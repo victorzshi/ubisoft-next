@@ -178,9 +178,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="external\App\app.h" />
     <ClInclude Include="external\App\AppSettings.h" />
     <ClInclude Include="external\App\main.h" />
