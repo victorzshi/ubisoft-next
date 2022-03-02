@@ -6,7 +6,7 @@
 #include <windows.h> 
 #include <math.h>  
 //------------------------------------------------------------------------
-#include "app\app.h"
+#include "external\app\app.h"
 //------------------------------------------------------------------------
 
 //------------------------------------------------------------------------
@@ -29,7 +29,7 @@ void Init()
 {
 	//------------------------------------------------------------------------
 	// Example Sprite Code....
-	testSprite = App::CreateSprite(".\\TestData\\Test.bmp", 8, 4);
+	testSprite = App::CreateSprite(".\\data\\Test.bmp", 8, 4);
 	testSprite->SetPosition(400.0f, 400.0f);
 	float speed = 1.0f / 15.0f;
 	testSprite->CreateAnimation(ANIM_BACKWARDS, speed, { 0,1,2,3,4,5,6,7 });
@@ -106,7 +106,7 @@ void Update(float deltaTime)
 	//------------------------------------------------------------------------
 	if (App::GetController().CheckButton(XINPUT_GAMEPAD_B, true))
 	{
-		App::PlaySound(".\\TestData\\Test.wav");
+		App::PlaySound(".\\data\\Test.wav");
 	}
 }
 
