@@ -12,4 +12,4 @@
 #include <math.h>
 #include <string>
 
-#include "..\external\App\app.h"
+#include "App\app.h"

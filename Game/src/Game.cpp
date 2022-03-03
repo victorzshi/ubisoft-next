@@ -18,12 +18,12 @@ void Init()
         tests = s;
     }
 
-    scene.SetViewport({0.0f, 0.0f, 960.0f, 540.0f});
+    scene.Init({0.0f, 0.0f, 960.0f, 540.0f});
 }
 
 void Update(float deltaTime)
 {
-    // Do something...
+    scene.Update(deltaTime);
 }
 
 void Render()
