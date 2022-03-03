@@ -63,7 +63,7 @@ private:
     float   m_animTime = 0.0F;
 
 #pragma warning(push)
-#pragma warning(disable: 26495)
+#pragma warning(disable : 26495)
     struct sAnimation
     {
         unsigned int m_id;

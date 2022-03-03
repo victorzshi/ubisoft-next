@@ -7,9 +7,7 @@
 
 #include "targetver.h"
 
-#include <stdio.h>
-#include <tchar.h>
+#include <iostream>
+#include <math.h>
 
-
-
-// TODO: reference additional headers your program requires here
+#include "..\external\App\app.h"

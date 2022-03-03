@@ -21,9 +21,12 @@ CSimpleSound &CSimpleSound::GetInstance()
 	return theSoundClass;
 }
 
+#pragma warning(push)
+#pragma warning(disable : 26495)
 CSimpleSound::CSimpleSound() : m_directSound(nullptr), m_primaryBuffer(nullptr)
 {
 }
+#pragma warning(pop)
 
 CSimpleSound::~CSimpleSound()
 {
@@ -39,7 +42,7 @@ bool CSimpleSound::Initialize(HWND hwnd)
 void CSimpleSound::Shutdown()
 {
 	// Release the secondary buffers.
-	for (auto sound : m_sounds) 
+	for (auto& sound : m_sounds) 
 	{
 		if( sound.second )
 		{
@@ -134,7 +137,10 @@ bool CSimpleSound::PlaySound(const char *filename, DWORD flags)
 	//result = m_secondaryBuffer1->SetCurrentPosition(0);
 	if (m_sounds[filename] == nullptr)
 	{
+#pragma warning(push)
+#pragma warning(disable : 6216)
 		result = LoadWaveFile(filename);
+#pragma warning(pop)
 		if (FAILED(result))
 		{
 			return false;
@@ -319,8 +325,11 @@ bool CSimpleSound::LoadWaveFile(const char* filename)
 		return false;
 	}
 
+#pragma warning(push)
+#pragma warning(disable : 6386)
 	// Copy the wave data into the buffer.
 	memcpy(bufferPtr, waveData, waveFileHeader.m_dataSize);
+#pragma warning(pop)
 
 	// Unlock the secondary buffer after the data has been written to it.
 	result = (*secondaryBuffer)->Unlock((void*)bufferPtr, bufferSize, NULL, 0);
