@@ -62,12 +62,15 @@ private:
     int     m_currentAnim = -1;
     float   m_animTime = 0.0F;
 
+#pragma warning(push)
+#pragma warning(disable : 26495)
     struct sAnimation
     {
         unsigned int m_id;
         float m_speed;
         std::vector<int> m_frames;
     };
+#pragma warning(pop)
     std::vector<sAnimation> m_animations;
 
     // Texture management.

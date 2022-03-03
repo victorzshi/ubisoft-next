@@ -98,6 +98,8 @@ unsigned char * loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsig
         
     }
 
+#pragma warning(push)
+#pragma warning(disable : 26451)
 	if (flipY)
     {
 		// swap y-axis
@@ -113,6 +115,7 @@ unsigned char * loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsig
 		}
 		delete [] tmpBuffer;
 	}
+#pragma warning(pop)
 
 	return data;
 }
