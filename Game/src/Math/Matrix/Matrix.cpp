@@ -107,14 +107,18 @@ Matrix Matrix::Scale(float x, float y, float z)
     return matrix;
 }
 
-Matrix Matrix::Projection(float distancePlane, float aspectRatio, float zNear, float zFar)
+Matrix Matrix::Perspective(float fov, float aspectRatio, float zNear, float zFar)
 {
+    float radians = fov * (PI / 180.0f);
+    float distance = 1.0f / tanf(radians * 0.5f);
+    float reciprocal = 1.0f / (zNear - zFar);
+
     Matrix matrix;
-    matrix(0, 0) = distancePlane / aspectRatio;
-    matrix(1, 1) = distancePlane;
-    matrix(2, 2) = zFar / (zFar - zNear);
-    matrix(2, 3) = -((zNear * zFar) / (zFar - zNear));
-    matrix(3, 2) = 1.0f;
+    matrix(0, 0) = distance / aspectRatio;
+    matrix(1, 1) = distance;
+    matrix(2, 2) = (zNear + zFar) * reciprocal;
+    matrix(2, 3) = 2.0f * zNear * zFar * reciprocal;
+    matrix(3, 2) = -1.0f;
     return matrix;
 }
 
@@ -125,7 +129,7 @@ Matrix Matrix::PointAt(Vector3 &position, Vector3 &target, Vector3 &up)
     Vector3 a = newForward * (up.Dot(newForward));
     Vector3 newUp = (up - a).Normalize();
 
-    Vector3 newRight = up.Cross(newForward);
+    Vector3 newRight = newUp.Cross(newForward);
 
     Matrix matrix;
     matrix(0, 0) = newRight.x;

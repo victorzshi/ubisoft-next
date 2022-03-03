@@ -23,7 +23,7 @@ struct Matrix
     static Matrix RotateY(float theta);
     static Matrix RotateZ(float theta);
     static Matrix Scale(float x, float y, float z);
-    static Matrix Projection(float distancePlane, float aspectRatio, float zNear, float zFar);
+    static Matrix Perspective(float distancePlane, float aspectRatio, float zNear, float zFar);
     static Matrix PointAt(Vector3 &position, Vector3 &target, Vector3 &up);
     static Matrix QuickInverse(Matrix &m);
 };
