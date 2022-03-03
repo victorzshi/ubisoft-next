@@ -2,12 +2,6 @@
 
 #include "Vector3.h"
 
-enum class Test
-{
-    PASS,
-    FAIL
-};
-
 class Vector3Test
 {
   public:
@@ -15,144 +9,145 @@ class Vector3Test
     {
         Vector3 v = Vector3(1.0f, 2.0f, 3.0f);
         Vector3 w = Vector3(4.0f, 5.0f, 6.0f);
+        float n = 2.0f;
 
-        if (Add(v, w) == Test::FAIL)
-        {
-            throw "Vector3 add failed...";
-        }
-        if (CompoundAdd(v, w) == Test::FAIL)
-        {
-            throw "Vector3 compound add failed...";
-        }
-        if (Subtract(v, w) == Test::FAIL)
-        {
-            throw "Vector3 subtract failed...";
-        }
-        if (CompoundSubtract(v, w) == Test::FAIL)
-        {
-            throw "Vector3 compound subtract failed...";
-        }
-        if (Multiply(v) == Test::FAIL)
-        {
-            throw "Vector3 multiply failed...";
-        }
-        if (CompoundMultiply(v) == Test::FAIL)
-        {
-            throw "Vector3 compound multiply failed...";
-        }
-        if (Divide(v) == Test::FAIL)
-        {
-            throw "Vector3 divide failed...";
-        }
-        if (CompoundDivide(v) == Test::FAIL)
-        {
-            throw "Vector3 compound divide failed...";
-        }
-        if (Length(v) == Test::FAIL)
-        {
-            throw "Vector3 length failed...";
-        }
-        if (Normalize(v) == Test::FAIL)
-        {
-            throw "Vector3 normalize failed...";
-        }
-        if (Dot(v, w) == Test::FAIL)
-        {
-            throw "Vector3 dot product failed...";
-        }
-        if (Cross(v, w) == Test::FAIL)
-        {
-            throw "Vector3 cross product failed...";
-        }
+        TestAdd(v, w);
+        TestCompoundAdd(v, w);
+        TestSubtract(v, w);
+        TestCompoundSubtract(v, w);
+        TestMultiply(v, n);
+        TestCompoundMultiply(v, n);
+        TestDivide(v, n);
+        TestCompoundDivide(v, n);
+        TestLength(v);
+        TestNormalize(v);
+        TestDot(v, w);
+        TestCross(v, w);
     }
 
   private:
-    static Test Add(Vector3 v, Vector3 w)
+    static void TestAdd(Vector3 v, Vector3 w)
     {
         Vector3 u = v + w;
 
-        return u == Vector3(5.0f, 7.0f, 9.0f) ? Test::PASS : Test::FAIL;
+        if (u != Vector3(5.0f, 7.0f, 9.0f))
+        {
+            throw "Vector3 add failed...";
+        }
     }
 
-    static Test CompoundAdd(Vector3 v, Vector3 w)
+    static void TestCompoundAdd(Vector3 v, Vector3 w)
     {
         Vector3 u = v + w;
         u += u;
 
-        return u == Vector3(10.0f, 14.0f, 18.0f) ? Test::PASS : Test::FAIL;
+        if (u != Vector3(10.0f, 14.0f, 18.0f))
+        {
+            throw "Vector3 compound add failed...";
+        }
     }
 
-    static Test Subtract(Vector3 v, Vector3 w)
+    static void TestSubtract(Vector3 v, Vector3 w)
     {
         Vector3 u = v - w;
 
-        return u == Vector3(-3.0f, -3.0f, -3.0f) ? Test::PASS : Test::FAIL;
+        if (u != Vector3(-3.0f, -3.0f, -3.0f))
+        {
+            throw "Vector3 subtract failed...";
+        }
     }
 
-    static Test CompoundSubtract(Vector3 v, Vector3 w)
+    static void TestCompoundSubtract(Vector3 v, Vector3 w)
     {
         Vector3 u = v - w;
         u -= u;
 
-        return u == Vector3(0.0f, 0.0f, 0.0f) ? Test::PASS : Test::FAIL;
+        if (u != Vector3(0.0f, 0.0f, 0.0f))
+        {
+            throw "Vector3 compound subtract failed...";
+        }
     }
 
-    static Test Multiply(Vector3 v)
+    static void TestMultiply(Vector3 v, float n)
     {
-        Vector3 u = v * 2.0f;
+        Vector3 u = v * n;
 
-        return u == Vector3(2.0f, 4.0f, 6.0f) ? Test::PASS : Test::FAIL;
+        if (u != Vector3(2.0f, 4.0f, 6.0f))
+        {
+            throw "Vector3 multiply failed...";
+        }
     }
 
-    static Test CompoundMultiply(Vector3 v)
+    static void TestCompoundMultiply(Vector3 v, float n)
     {
-        Vector3 u = v * 2.0f;
-        u *= 2.0f;
+        Vector3 u = v * n;
+        u *= n;
 
-        return u == Vector3(4.0f, 8.0f, 12.0f) ? Test::PASS : Test::FAIL;
+        if (u != Vector3(4.0f, 8.0f, 12.0f))
+        {
+            throw "Vector3 compound multiply failed...";
+        }
     }
 
-    static Test Divide(Vector3 v)
+    static void TestDivide(Vector3 v, float n)
     {
-        Vector3 u = v / 2.0f;
+        Vector3 u = v / n;
 
-        return u == Vector3(0.5f, 1.0f, 1.5f) ? Test::PASS : Test::FAIL;
+        if (u != Vector3(0.5f, 1.0f, 1.5f))
+        {
+            throw "Vector3 divide failed...";
+        }
     }
 
-    static Test CompoundDivide(Vector3 v)
+    static void TestCompoundDivide(Vector3 v, float n)
     {
-        Vector3 u = v / 2.0f;
-        u /= 2.0f;
+        Vector3 u = v / n;
+        u /= n;
 
-        return u == Vector3(0.25f, 0.5f, 0.75f) ? Test::PASS : Test::FAIL;
+        if (u != Vector3(0.25f, 0.5f, 0.75f))
+        {
+            throw "Vector3 compound divide failed...";
+        }
     }
 
-    static Test Length(Vector3 v)
+    static void TestLength(Vector3 v)
     {
         float length = v.Length();
 
-        return length == sqrtf(14) ? Test::PASS : Test::FAIL;
+        if (length != sqrtf(14))
+        {
+            throw "Vector3 length failed...";
+        }
     }
 
-    static Test Normalize(Vector3 v)
+    static void TestNormalize(Vector3 v)
     {
         float length = v.Length();
         Vector3 u = v.Normalize();
 
-        return u == Vector3(v.x / length, v.y / length, v.z / length) ? Test::PASS : Test::FAIL;
+        if (u != Vector3(v.x / length, v.y / length, v.z / length))
+        {
+            throw "Vector3 normalize failed...";
+        }
     }
 
-    static Test Dot(Vector3 v, Vector3 w)
+    static void TestDot(Vector3 v, Vector3 w)
     {
         float dot = v.Dot(w);
 
-        return dot == 32.0f ? Test::PASS : Test::FAIL;
+        if (dot != 32.0f)
+        {
+            throw "Vector3 dot failed...";
+        }
     }
 
-    static Test Cross(Vector3 v, Vector3 w)
+    static void TestCross(Vector3 v, Vector3 w)
     {
         Vector3 u = v.Cross(w);
 
-        return u == Vector3(-3.0f, 6.0f, -3.0f) ? Test::PASS : Test::FAIL;
+        if (u != Vector3(-3.0f, 6.0f, -3.0f))
+        {
+            throw "Vector3 cross failed...";
+        }
     }
 };
