@@ -7,7 +7,9 @@
 
 #include "targetver.h"
 
+#include <assert.h>
 #include <iostream>
 #include <math.h>
+#include <string>
 
 #include "..\external\App\app.h"
