@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Box/Box.h"
+#include "Graphics/Box/Box.h"
 #include "Graphics/Camera/Camera.h"
 #include "Graphics/Mesh/Mesh.h"
 #include "Math/Matrix/Matrix.h"

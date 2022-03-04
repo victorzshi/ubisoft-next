@@ -193,7 +193,7 @@
     <ClInclude Include="external\App\TextureLoader.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
-    <ClInclude Include="src\Box\Box.h" />
+    <ClInclude Include="src\Graphics\Box\Box.h" />
     <ClInclude Include="src\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\Triangle\Triangle.h" />
@@ -208,6 +208,7 @@
     <ClCompile Include="external\App\SimpleSound.cpp" />
     <ClCompile Include="external\App\SimpleSprite.cpp" />
     <ClCompile Include="external\App\TextureLoader.cpp" />
+    <ClCompile Include="src\Graphics\Box\Box.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="include\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -215,6 +216,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="src\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Triangle\Triangle.cpp" />
     <ClCompile Include="src\Math\Matrix\Matrix.cpp" />

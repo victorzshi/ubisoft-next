@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "Graphics/Triangle/Triangle.h"
-#include "Math/Vector3/Vector3.h"
 
 struct Mesh
 {
