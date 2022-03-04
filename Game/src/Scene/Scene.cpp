@@ -23,6 +23,12 @@ void Scene::Init(Box viewport)
     projection_ = Matrix::Perspective(fov, aspectRatio, zNear, zFar);
 
     mesh_ = Mesh::Cube();
+
+    camera_.position = Vector3(0.0f, 0.0f, 0.0f);
+    camera_.target = Vector3(0.0f, 0.0f, 1.0f);
+    camera_.up = Vector3(0.0f, 1.0f, 0.0f);
+    camera_.yaw = 0.0f;
+    camera_.pitch = 0.0f;
 }
 
 void Scene::Update(float deltaTime)
@@ -33,18 +39,15 @@ void Scene::Update(float deltaTime)
     elapsed += deltaTime / 1000.0f;
 
     Matrix scaling = Matrix::Scale(1.0f, 1.0f, 1.0f);
-    // Matrix rotation = Matrix::RotateY(elapsed) * Matrix::RotateX(elapsed);
-    Matrix rotation = Matrix::Identity();
-    Matrix translation = Matrix::Translate(Vector3(0.0f, 0.0f, 5.0f));
+    Matrix rotation = Matrix::RotateY(elapsed) * Matrix::RotateX(elapsed);
+    Matrix translation = Matrix::Translate(Vector3(5.0f, 5.0f, 50.0f));
     Matrix world = Matrix::Identity() * scaling * rotation * translation;
 
     // Set up camera
-    Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
-    Vector3 target = Vector3(0.0f, 0.0f, 1.0f);
-    Vector3 lookDirection = Matrix::RotateY(camera_.yaw) * target;
-    target = camera_.position + lookDirection;
-    Matrix camera = Matrix::PointAt(camera_.position, target, up);
-    Matrix view = Matrix::QuickInverse(camera);
+    Matrix rotate = Matrix::RotateX(camera_.pitch) * Matrix::RotateY(camera_.yaw);
+    Vector3 direction = rotate * camera_.target;
+    Vector3 target = camera_.position + direction;
+    Matrix view = Matrix::LookAt(camera_.position, target, camera_.up);
 
     std::vector<Triangle> raster;
     for (auto &triangle : mesh_.triangles)
@@ -114,10 +117,6 @@ void Scene::Render()
     {
         triangle.Render();
     }
-
-    float x = viewport_.w * 0.01f;
-    float y = viewport_.h * 0.95f;
-    App::Print(x, y, "Scene::Render()");
 }
 
 void Scene::DrawBorder()
@@ -139,11 +138,11 @@ void Scene::HandleInput()
 {
     if (App::GetController().GetLeftThumbStickX() > 0.5f)
     {
-        camera_.position.x -= 0.05f;
+        camera_.position.x += 0.05f;
     }
     if (App::GetController().GetLeftThumbStickX() < -0.5f)
     {
-        camera_.position.x += 0.05f;
+        camera_.position.x -= 0.05f;
     }
     if (App::GetController().GetLeftThumbStickY() > 0.5f)
     {
@@ -153,12 +152,20 @@ void Scene::HandleInput()
     {
         camera_.position.y -= 0.05f;
     }
-    if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_LEFT, false))
+    if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_UP, false))
     {
-        camera_.yaw += 0.05f;
+        camera_.pitch += 0.05f;
+    }
+    if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_DOWN, false))
+    {
+        camera_.pitch -= 0.05f;
     }
     if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_RIGHT, false))
     {
-        camera_.yaw -= 0.05f;
+        camera_.yaw += 0.01f;
+    }
+    if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_LEFT, false))
+    {
+        camera_.yaw -= 0.01f;
     }
 }

@@ -10,8 +10,11 @@ struct Box
 
 struct Camera
 {
-    Vector3 position = Vector3();
-    float yaw = 0.0f;
+    Vector3 position;
+    Vector3 target;
+    Vector3 up;
+    float yaw;
+    float pitch;
 };
 
 class Scene
@@ -29,7 +32,6 @@ class Scene
     Box viewport_;
     Mesh mesh_;
     Matrix projection_;
-
     Camera camera_;
 
     std::vector<Triangle> triangles_;
