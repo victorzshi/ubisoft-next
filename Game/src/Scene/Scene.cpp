@@ -22,7 +22,7 @@ void Scene::Init(Box viewport)
     float zFar = 100.0f;
     projection_ = Matrix::Perspective(fov, aspectRatio, zNear, zFar);
 
-    mesh_ = Mesh::Cube();
+    mesh_ = Mesh::LoadFromObjectFile("sphere.obj");
 
     camera_.position = Vector3(0.0f, 0.0f, 0.0f);
     camera_.target = Vector3(0.0f, 0.0f, 1.0f);
@@ -38,9 +38,10 @@ void Scene::Update(float deltaTime)
     static float elapsed = 0.0f;
     elapsed += deltaTime / 1000.0f;
 
-    Matrix scaling = Matrix::Scale(1.0f, 1.0f, 1.0f);
-    Matrix rotation = Matrix::RotateY(elapsed) * Matrix::RotateX(elapsed);
-    Matrix translation = Matrix::Translate(Vector3(5.0f, 5.0f, 50.0f));
+    Matrix scaling = Matrix::Scale(1.0f, -1.0f, 1.0f);
+    //Matrix rotation = Matrix::RotateY(elapsed) * Matrix::RotateX(elapsed);
+    Matrix rotation = Matrix::Identity();
+    Matrix translation = Matrix::Translate(Vector3(0.0f, 0.0f, 10.0f));
     Matrix world = Matrix::Identity() * scaling * rotation * translation;
 
     // Set up camera
@@ -154,11 +155,11 @@ void Scene::HandleInput()
     }
     if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_UP, false))
     {
-        camera_.pitch += 0.05f;
+        camera_.pitch += 0.01f;
     }
     if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_DOWN, false))
     {
-        camera_.pitch -= 0.05f;
+        camera_.pitch -= 0.01f;
     }
     if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_RIGHT, false))
     {

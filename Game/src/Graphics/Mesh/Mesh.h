@@ -10,5 +10,5 @@ struct Mesh
 {
     std::vector<Triangle> triangles;
 
-    static Mesh Cube();
+    static Mesh LoadFromObjectFile(std::string file);
 };
