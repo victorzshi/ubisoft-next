@@ -1,21 +1,9 @@
 #pragma once
 
+#include "Box/Box.h"
+#include "Camera/Camera.h"
 #include "Graphics/Mesh/Mesh.h"
 #include "Math/Matrix/Matrix.h"
-
-struct Box
-{
-    float x, y, w, h;
-};
-
-struct Camera
-{
-    Vector3 position;
-    Vector3 target;
-    Vector3 up;
-    float yaw;
-    float pitch;
-};
 
 class Scene
 {
@@ -23,21 +11,30 @@ class Scene
     Scene();
     ~Scene();
 
-    void Init(Box viewport);
+    void Init();
 
     void Update(float deltaTime);
     void Render();
 
   private:
-    Box viewport_;
-    Mesh mesh_;
-    Matrix projection_;
-    Camera camera_;
+    Box m_viewport;
+    Camera m_camera;
+    Matrix m_world;
+    Matrix m_view;
+    Matrix m_projection;
 
-    std::vector<Triangle> triangles_;
+    Mesh m_mesh;
+    std::vector<Triangle> m_triangles;
 
-    void DrawBorder();
-    // TODO: Draw grid for visualizing 3D space.
+    void SetViewport();
+    void SetCamera();
+    void SetWorldMatrix();
+    void SetViewMatrix();
+    void SetProjectionMatrix();
 
     void HandleInput();
+    void UpdateTriangles();
+    void RenderTriangles();
+    void RenderBorder();
+    // TODO: Draw grid for visualizing 3D space.
 };
