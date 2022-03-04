@@ -123,11 +123,11 @@ Matrix Matrix::Perspective(float fov, float aspectRatio, float zNear, float zFar
     return matrix;
 }
 
-Matrix Matrix::LookAt(Vector3 &position, Vector3 &target, Vector3 &up)
+Matrix Matrix::LookAt(Vector3 &from, Vector3 &to, Vector3 &up)
 {
-    Vector3 zAxis = (target - position).Normalize(); // Forward
-    Vector3 xAxis = zAxis.Cross(up).Normalize();     // Right
-    Vector3 yAxis = xAxis.Cross(zAxis);              // Up
+    Vector3 zAxis = (to - from).Normalize();     // Forward
+    Vector3 xAxis = zAxis.Cross(up).Normalize(); // Right
+    Vector3 yAxis = xAxis.Cross(zAxis);          // Up
 
     Matrix matrix;
     matrix(0, 0) = xAxis.x;
@@ -142,9 +142,9 @@ Matrix Matrix::LookAt(Vector3 &position, Vector3 &target, Vector3 &up)
     matrix(2, 1) = yAxis.z;
     matrix(2, 2) = zAxis.z;
     matrix(2, 3) = 0.0f;
-    matrix(3, 0) = -xAxis.Dot(position);
-    matrix(3, 1) = -yAxis.Dot(position);
-    matrix(3, 2) = -zAxis.Dot(position);
+    matrix(3, 0) = -xAxis.Dot(from);
+    matrix(3, 1) = -yAxis.Dot(from);
+    matrix(3, 2) = -zAxis.Dot(from);
     matrix(3, 3) = 1.0f;
     return matrix;
 }

@@ -24,5 +24,5 @@ struct Matrix
     static Matrix RotateZ(float theta);
     static Matrix Scale(float x, float y, float z);
     static Matrix Perspective(float distancePlane, float aspectRatio, float zNear, float zFar);
-    static Matrix LookAt(Vector3 &position, Vector3 &target, Vector3 &up);
+    static Matrix LookAt(Vector3 &from, Vector3 &to, Vector3 &up);
 };

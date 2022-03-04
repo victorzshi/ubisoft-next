@@ -22,7 +22,7 @@ void Scene::Init(Box viewport)
     float zFar = 100.0f;
     projection_ = Matrix::Perspective(fov, aspectRatio, zNear, zFar);
 
-    mesh_ = Mesh::LoadFromObjectFile("cone.obj");
+    mesh_ = Mesh::LoadFromObjectFile("monkey.obj");
 
     camera_.position = Vector3(0.0f, 0.0f, 0.0f);
     camera_.target = Vector3(0.0f, 0.0f, 1.0f);
@@ -39,16 +39,16 @@ void Scene::Update(float deltaTime)
     elapsed += deltaTime / 1000.0f;
 
     Matrix scaling = Matrix::Scale(1.0f, 1.0f, 1.0f);
-    //Matrix rotation = Matrix::RotateY(elapsed) * Matrix::RotateX(elapsed);
-    Matrix rotation = Matrix::Identity();
-    Matrix translation = Matrix::Translate(Vector3(0.0f, 0.0f, 10.0f));
+    Matrix rotation = Matrix::RotateY(elapsed) * Matrix::RotateX(elapsed);
+    // Matrix rotation = Matrix::Identity();
+    Matrix translation = Matrix::Translate(Vector3(0.0f, 0.0f, 20.0f));
     Matrix world = Matrix::Identity() * scaling * rotation * translation;
 
     // Set up camera
     Matrix rotate = Matrix::RotateX(camera_.pitch) * Matrix::RotateY(camera_.yaw);
-    Vector3 direction = rotate * camera_.target;
-    Vector3 target = camera_.position + direction;
-    Matrix view = Matrix::LookAt(camera_.position, target, camera_.up);
+    Vector3 from = camera_.position;
+    Vector3 to = camera_.position + rotate * camera_.target;
+    Matrix view = Matrix::LookAt(from, to, camera_.up);
 
     std::vector<Triangle> raster;
     for (auto &triangle : mesh_.triangles)
