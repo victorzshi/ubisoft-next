@@ -2,11 +2,11 @@
 
 #include "Vector3.h"
 
-Vector3::Vector3() : x(0.0f), y(0.0f), z(0.0f)
+Vector3::Vector3() : x(0.0f), y(0.0f), z(0.0f), w(1.0f)
 {
 }
 
-Vector3::Vector3(float newX, float newY, float newZ) : x(newX), y(newY), z(newZ)
+Vector3::Vector3(float newX, float newY, float newZ) : x(newX), y(newY), z(newZ), w(1.0f)
 {
 }
 
