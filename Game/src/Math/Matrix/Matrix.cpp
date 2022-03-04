@@ -119,31 +119,32 @@ Matrix Matrix::Perspective(float fov, float aspectRatio, float zNear, float zFar
     matrix(2, 2) = (zNear + zFar) * reciprocal;
     matrix(2, 3) = 2.0f * zNear * zFar * reciprocal;
     matrix(3, 2) = -1.0f;
+    matrix(3, 3) = 0.0f;
     return matrix;
 }
 
 Matrix Matrix::LookAt(Vector3 &position, Vector3 &target, Vector3 &up)
 {
-    Vector3 viewForward = (target - position).Normalize();
-    Vector3 viewRight = viewForward.Cross(up).Normalize();
-    Vector3 viewUp = viewRight.Cross(viewForward).Normalize();
+    Vector3 zAxis = (target - position).Normalize(); // Forward
+    Vector3 xAxis = zAxis.Cross(up).Normalize();     // Right
+    Vector3 yAxis = xAxis.Cross(zAxis);              // Up
 
     Matrix matrix;
-    matrix(0, 0) = viewRight.x;
-    matrix(0, 1) = viewUp.x;
-    matrix(0, 2) = viewForward.x;
+    matrix(0, 0) = xAxis.x;
+    matrix(0, 1) = yAxis.x;
+    matrix(0, 2) = zAxis.x;
     matrix(0, 3) = 0.0f;
-    matrix(1, 0) = viewRight.y;
-    matrix(1, 1) = viewUp.y;
-    matrix(1, 2) = viewForward.y;
+    matrix(1, 0) = xAxis.y;
+    matrix(1, 1) = yAxis.y;
+    matrix(1, 2) = zAxis.y;
     matrix(1, 3) = 0.0f;
-    matrix(2, 0) = viewRight.z;
-    matrix(2, 1) = viewUp.z;
-    matrix(2, 2) = viewForward.z;
+    matrix(2, 0) = xAxis.z;
+    matrix(2, 1) = yAxis.z;
+    matrix(2, 2) = zAxis.z;
     matrix(2, 3) = 0.0f;
-    matrix(3, 0) = -(position.x * matrix(0, 0) + position.y * matrix(1, 0) + position.z * matrix(2, 0));
-    matrix(3, 1) = -(position.x * matrix(0, 1) + position.y * matrix(1, 1) + position.z * matrix(2, 1));
-    matrix(3, 2) = -(position.x * matrix(0, 2) + position.y * matrix(1, 2) + position.z * matrix(2, 2));
+    matrix(3, 0) = -xAxis.Dot(position);
+    matrix(3, 1) = -yAxis.Dot(position);
+    matrix(3, 2) = -zAxis.Dot(position);
     matrix(3, 3) = 1.0f;
     return matrix;
 }
