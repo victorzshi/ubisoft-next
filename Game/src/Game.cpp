@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Math/Matrix/MatrixTest.cpp"
 #include "Math/Vector3/Vector3Test.cpp"
 #include "Scene/Scene.h"
 
@@ -11,6 +12,7 @@ void Init()
     try
     {
         Vector3Test::RunTests();
+        MatrixTest::RunTests();
         tests = "All tests passed!";
     }
     catch (const char *s)

@@ -107,64 +107,43 @@ Matrix Matrix::Scale(float x, float y, float z)
     return matrix;
 }
 
-Matrix Matrix::Projection(float distancePlane, float aspectRatio, float zNear, float zFar)
+Matrix Matrix::Perspective(float fov, float aspectRatio, float zNear, float zFar)
 {
+    float radians = fov * (PI / 180.0f);
+    float distance = 1.0f / tanf(radians * 0.5f);
+    float reciprocal = 1.0f / (zNear - zFar);
+
     Matrix matrix;
-    matrix(0, 0) = distancePlane / aspectRatio;
-    matrix(1, 1) = distancePlane;
-    matrix(2, 2) = zFar / (zFar - zNear);
-    matrix(2, 3) = -((zNear * zFar) / (zFar - zNear));
-    matrix(3, 2) = 1.0f;
+    matrix(0, 0) = distance / aspectRatio;
+    matrix(1, 1) = distance;
+    matrix(2, 2) = (zNear + zFar) * reciprocal;
+    matrix(2, 3) = 2.0f * zNear * zFar * reciprocal;
+    matrix(3, 2) = -1.0f;
     return matrix;
 }
 
-Matrix Matrix::PointAt(Vector3 &position, Vector3 &target, Vector3 &up)
+Matrix Matrix::LookAt(Vector3 &position, Vector3 &target, Vector3 &up)
 {
-    Vector3 newForward = (target - position).Normalize();
-
-    Vector3 a = newForward * (up.Dot(newForward));
-    Vector3 newUp = (up - a).Normalize();
-
-    Vector3 newRight = up.Cross(newForward);
+    Vector3 viewForward = (target - position).Normalize();
+    Vector3 viewRight = viewForward.Cross(up).Normalize();
+    Vector3 viewUp = viewRight.Cross(viewForward).Normalize();
 
     Matrix matrix;
-    matrix(0, 0) = newRight.x;
-    matrix(0, 1) = newRight.y;
-    matrix(0, 2) = newRight.z;
+    matrix(0, 0) = viewRight.x;
+    matrix(0, 1) = viewUp.x;
+    matrix(0, 2) = viewForward.x;
     matrix(0, 3) = 0.0f;
-    matrix(1, 0) = newUp.x;
-    matrix(1, 1) = newUp.y;
-    matrix(1, 2) = newUp.z;
+    matrix(1, 0) = viewRight.y;
+    matrix(1, 1) = viewUp.y;
+    matrix(1, 2) = viewForward.y;
     matrix(1, 3) = 0.0f;
-    matrix(2, 0) = newForward.x;
-    matrix(2, 1) = newForward.y;
-    matrix(2, 2) = newForward.z;
+    matrix(2, 0) = viewRight.z;
+    matrix(2, 1) = viewUp.z;
+    matrix(2, 2) = viewForward.z;
     matrix(2, 3) = 0.0f;
-    matrix(3, 0) = position.x;
-    matrix(3, 1) = position.y;
-    matrix(3, 2) = position.z;
-    matrix(3, 3) = 1.0f;
-    return matrix;
-}
-
-Matrix Matrix::QuickInverse(Matrix &m)
-{
-    Matrix matrix;
-    matrix(0, 0) = m(0, 0);
-    matrix(0, 1) = m(1, 0);
-    matrix(0, 2) = m(2, 0);
-    matrix(0, 3) = 0.0f;
-    matrix(1, 0) = m(0, 1);
-    matrix(1, 1) = m(1, 1);
-    matrix(1, 2) = m(2, 1);
-    matrix(1, 3) = 0.0f;
-    matrix(2, 0) = m(0, 2);
-    matrix(2, 1) = m(1, 2);
-    matrix(2, 2) = m(2, 2);
-    matrix(2, 3) = 0.0f;
-    matrix(3, 0) = -(m(3, 0) * matrix(0, 0) + m(3, 1) * matrix(1, 0) + m(3, 2) * matrix(2, 0));
-    matrix(3, 1) = -(m(3, 0) * matrix(0, 1) + m(3, 1) * matrix(1, 1) + m(3, 2) * matrix(2, 1));
-    matrix(3, 2) = -(m(3, 0) * matrix(0, 2) + m(3, 1) * matrix(1, 2) + m(3, 2) * matrix(2, 2));
+    matrix(3, 0) = -(position.x * matrix(0, 0) + position.y * matrix(1, 0) + position.z * matrix(2, 0));
+    matrix(3, 1) = -(position.x * matrix(0, 1) + position.y * matrix(1, 1) + position.z * matrix(2, 1));
+    matrix(3, 2) = -(position.x * matrix(0, 2) + position.y * matrix(1, 2) + position.z * matrix(2, 2));
     matrix(3, 3) = 1.0f;
     return matrix;
 }

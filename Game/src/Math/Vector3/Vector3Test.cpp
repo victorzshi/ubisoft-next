@@ -26,7 +26,7 @@ class Vector3Test
     }
 
   private:
-    static void TestAdd(Vector3 v, Vector3 w)
+    static void TestAdd(Vector3& v, Vector3& w)
     {
         Vector3 u = v + w;
 
@@ -36,7 +36,7 @@ class Vector3Test
         }
     }
 
-    static void TestCompoundAdd(Vector3 v, Vector3 w)
+    static void TestCompoundAdd(Vector3& v, Vector3& w)
     {
         Vector3 u = v + w;
         u += u;
@@ -47,7 +47,7 @@ class Vector3Test
         }
     }
 
-    static void TestSubtract(Vector3 v, Vector3 w)
+    static void TestSubtract(Vector3& v, Vector3& w)
     {
         Vector3 u = v - w;
 
@@ -57,7 +57,7 @@ class Vector3Test
         }
     }
 
-    static void TestCompoundSubtract(Vector3 v, Vector3 w)
+    static void TestCompoundSubtract(Vector3& v, Vector3& w)
     {
         Vector3 u = v - w;
         u -= u;
@@ -68,7 +68,7 @@ class Vector3Test
         }
     }
 
-    static void TestMultiply(Vector3 v, float n)
+    static void TestMultiply(Vector3& v, float& n)
     {
         Vector3 u = v * n;
 
@@ -78,7 +78,7 @@ class Vector3Test
         }
     }
 
-    static void TestCompoundMultiply(Vector3 v, float n)
+    static void TestCompoundMultiply(Vector3& v, float& n)
     {
         Vector3 u = v * n;
         u *= n;
@@ -89,7 +89,7 @@ class Vector3Test
         }
     }
 
-    static void TestDivide(Vector3 v, float n)
+    static void TestDivide(Vector3& v, float& n)
     {
         Vector3 u = v / n;
 
@@ -99,7 +99,7 @@ class Vector3Test
         }
     }
 
-    static void TestCompoundDivide(Vector3 v, float n)
+    static void TestCompoundDivide(Vector3& v, float& n)
     {
         Vector3 u = v / n;
         u /= n;
@@ -110,7 +110,7 @@ class Vector3Test
         }
     }
 
-    static void TestLength(Vector3 v)
+    static void TestLength(Vector3& v)
     {
         float length = v.Length();
 
@@ -120,7 +120,7 @@ class Vector3Test
         }
     }
 
-    static void TestNormalize(Vector3 v)
+    static void TestNormalize(Vector3& v)
     {
         float length = v.Length();
         Vector3 u = v.Normalize();
@@ -131,7 +131,7 @@ class Vector3Test
         }
     }
 
-    static void TestDot(Vector3 v, Vector3 w)
+    static void TestDot(Vector3& v, Vector3& w)
     {
         float dot = v.Dot(w);
 
@@ -141,7 +141,7 @@ class Vector3Test
         }
     }
 
-    static void TestCross(Vector3 v, Vector3 w)
+    static void TestCross(Vector3& v, Vector3& w)
     {
         Vector3 u = v.Cross(w);
 
