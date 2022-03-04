@@ -194,7 +194,7 @@
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="src\Box\Box.h" />
-    <ClInclude Include="src\Camera\Camera.h" />
+    <ClInclude Include="src\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\Triangle\Triangle.h" />
     <ClInclude Include="src\Math\Matrix\Matrix.h" />

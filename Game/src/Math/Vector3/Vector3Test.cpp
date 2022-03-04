@@ -30,10 +30,7 @@ class Vector3Test
     {
         Vector3 u = v + w;
 
-        if (u != Vector3(5.0f, 7.0f, 9.0f))
-        {
-            throw "Vector3 add failed...";
-        }
+        assert(u == Vector3(5.0f, 7.0f, 9.0f));
     }
 
     static void TestCompoundAdd(Vector3& v, Vector3& w)
@@ -41,20 +38,14 @@ class Vector3Test
         Vector3 u = v + w;
         u += u;
 
-        if (u != Vector3(10.0f, 14.0f, 18.0f))
-        {
-            throw "Vector3 compound add failed...";
-        }
+        assert(u == Vector3(10.0f, 14.0f, 18.0f));
     }
 
     static void TestSubtract(Vector3& v, Vector3& w)
     {
         Vector3 u = v - w;
 
-        if (u != Vector3(-3.0f, -3.0f, -3.0f))
-        {
-            throw "Vector3 subtract failed...";
-        }
+        assert(u == Vector3(-3.0f, -3.0f, -3.0f));
     }
 
     static void TestCompoundSubtract(Vector3& v, Vector3& w)
@@ -62,20 +53,14 @@ class Vector3Test
         Vector3 u = v - w;
         u -= u;
 
-        if (u != Vector3(0.0f, 0.0f, 0.0f))
-        {
-            throw "Vector3 compound subtract failed...";
-        }
+        assert(u == Vector3(0.0f, 0.0f, 0.0f));
     }
 
     static void TestMultiply(Vector3& v, float& n)
     {
         Vector3 u = v * n;
 
-        if (u != Vector3(2.0f, 4.0f, 6.0f))
-        {
-            throw "Vector3 multiply failed...";
-        }
+        assert(u == Vector3(2.0f, 4.0f, 6.0f));
     }
 
     static void TestCompoundMultiply(Vector3& v, float& n)
@@ -83,20 +68,14 @@ class Vector3Test
         Vector3 u = v * n;
         u *= n;
 
-        if (u != Vector3(4.0f, 8.0f, 12.0f))
-        {
-            throw "Vector3 compound multiply failed...";
-        }
+        assert(u == Vector3(4.0f, 8.0f, 12.0f));
     }
 
     static void TestDivide(Vector3& v, float& n)
     {
         Vector3 u = v / n;
 
-        if (u != Vector3(0.5f, 1.0f, 1.5f))
-        {
-            throw "Vector3 divide failed...";
-        }
+        assert(u == Vector3(0.5f, 1.0f, 1.5f));
     }
 
     static void TestCompoundDivide(Vector3& v, float& n)
@@ -104,20 +83,14 @@ class Vector3Test
         Vector3 u = v / n;
         u /= n;
 
-        if (u != Vector3(0.25f, 0.5f, 0.75f))
-        {
-            throw "Vector3 compound divide failed...";
-        }
+        assert(u == Vector3(0.25f, 0.5f, 0.75f));
     }
 
     static void TestLength(Vector3& v)
     {
         float length = v.Length();
 
-        if (length != sqrtf(14))
-        {
-            throw "Vector3 length failed...";
-        }
+        assert(length == sqrtf(14));
     }
 
     static void TestNormalize(Vector3& v)
@@ -125,29 +98,20 @@ class Vector3Test
         float length = v.Length();
         Vector3 u = v.Normalize();
 
-        if (u != Vector3(v.x / length, v.y / length, v.z / length))
-        {
-            throw "Vector3 normalize failed...";
-        }
+        assert(u == Vector3(v.x / length, v.y / length, v.z / length));
     }
 
     static void TestDot(Vector3& v, Vector3& w)
     {
         float dot = v.Dot(w);
 
-        if (dot != 32.0f)
-        {
-            throw "Vector3 dot failed...";
-        }
+        assert(dot == 32.0f);
     }
 
     static void TestCross(Vector3& v, Vector3& w)
     {
         Vector3 u = v.Cross(w);
 
-        if (u != Vector3(-3.0f, 6.0f, -3.0f))
-        {
-            throw "Vector3 cross failed...";
-        }
+        assert(u == Vector3(-3.0f, 6.0f, -3.0f));
     }
 };

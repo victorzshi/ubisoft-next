@@ -27,31 +27,25 @@ class MatrixTest
   private:
     static void TestInitialization()
     {
-        Matrix c = Matrix();
+        Matrix m = Matrix();
 
         for (int row = 0; row < 4; row++)
         {
             for (int col = 0; col < 4; col++)
             {
-                if (c(row, col) != 0.0f)
-                {
-                    throw "Matrix initialization failed...";
-                }
+                assert(m(row, col) == 0.0f);
             }
         }
     }
     static void TestMultiplyMatrix(Matrix &a, Matrix &b)
     {
-        Matrix c = a * b;
+        Matrix m = a * b;
 
         for (int row = 0; row < 4; row++)
         {
             for (int col = 0; col < 4; col++)
             {
-                if (c(row, col) != 24.0f)
-                {
-                    throw "Matrix multiply matrix failed...";
-                }
+                assert(m(row, col) == 24.0f);
             }
         }
     }
@@ -60,107 +54,120 @@ class MatrixTest
     {
         Vector3 u = a * v;
 
-        if (u != Vector3(20.0f, 20.0f, 20.0f) || u.w != 20.0f)
-        {
-            throw "Matrix multiply vector failed...";
-        }
+        assert(u == Vector3(20.0f, 20.0f, 20.0f));
+        assert(u.w == 20.0f);
     }
 
     static void TestTranslate(Vector3 &v)
     {
         Matrix m = Matrix::Translate(v);
 
-        float valX = v.x;
-        float valY = v.y;
-        float valZ = v.z;
-
-        bool row0 = m(0, 0) != 1.0f || m(0, 1) != 0.0f || m(0, 2) != 0.0f || m(0, 3) != 0.0f;
-        bool row1 = m(1, 0) != 0.0f || m(1, 1) != 1.0f || m(1, 2) != 0.0f || m(1, 3) != 0.0f;
-        bool row2 = m(2, 0) != 0.0f || m(2, 1) != 0.0f || m(2, 2) != 1.0f || m(2, 3) != 0.0f;
-        bool row3 = m(3, 0) != valX || m(3, 1) != valY || m(3, 2) != valZ || m(3, 3) != 1.0f;
-
-        if (row0 || row1 || row2 || row3)
-        {
-            throw "Matrix translate failed...";
-        }
+        assert(m(0, 0) == 1.0f);
+        assert(m(0, 1) == 0.0f);
+        assert(m(0, 2) == 0.0f);
+        assert(m(0, 3) == 0.0f);
+        assert(m(1, 0) == 0.0f);
+        assert(m(1, 1) == 1.0f);
+        assert(m(1, 2) == 0.0f);
+        assert(m(1, 3) == 0.0f);
+        assert(m(2, 0) == 0.0f);
+        assert(m(2, 1) == 0.0f);
+        assert(m(2, 2) == 1.0f);
+        assert(m(2, 3) == 0.0f);
+        assert(m(3, 0) == v.x);
+        assert(m(3, 1) == v.y);
+        assert(m(3, 2) == v.z);
+        assert(m(3, 3) == 1.0f);
     }
 
-    static void TestRotateX(float& n)
+    static void TestRotateX(float &n)
     {
         Matrix m = Matrix::RotateX(n);
 
-        float valA = cosf(n);
-        float valB = sinf(n);
-        float valC = -sinf(n);
-        float valD = cosf(n);
-
-        bool row0 = m(0, 0) != 1.0f || m(0, 1) != 0.0f || m(0, 2) != 0.0f || m(0, 3) != 0.0f;
-        bool row1 = m(1, 0) != 0.0f || m(1, 1) != valA || m(1, 2) != valB || m(1, 3) != 0.0f;
-        bool row2 = m(2, 0) != 0.0f || m(2, 1) != valC || m(2, 2) != valD || m(2, 3) != 0.0f;
-        bool row3 = m(3, 0) != 0.0f || m(3, 1) != 0.0f || m(3, 2) != 0.0f || m(3, 3) != 1.0f;
-
-        if (row0 || row1 || row2 || row3)
-        {
-            throw "Matrix rotate X failed...";
-        }
+        assert(m(0, 0) == 1.0f);
+        assert(m(0, 1) == 0.0f);
+        assert(m(0, 2) == 0.0f);
+        assert(m(0, 3) == 0.0f);
+        assert(m(1, 0) == 0.0f);
+        assert(m(1, 1) == cosf(n));
+        assert(m(1, 2) == sinf(n));
+        assert(m(1, 3) == 0.0f);
+        assert(m(2, 0) == 0.0f);
+        assert(m(2, 1) == -sinf(n));
+        assert(m(2, 2) == cosf(n));
+        assert(m(2, 3) == 0.0f);
+        assert(m(3, 0) == 0.0f);
+        assert(m(3, 1) == 0.0f);
+        assert(m(3, 2) == 0.0f);
+        assert(m(3, 3) == 1.0f);
     }
 
     static void TestRotateY(float &n)
     {
         Matrix m = Matrix::RotateY(n);
 
-        float valA = cosf(n);
-        float valB = -sinf(n);
-        float valC = sinf(n);
-        float valD = cosf(n);
-
-        bool row0 = m(0, 0) != valA || m(0, 1) != 0.0f || m(0, 2) != valB || m(0, 3) != 0.0f;
-        bool row1 = m(1, 0) != 0.0f || m(1, 1) != 1.0f || m(1, 2) != 0.0f || m(1, 3) != 0.0f;
-        bool row2 = m(2, 0) != valC || m(2, 1) != 0.0f || m(2, 2) != valD || m(2, 3) != 0.0f;
-        bool row3 = m(3, 0) != 0.0f || m(3, 1) != 0.0f || m(3, 2) != 0.0f || m(3, 3) != 1.0f;
-
-        if (row0 || row1 || row2 || row3)
-        {
-            throw "Matrix rotate Y failed...";
-        }
+        assert(m(0, 0) == cosf(n));
+        assert(m(0, 1) == 0.0f);
+        assert(m(0, 2) == -sinf(n));
+        assert(m(0, 3) == 0.0f);
+        assert(m(1, 0) == 0.0f);
+        assert(m(1, 1) == 1.0f);
+        assert(m(1, 2) == 0.0f);
+        assert(m(1, 3) == 0.0f);
+        assert(m(2, 0) == sinf(n));
+        assert(m(2, 1) == 0.0f);
+        assert(m(2, 2) == cosf(n));
+        assert(m(2, 3) == 0.0f);
+        assert(m(3, 0) == 0.0f);
+        assert(m(3, 1) == 0.0f);
+        assert(m(3, 2) == 0.0f);
+        assert(m(3, 3) == 1.0f);
     }
 
     static void TestRotateZ(float &n)
     {
         Matrix m = Matrix::RotateZ(n);
 
-        float valA = cosf(n);
-        float valB = sinf(n);
-        float valC = -sinf(n);
-        float valD = cosf(n);
-
-        bool row0 = m(0, 0) != valA || m(0, 1) != valB || m(0, 2) != 0.0f || m(0, 3) != 0.0f;
-        bool row1 = m(1, 0) != valC || m(1, 1) != valD || m(1, 2) != 0.0f || m(1, 3) != 0.0f;
-        bool row2 = m(2, 0) != 0.0f || m(2, 1) != 0.0f || m(2, 2) != 1.0f || m(2, 3) != 0.0f;
-        bool row3 = m(3, 0) != 0.0f || m(3, 1) != 0.0f || m(3, 2) != 0.0f || m(3, 3) != 1.0f;
-
-        if (row0 || row1 || row2 || row3)
-        {
-            throw "Matrix rotate Z failed...";
-        }
+        assert(m(0, 0) == cosf(n));
+        assert(m(0, 1) == sinf(n));
+        assert(m(0, 2) == 0.0f);
+        assert(m(0, 3) == 0.0f);
+        assert(m(1, 0) == -sinf(n));
+        assert(m(1, 1) == cosf(n));
+        assert(m(1, 2) == 0.0f);
+        assert(m(1, 3) == 0.0f);
+        assert(m(2, 0) == 0.0f);
+        assert(m(2, 1) == 0.0f);
+        assert(m(2, 2) == 1.0f);
+        assert(m(2, 3) == 0.0f);
+        assert(m(3, 0) == 0.0f);
+        assert(m(3, 1) == 0.0f);
+        assert(m(3, 2) == 0.0f);
+        assert(m(3, 3) == 1.0f);
     }
 
     static void TestScale(float &n)
     {
-        Matrix m = Matrix::Scale(n * 1, n * 2, n * 3);
+        float x = n * 1;
+        float y = n * 2;
+        float z = n * 3;
+        Matrix m = Matrix::Scale(x, y, z);
 
-        float valX = n * 1;
-        float valY = n * 2;
-        float valZ = n * 3;
-
-        bool row0 = m(0, 0) != valX || m(0, 1) != 0.0f || m(0, 2) != 0.0f || m(0, 3) != 0.0f;
-        bool row1 = m(1, 0) != 0.0f || m(1, 1) != valY || m(1, 2) != 0.0f || m(1, 3) != 0.0f;
-        bool row2 = m(2, 0) != 0.0f || m(2, 1) != 0.0f || m(2, 2) != valZ || m(2, 3) != 0.0f;
-        bool row3 = m(3, 0) != 0.0f || m(3, 1) != 0.0f || m(3, 2) != 0.0f || m(3, 3) != 1.0f;
-
-        if (row0 || row1 || row2 || row3)
-        {
-            throw "Matrix scale failed...";
-        }
+        assert(m(0, 0) == x);
+        assert(m(0, 1) == 0.0f);
+        assert(m(0, 2) == 0.0f);
+        assert(m(0, 3) == 0.0f);
+        assert(m(1, 0) == 0.0f);
+        assert(m(1, 1) == y);
+        assert(m(1, 2) == 0.0f);
+        assert(m(1, 3) == 0.0f);
+        assert(m(2, 0) == 0.0f);
+        assert(m(2, 1) == 0.0f);
+        assert(m(2, 2) == z);
+        assert(m(2, 3) == 0.0f);
+        assert(m(3, 0) == 0.0f);
+        assert(m(3, 1) == 0.0f);
+        assert(m(3, 2) == 0.0f);
+        assert(m(3, 3) == 1.0f);
     }
 };

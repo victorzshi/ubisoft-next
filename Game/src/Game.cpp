@@ -5,20 +5,11 @@
 #include "Scene/Scene.h"
 
 Scene scene;
-std::string tests;
 
 void Init()
 {
-    try
-    {
-        Vector3Test::RunTests();
-        MatrixTest::RunTests();
-        tests = "All tests passed!";
-    }
-    catch (const char *s)
-    {
-        tests = s;
-    }
+    Vector3Test::RunTests();
+    MatrixTest::RunTests();
     scene.Init();
 }
 
@@ -30,9 +21,6 @@ void Update(float deltaTime)
 void Render()
 {
     scene.Render();
-#ifdef _DEBUG
-    App::Print(10.0f, 100.0f, tests.c_str());
-#endif
 }
 
 void Shutdown()
