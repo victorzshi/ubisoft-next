@@ -8,6 +8,7 @@ class Pool
 {
   public:
     Pool();
+    virtual ~Pool() = default;
 
     virtual void Init(Scene &scene) = 0;
 

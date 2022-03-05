@@ -4,10 +4,11 @@
 #include "Components/Physics/Physics.h"
 #include "Components/Transform/Transform.h"
 #include "Graphics/Camera/Camera.h"
+#include "Graphics/Rect/Rect.h"
 #include "Math/Matrix/Matrix.h"
-#include "Math/Rect/Rect.h"
 #include "Pools/Asteroids/Asteroids.h"
 #include "Pools/Grid/Grid.h"
+#include "Pools/Ships/Ships.h"
 
 class Scene
 {
@@ -32,7 +33,6 @@ class Scene
 
   private:
     // Unique ID
-    static const int MAX_OBJECTS = 1000;
     int m_id;
 
     // 3D graphics
@@ -44,13 +44,14 @@ class Scene
     std::vector<Triangle> m_triangles;
 
     // Component arrays
-    Mesh *m_mesh;
-    Physics *m_physics;
-    Transform *m_transform;
+    std::vector<Mesh> m_mesh;
+    std::vector<Physics> m_physics;
+    std::vector<Transform> m_transform;
 
     // Object pools
     Asteroids m_asteroids;
     Grid m_grid;
+    Ships m_ships;
 
     // Helper functions
     void SetViewport();
@@ -59,7 +60,7 @@ class Scene
     void SetViewMatrix();
     void SetProjectionMatrix();
 
-    void HandleInput();
+    void MoveCamera(float deltaTime);
     void UpdateTriangles();
     void RenderTriangles();
     void RenderBorder();

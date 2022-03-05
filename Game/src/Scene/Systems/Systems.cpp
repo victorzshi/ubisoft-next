@@ -4,6 +4,40 @@
 
 #include "Scene/Scene.h"
 
+void Systems::ProcessInput(Scene &scene, int id)
+{
+    Physics physics = scene.GetPhysics(id);
+
+    float deltaVelocity = 2.0f;
+
+    if (App::GetController().GetLeftThumbStickX() > 0.5f)
+    {
+        physics.velocity.x = deltaVelocity;
+    }
+    if (App::GetController().GetLeftThumbStickX() < -0.5f)
+    {
+        physics.velocity.x = -deltaVelocity;
+    }
+    if (App::GetController().GetLeftThumbStickX() == 0.0f)
+    {
+        physics.velocity.x = 0.0f;
+    }
+    if (App::GetController().GetLeftThumbStickY() > 0.5f)
+    {
+        physics.velocity.y = deltaVelocity;
+    }
+    if (App::GetController().GetLeftThumbStickY() < -0.5f)
+    {
+        physics.velocity.y = -deltaVelocity;
+    }
+    if (App::GetController().GetLeftThumbStickY() == 0.0f)
+    {
+        physics.velocity.y = 0.0f;
+    }
+
+    scene.SetPhysics(id, physics);
+}
+
 void Systems::UpdatePosition(Scene &scene, int id, float deltaTime)
 {
     Physics physics = scene.GetPhysics(id);
@@ -34,13 +68,14 @@ void Systems::UpdatePosition(Scene &scene, int id, float deltaTime)
     scene.SetTransform(id, transform);
 }
 
-void Systems::UpdateRotation(Scene &scene, int id, float deltaTime)
+void Systems::AddRotation(Scene &scene, int id, float deltaTime)
 {
+    Physics physics = scene.GetPhysics(id);
     Transform transform = scene.GetTransform(id);
 
-    transform.rotation.x += deltaTime / 100.0f;
-    transform.rotation.y += deltaTime / 100.0f;
-    transform.rotation.z += deltaTime / 100.0f;
+    transform.rotation.x += physics.velocity.x;
+    transform.rotation.y += physics.velocity.y;
+    transform.rotation.z += physics.velocity.z;
 
     transform.rotation.x = fmod(transform.rotation.x, 360.0f);
     transform.rotation.y = fmod(transform.rotation.y, 360.0f);

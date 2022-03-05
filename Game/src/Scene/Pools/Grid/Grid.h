@@ -8,8 +8,6 @@
 class Grid : public Pool
 {
   public:
-    const float WIDTH = 1.0f;
-    const float HEIGHT = 1.0f;
     const int ROWS = 8;
     const int COLUMNS = 14;
     const std::string FILE = "cube.obj";

@@ -8,6 +8,8 @@
 struct Mesh
 {
     std::vector<Triangle> triangles;
+    // TODO: Enable/disable backface culling.
+    // TODO: Support quads.
 
     Mesh();
 

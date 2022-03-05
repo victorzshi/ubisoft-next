@@ -7,7 +7,7 @@
 
 void Asteroids::Init(Scene &scene)
 {
-    Mesh mesh = Mesh::LoadFromObjectFile(file);
+    Mesh mesh = Mesh::LoadFromObjectFile(FILE);
 
     int index = 0;
     for (int i = 0; i < TOTAL; i++)
@@ -25,7 +25,6 @@ void Asteroids::Init(Scene &scene)
         transform.rotation.x = Random::GetFloat(0.0f, 360.0f);
         transform.rotation.y = Random::GetFloat(0.0f, 360.0f);
         transform.rotation.z = Random::GetFloat(0.0f, 360.0f);
-        transform.scaling = Vector3(0.5f, 0.5f, 0.5f);
         scene.SetTransform(id, transform);
 
         index = id;

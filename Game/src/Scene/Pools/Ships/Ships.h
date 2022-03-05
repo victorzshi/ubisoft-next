@@ -2,11 +2,11 @@
 
 #include "Scene/Pools/Pool.h"
 
-class Asteroids : public Pool
+class Ships : public Pool
 {
   public:
-    const int TOTAL = 10;
-    const std::string FILE = "sphere.obj";
+    const int TOTAL = 1;
+    const std::string FILE = "cone.obj";
 
     virtual void Init(Scene &scene) override;
 };
