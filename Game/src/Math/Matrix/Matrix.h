@@ -19,9 +19,7 @@ struct Matrix
 
     static Matrix Identity();
     static Matrix Translate(Vector3 &v);
-    static Matrix RotateX(float theta);
-    static Matrix RotateY(float theta);
-    static Matrix RotateZ(float theta);
+    static Matrix Rotate(Vector3 &v);
     static Matrix Scale(Vector3 &v);
     static Matrix Perspective(float distancePlane, float aspectRatio, float zNear, float zFar);
     static Matrix LookAt(Vector3 &from, Vector3 &to, Vector3 &up);

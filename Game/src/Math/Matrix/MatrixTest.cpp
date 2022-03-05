@@ -18,9 +18,7 @@ class MatrixTest
         TestMultiplyMatrix(a, b);
         TestMultiplyVector(a, v);
         TestTranslate(v);
-        TestRotateX(n);
-        TestRotateY(n);
-        TestRotateZ(n);
+        TestRotate(v);
         TestScale(v);
     }
 
@@ -80,73 +78,69 @@ class MatrixTest
         assert(m(3, 3) == 1.0f);
     }
 
-    static void TestRotateX(float &n)
+    static void TestRotate(Vector3 &v)
     {
-        Matrix m = Matrix::RotateX(n);
+        Matrix mX = Matrix::Rotate(Vector3(v.x, 0.0f, 0.0f));
+        Matrix mY = Matrix::Rotate(Vector3(0.0f, v.y, 0.0f));
+        Matrix mZ = Matrix::Rotate(Vector3(0.0f, 0.0f, v.z));
 
-        assert(m(0, 0) == 1.0f);
-        assert(m(0, 1) == 0.0f);
-        assert(m(0, 2) == 0.0f);
-        assert(m(0, 3) == 0.0f);
-        assert(m(1, 0) == 0.0f);
-        assert(m(1, 1) == cosf(n));
-        assert(m(1, 2) == sinf(n));
-        assert(m(1, 3) == 0.0f);
-        assert(m(2, 0) == 0.0f);
-        assert(m(2, 1) == -sinf(n));
-        assert(m(2, 2) == cosf(n));
-        assert(m(2, 3) == 0.0f);
-        assert(m(3, 0) == 0.0f);
-        assert(m(3, 1) == 0.0f);
-        assert(m(3, 2) == 0.0f);
-        assert(m(3, 3) == 1.0f);
+        float x = v.x * (PI / 180.0f);
+        float y = v.y * (PI / 180.0f);
+        float z = v.z * (PI / 180.0f);
+
+        assert(mX(0, 0) == 1.0f);
+        assert(mX(0, 1) == 0.0f);
+        assert(mX(0, 2) == 0.0f);
+        assert(mX(0, 3) == 0.0f);
+        assert(mX(1, 0) == 0.0f);
+        assert(mX(1, 1) == cosf(x));
+        assert(mX(1, 2) == -sinf(x));
+        assert(mX(1, 3) == 0.0f);
+        assert(mX(2, 0) == 0.0f);
+        assert(mX(2, 1) == sinf(x));
+        assert(mX(2, 2) == cosf(x));
+        assert(mX(2, 3) == 0.0f);
+        assert(mX(3, 0) == 0.0f);
+        assert(mX(3, 1) == 0.0f);
+        assert(mX(3, 2) == 0.0f);
+        assert(mX(3, 3) == 1.0f);
+
+        assert(mY(0, 0) == cosf(y));
+        assert(mY(0, 1) == 0.0f);
+        assert(mY(0, 2) == sinf(y));
+        assert(mY(0, 3) == 0.0f);
+        assert(mY(1, 0) == 0.0f);
+        assert(mY(1, 1) == 1.0f);
+        assert(mY(1, 2) == 0.0f);
+        assert(mY(1, 3) == 0.0f);
+        assert(mY(2, 0) == -sinf(y));
+        assert(mY(2, 1) == 0.0f);
+        assert(mY(2, 2) == cosf(y));
+        assert(mY(2, 3) == 0.0f);
+        assert(mY(3, 0) == 0.0f);
+        assert(mY(3, 1) == 0.0f);
+        assert(mY(3, 2) == 0.0f);
+        assert(mY(3, 3) == 1.0f);
+
+        assert(mZ(0, 0) == cosf(z));
+        assert(mZ(0, 1) == -sinf(z));
+        assert(mZ(0, 2) == 0.0f);
+        assert(mZ(0, 3) == 0.0f);
+        assert(mZ(1, 0) == sinf(z));
+        assert(mZ(1, 1) == cosf(z));
+        assert(mZ(1, 2) == 0.0f);
+        assert(mZ(1, 3) == 0.0f);
+        assert(mZ(2, 0) == 0.0f);
+        assert(mZ(2, 1) == 0.0f);
+        assert(mZ(2, 2) == 1.0f);
+        assert(mZ(2, 3) == 0.0f);
+        assert(mZ(3, 0) == 0.0f);
+        assert(mZ(3, 1) == 0.0f);
+        assert(mZ(3, 2) == 0.0f);
+        assert(mZ(3, 3) == 1.0f);
     }
 
-    static void TestRotateY(float &n)
-    {
-        Matrix m = Matrix::RotateY(n);
-
-        assert(m(0, 0) == cosf(n));
-        assert(m(0, 1) == 0.0f);
-        assert(m(0, 2) == -sinf(n));
-        assert(m(0, 3) == 0.0f);
-        assert(m(1, 0) == 0.0f);
-        assert(m(1, 1) == 1.0f);
-        assert(m(1, 2) == 0.0f);
-        assert(m(1, 3) == 0.0f);
-        assert(m(2, 0) == sinf(n));
-        assert(m(2, 1) == 0.0f);
-        assert(m(2, 2) == cosf(n));
-        assert(m(2, 3) == 0.0f);
-        assert(m(3, 0) == 0.0f);
-        assert(m(3, 1) == 0.0f);
-        assert(m(3, 2) == 0.0f);
-        assert(m(3, 3) == 1.0f);
-    }
-
-    static void TestRotateZ(float &n)
-    {
-        Matrix m = Matrix::RotateZ(n);
-
-        assert(m(0, 0) == cosf(n));
-        assert(m(0, 1) == sinf(n));
-        assert(m(0, 2) == 0.0f);
-        assert(m(0, 3) == 0.0f);
-        assert(m(1, 0) == -sinf(n));
-        assert(m(1, 1) == cosf(n));
-        assert(m(1, 2) == 0.0f);
-        assert(m(1, 3) == 0.0f);
-        assert(m(2, 0) == 0.0f);
-        assert(m(2, 1) == 0.0f);
-        assert(m(2, 2) == 1.0f);
-        assert(m(2, 3) == 0.0f);
-        assert(m(3, 0) == 0.0f);
-        assert(m(3, 1) == 0.0f);
-        assert(m(3, 2) == 0.0f);
-        assert(m(3, 3) == 1.0f);
-    }
-
-    static void TestScale(Vector3& v)
+    static void TestScale(Vector3 &v)
     {
         Matrix m = Matrix::Scale(v);
 

@@ -68,33 +68,35 @@ Matrix Matrix::Translate(Vector3 &v)
     return matrix;
 }
 
-Matrix Matrix::RotateX(float theta)
+Matrix Matrix::Rotate(Vector3 &v)
 {
-    Matrix matrix = Matrix::Identity();
-    matrix(1, 1) = cosf(theta);
-    matrix(1, 2) = sinf(theta);
-    matrix(2, 1) = -sinf(theta);
-    matrix(2, 2) = cosf(theta);
-    return matrix;
-}
+    float x = v.x * (PI / 180.0f);
+    float y = v.y * (PI / 180.0f);
+    float z = v.z * (PI / 180.0f);
+    float cX = cosf(x);
+    float cY = cosf(y);
+    float cZ = cosf(z);
+    float sX = sinf(x);
+    float sY = sinf(y);
+    float sZ = sinf(z);
 
-Matrix Matrix::RotateY(float theta)
-{
-    Matrix matrix = Matrix::Identity();
-    matrix(0, 0) = cosf(theta);
-    matrix(0, 2) = -sinf(theta);
-    matrix(2, 0) = sinf(theta);
-    matrix(2, 2) = cosf(theta);
-    return matrix;
-}
-
-Matrix Matrix::RotateZ(float theta)
-{
-    Matrix matrix = Matrix::Identity();
-    matrix(0, 0) = cosf(theta);
-    matrix(0, 1) = sinf(theta);
-    matrix(1, 0) = -sinf(theta);
-    matrix(1, 1) = cosf(theta);
+    Matrix matrix;
+    matrix(0, 0) = cY * cZ;
+    matrix(0, 1) = -cY * sZ;
+    matrix(0, 2) = sY;
+    matrix(0, 3) = 0.0f;
+    matrix(1, 0) = (sX * sY * cZ) + (cX * sZ);
+    matrix(1, 1) = -(sX * sY * sZ) + (cX * cZ);
+    matrix(1, 2) = -sX * cY;
+    matrix(1, 3) = 0.0f;
+    matrix(2, 0) = -(cX * sY * cZ) + (sX * sZ);
+    matrix(2, 1) = (cX * sY * sZ) + (sX * cZ);
+    matrix(2, 2) = cX * cY;
+    matrix(2, 3) = 0.0f;
+    matrix(3, 0) = 0.0f;
+    matrix(3, 1) = 0.0f;
+    matrix(3, 2) = 0.0f;
+    matrix(3, 3) = 1.0f;
     return matrix;
 }
 

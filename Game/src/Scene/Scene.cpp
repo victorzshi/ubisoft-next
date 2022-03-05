@@ -85,8 +85,7 @@ void Scene::SetCamera()
     m_camera.position = Vector3(0.0f, 0.0f, 0.0f);
     m_camera.facing = Vector3(0.0f, 0.0f, 1.0f);
     m_camera.up = Vector3(0.0f, 1.0f, 0.0f);
-    m_camera.yaw = 0.0f;
-    m_camera.pitch = 0.0f;
+    m_camera.rotation = Vector3(0.0f, 0.0f, 0.0f);
 }
 
 void Scene::SetWorldMatrix()
@@ -99,8 +98,7 @@ void Scene::SetWorldMatrix()
 
 void Scene::SetViewMatrix()
 {
-    Matrix rotate = Matrix::RotateX(m_camera.pitch) * Matrix::RotateY(m_camera.yaw);
-    Vector3 direction = rotate * m_camera.facing;
+    Vector3 direction = Matrix::Rotate(m_camera.rotation) * m_camera.facing;
     Vector3 from = m_camera.position;
     Vector3 to = m_camera.position + direction;
     Vector3 up = m_camera.up;
@@ -136,19 +134,19 @@ void Scene::HandleInput()
     }
     if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_UP, false))
     {
-        m_camera.pitch += 0.01f;
+        m_camera.rotation.x -= 0.5f;
     }
     if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_DOWN, false))
     {
-        m_camera.pitch -= 0.01f;
+        m_camera.rotation.x += 0.5f;
     }
     if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_RIGHT, false))
     {
-        m_camera.yaw += 0.01f;
+        m_camera.rotation.y -= 0.5f;
     }
     if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_LEFT, false))
     {
-        m_camera.yaw -= 0.01f;
+        m_camera.rotation.y += 0.5f;
     }
 }
 
@@ -171,9 +169,7 @@ void Scene::UpdateTriangles()
         // Apply local transform
         Transform transform = GetTransform(id);
         Matrix translate = Matrix::Translate(transform.position);
-        Matrix rotate = Matrix::RotateZ(transform.rotation.z);
-        rotate = rotate * Matrix::RotateY(transform.rotation.y);
-        rotate = rotate * Matrix::RotateX(transform.rotation.x);
+        Matrix rotate = Matrix::Rotate(transform.rotation);
         Matrix scale = Matrix::Scale(transform.scaling);
         Matrix local = scale * rotate * translate;
         for (auto &triangle : mesh.triangles)

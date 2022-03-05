@@ -4,8 +4,7 @@
 
 struct Camera
 {
-    Vector3 position, facing, up;
-    float yaw, pitch;
+    Vector3 position, rotation, facing, up;
 
     Camera();
 };
