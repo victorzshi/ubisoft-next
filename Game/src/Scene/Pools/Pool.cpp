@@ -8,23 +8,22 @@
 #include "Scene/Components/Transform/Transform.h"
 #include "Scene/Scene.h"
 
-Pool::Pool() : m_begin(0), m_size(0), m_end(0), m_scene(nullptr)
+Pool::Pool() : m_scene(nullptr), m_begin(0), m_size(0), m_end(0)
 {
 }
 
-size_t Pool::Begin()
+std::vector<size_t> Pool::GetActiveEntities()
 {
-    return m_begin;
-}
+    assert(m_end != 0);
 
-size_t Pool::Size()
-{
-    return m_size;
-}
+    std::vector<size_t> active;
 
-size_t Pool::End()
-{
-    return m_end;
+    for (size_t id = m_begin; id < m_size; id++)
+    {
+        active.push_back(id);
+    }
+
+    return active;
 }
 
 bool Pool::Activate(int index)
@@ -58,6 +57,21 @@ bool Pool::Deactivate(int index)
 void Pool::SetScene(Scene *scene)
 {
     m_scene = scene;
+}
+
+void Pool::SetBegin(size_t index)
+{
+    m_begin = index;
+}
+
+void Pool::SetSize(size_t index)
+{
+    m_size = index;
+}
+
+void Pool::SetEnd(size_t index)
+{
+    m_end = index;
 }
 
 void Pool::MemorySwap(int index)

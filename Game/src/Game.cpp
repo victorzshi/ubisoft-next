@@ -25,6 +25,5 @@ void Render()
 
 void Shutdown()
 {
-    // TODO: This is causing a crash?
-    // scene.Shutdown();
+    scene.Shutdown();
 }

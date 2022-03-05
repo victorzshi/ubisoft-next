@@ -142,24 +142,27 @@ void Scene::HandleInput()
 
 void Scene::UpdateTriangles()
 {
-
     m_triangles.clear();
-    for (int i = 0; i < MAX_ENTITIES; i++)
-    {
-        Mesh mesh = m_meshes[i];
 
+    std::vector<size_t> active = m_asteroids.GetActiveEntities();
+
+    for (auto &id : active)
+    {
+        Mesh mesh = m_meshes[id];
+
+        // Early exit
         if (mesh.triangles.empty())
         {
             return;
         }
 
         // Apply local transform
-        Matrix translate = Matrix::Translate(m_transforms[i].position);
+        Matrix translate = Matrix::Translate(m_transforms[id].position);
         for (auto &triangle : mesh.triangles)
         {
-            for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 3; i++)
             {
-                triangle.point[j] = translate * triangle.point[j];
+                triangle.point[i] = translate * triangle.point[i];
             }
         }
 
