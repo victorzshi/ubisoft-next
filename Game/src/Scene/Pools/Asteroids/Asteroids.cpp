@@ -7,7 +7,7 @@
 
 void Asteroids::Init(Scene &scene)
 {
-    Mesh mesh = Mesh::LoadFromObjectFile(file);
+    Mesh mesh = Mesh::LoadFromObjectFile(FILE);
 
     int index = 0;
     for (int i = 0; i < TOTAL; i++)

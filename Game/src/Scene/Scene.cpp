@@ -21,16 +21,17 @@ void Scene::Init()
 
     m_asteroids.Init(*this);
     m_grid.Init(*this);
+    m_ships.Init(*this);
 }
 
 void Scene::Shutdown()
 {
-    delete[] m_mesh;
-    delete[] m_physics;
-    delete[] m_transform;
-    m_mesh = nullptr;
-    m_physics = nullptr;
-    m_transform = nullptr;
+    // delete[] m_mesh;
+    // delete[] m_physics;
+    // delete[] m_transform;
+    // m_mesh = nullptr;
+    // m_physics = nullptr;
+    // m_transform = nullptr;
 }
 
 Mesh Scene::GetMesh(int id) const
@@ -69,6 +70,9 @@ void Scene::SetTransform(int id, Transform transform)
 int Scene::CreateId()
 {
     assert(m_id < MAX_OBJECTS);
+
+    // Add component to every array.
+
     m_id++;
     return m_id - 1; // Array index starts at 0
 }
@@ -185,6 +189,10 @@ void Scene::UpdateTriangles()
         ids.push_back(id);
     }
     for (auto &id : m_grid.GetIds())
+    {
+        ids.push_back(id);
+    }
+    for (auto &id : m_ships.GetIds())
     {
         ids.push_back(id);
     }

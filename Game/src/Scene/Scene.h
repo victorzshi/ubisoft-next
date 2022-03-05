@@ -8,6 +8,7 @@
 #include "Math/Matrix/Matrix.h"
 #include "Pools/Asteroids/Asteroids.h"
 #include "Pools/Grid/Grid.h"
+#include "Pools/Ships/Ships.h"
 
 class Scene
 {
@@ -51,6 +52,7 @@ class Scene
     // Object pools
     Asteroids m_asteroids;
     Grid m_grid;
+    Ships m_ships;
 
     // Helper functions
     void SetViewport();
