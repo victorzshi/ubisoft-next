@@ -4,8 +4,8 @@
 #include "Components/Physics/Physics.h"
 #include "Components/Transform/Transform.h"
 #include "Graphics/Camera/Camera.h"
+#include "Graphics/Rect/Rect.h"
 #include "Math/Matrix/Matrix.h"
-#include "Math/Rect/Rect.h"
 #include "Pools/Asteroids/Asteroids.h"
 #include "Pools/Grid/Grid.h"
 

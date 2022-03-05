@@ -25,7 +25,6 @@ void Asteroids::Init(Scene &scene)
         transform.rotation.x = Random::GetFloat(0.0f, 360.0f);
         transform.rotation.y = Random::GetFloat(0.0f, 360.0f);
         transform.rotation.z = Random::GetFloat(0.0f, 360.0f);
-        transform.scaling = Vector3(0.5f, 0.5f, 0.5f);
         scene.SetTransform(id, transform);
 
         index = id;

@@ -18,7 +18,6 @@ void Grid::Init(Scene &scene)
 
         Transform transform;
         transform.position = position;
-        transform.scaling = Vector3(WIDTH, HEIGHT, 0.001f);
         scene.SetTransform(id, transform);
 
         index = id;
@@ -32,6 +31,10 @@ void Grid::Init(Scene &scene)
 
 std::vector<Vector3> Grid::CreatePositions()
 {
+    // Cube model should be unit cube.
+    float WIDTH = 1.0f;
+    float HEIGHT = 1.0f;
+
     float gridWidth = WIDTH * COLUMNS;
     float gridHeight = HEIGHT * ROWS;
 
