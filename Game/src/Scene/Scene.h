@@ -60,7 +60,7 @@ class Scene
     void SetViewMatrix();
     void SetProjectionMatrix();
 
-    void HandleInput();
+    void MoveCamera(float deltaTime);
     void UpdateTriangles();
     void RenderTriangles();
     void RenderBorder();

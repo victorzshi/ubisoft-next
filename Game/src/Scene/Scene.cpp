@@ -70,16 +70,29 @@ int Scene::CreateId()
 
 void Scene::Update(float deltaTime)
 {
-    HandleInput();
+    MoveCamera(deltaTime);
 
-    std::vector<int> ids = m_asteroids.GetIds();
+    std::vector<int> ids = m_ships.GetIds();
+    for (auto id : ids)
+    {
+        Systems::ProcessInput(*this, id);
+        Systems::UpdatePosition(*this, id, deltaTime);
+    }
+
+    ids = m_asteroids.GetIds();
     for (auto id : ids)
     {
         Systems::UpdatePosition(*this, id, deltaTime);
-        Systems::UpdateRotation(*this, id, deltaTime);
+        Systems::AddRotation(*this, id, deltaTime);
     }
 
-    SetViewMatrix();
+    // Look at ship
+    int id = m_ships.GetIds().front();
+    Vector3 from = m_camera.position;
+    Vector3 to = GetTransform(id).position;
+    Vector3 up = m_camera.up;
+    m_view = Matrix::LookAt(from, to, up);
+
     UpdateTriangles();
 }
 
@@ -102,7 +115,7 @@ void Scene::SetViewport()
 
 void Scene::SetCamera()
 {
-    m_camera.position = Vector3(0.0f, 0.0f, 0.0f);
+    m_camera.position = Vector3(0.0f, 0.0f, -20.0f);
     m_camera.facing = Vector3(0.0f, 0.0f, 1.0f);
     m_camera.up = Vector3(0.0f, 1.0f, 0.0f);
     m_camera.rotation = Vector3(0.0f, 0.0f, 0.0f);
@@ -112,14 +125,14 @@ void Scene::SetWorldMatrix()
 {
     Matrix scale = Matrix::Scale(Vector3(1.0f, 1.0f, 1.0f));
     Matrix rotate = Matrix::Identity();
-    Matrix translate = Matrix::Translate(Vector3(0.0f, 0.0f, 20.0f));
+    Matrix translate = Matrix::Translate(Vector3(0.0f, 0.0f, 0.0f));
     m_world = scale * rotate * translate;
 }
 
 void Scene::SetViewMatrix()
 {
-    Vector3 direction = Matrix::Rotate(m_camera.rotation) * m_camera.facing;
     Vector3 from = m_camera.position;
+    Vector3 direction = Matrix::Rotate(m_camera.rotation) * m_camera.facing;
     Vector3 to = m_camera.position + direction;
     Vector3 up = m_camera.up;
     m_view = Matrix::LookAt(from, to, up);
@@ -134,39 +147,33 @@ void Scene::SetProjectionMatrix()
     m_projection = Matrix::Perspective(fov, aspectRatio, zNear, zFar);
 }
 
-void Scene::HandleInput()
+void Scene::MoveCamera(float deltaTime)
 {
-    if (App::GetController().GetLeftThumbStickX() > 0.5f)
+    float deltaVelocity = deltaTime / 100.0f;
+
+    if (App::IsKeyPressed(VK_NUMPAD6))
     {
-        m_camera.position.x += 0.05f;
+        m_camera.position.x += deltaVelocity;
     }
-    if (App::GetController().GetLeftThumbStickX() < -0.5f)
+    if (App::IsKeyPressed(VK_NUMPAD4))
     {
-        m_camera.position.x -= 0.05f;
+        m_camera.position.x -= deltaVelocity;
     }
-    if (App::GetController().GetLeftThumbStickY() > 0.5f)
+    if (App::IsKeyPressed(VK_NUMPAD8))
     {
-        m_camera.position.z -= 0.05f;
+        m_camera.position.z += deltaVelocity;
     }
-    if (App::GetController().GetLeftThumbStickY() < -0.5f)
+    if (App::IsKeyPressed(VK_NUMPAD2))
     {
-        m_camera.position.z += 0.05f;
+        m_camera.position.z -= deltaVelocity;
     }
-    if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_UP, false))
+    if (App::IsKeyPressed(VK_NUMPAD7))
     {
-        m_camera.rotation.x -= 0.5f;
+        m_camera.position.y += deltaVelocity;
     }
-    if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_DOWN, false))
+    if (App::IsKeyPressed(VK_NUMPAD9))
     {
-        m_camera.rotation.x += 0.5f;
-    }
-    if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_RIGHT, false))
-    {
-        m_camera.rotation.y -= 0.5f;
-    }
-    if (App::GetController().CheckButton(XINPUT_GAMEPAD_DPAD_LEFT, false))
-    {
-        m_camera.rotation.y += 0.5f;
+        m_camera.position.y -= deltaVelocity;
     }
 }
 
