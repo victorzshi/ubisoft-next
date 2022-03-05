@@ -1,10 +1,9 @@
 #pragma once
 
+// 3D basis plus extra info.
 struct Vector3
 {
-    // 3D basis, plus extra info
-    float x, y, z;
-    float w = 1.0f;
+    float x, y, z, w;
 
     Vector3();
 

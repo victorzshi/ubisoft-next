@@ -59,7 +59,7 @@ Matrix Matrix::Identity()
     return matrix;
 }
 
-Matrix Matrix::Translate(Vector3 v)
+Matrix Matrix::Translate(Vector3 &v)
 {
     Matrix matrix = Matrix::Identity();
     matrix(3, 0) = v.x;
@@ -68,42 +68,44 @@ Matrix Matrix::Translate(Vector3 v)
     return matrix;
 }
 
-Matrix Matrix::RotateX(float theta)
+Matrix Matrix::Rotate(Vector3 &v)
 {
-    Matrix matrix = Matrix::Identity();
-    matrix(1, 1) = cosf(theta);
-    matrix(1, 2) = sinf(theta);
-    matrix(2, 1) = -sinf(theta);
-    matrix(2, 2) = cosf(theta);
+    float x = v.x * (PI / 180.0f);
+    float y = v.y * (PI / 180.0f);
+    float z = v.z * (PI / 180.0f);
+    float cX = cosf(x);
+    float cY = cosf(y);
+    float cZ = cosf(z);
+    float sX = sinf(x);
+    float sY = sinf(y);
+    float sZ = sinf(z);
+
+    Matrix matrix;
+    matrix(0, 0) = cY * cZ;
+    matrix(0, 1) = -cY * sZ;
+    matrix(0, 2) = sY;
+    matrix(0, 3) = 0.0f;
+    matrix(1, 0) = (sX * sY * cZ) + (cX * sZ);
+    matrix(1, 1) = -(sX * sY * sZ) + (cX * cZ);
+    matrix(1, 2) = -sX * cY;
+    matrix(1, 3) = 0.0f;
+    matrix(2, 0) = -(cX * sY * cZ) + (sX * sZ);
+    matrix(2, 1) = (cX * sY * sZ) + (sX * cZ);
+    matrix(2, 2) = cX * cY;
+    matrix(2, 3) = 0.0f;
+    matrix(3, 0) = 0.0f;
+    matrix(3, 1) = 0.0f;
+    matrix(3, 2) = 0.0f;
+    matrix(3, 3) = 1.0f;
     return matrix;
 }
 
-Matrix Matrix::RotateY(float theta)
+Matrix Matrix::Scale(Vector3 &v)
 {
     Matrix matrix = Matrix::Identity();
-    matrix(0, 0) = cosf(theta);
-    matrix(0, 2) = -sinf(theta);
-    matrix(2, 0) = sinf(theta);
-    matrix(2, 2) = cosf(theta);
-    return matrix;
-}
-
-Matrix Matrix::RotateZ(float theta)
-{
-    Matrix matrix = Matrix::Identity();
-    matrix(0, 0) = cosf(theta);
-    matrix(0, 1) = sinf(theta);
-    matrix(1, 0) = -sinf(theta);
-    matrix(1, 1) = cosf(theta);
-    return matrix;
-}
-
-Matrix Matrix::Scale(float x, float y, float z)
-{
-    Matrix matrix = Matrix::Identity();
-    matrix(0, 0) = x;
-    matrix(1, 1) = y;
-    matrix(2, 2) = z;
+    matrix(0, 0) = v.x;
+    matrix(1, 1) = v.y;
+    matrix(2, 2) = v.z;
     return matrix;
 }
 
@@ -123,11 +125,11 @@ Matrix Matrix::Perspective(float fov, float aspectRatio, float zNear, float zFar
     return matrix;
 }
 
-Matrix Matrix::LookAt(Vector3 &position, Vector3 &target, Vector3 &up)
+Matrix Matrix::LookAt(Vector3 &from, Vector3 &to, Vector3 &up)
 {
-    Vector3 zAxis = (target - position).Normalize(); // Forward
-    Vector3 xAxis = zAxis.Cross(up).Normalize();     // Right
-    Vector3 yAxis = xAxis.Cross(zAxis);              // Up
+    Vector3 zAxis = (to - from).Normalize();     // Forward
+    Vector3 xAxis = zAxis.Cross(up).Normalize(); // Right
+    Vector3 yAxis = xAxis.Cross(zAxis);          // Up
 
     Matrix matrix;
     matrix(0, 0) = xAxis.x;
@@ -142,9 +144,9 @@ Matrix Matrix::LookAt(Vector3 &position, Vector3 &target, Vector3 &up)
     matrix(2, 1) = yAxis.z;
     matrix(2, 2) = zAxis.z;
     matrix(2, 3) = 0.0f;
-    matrix(3, 0) = -xAxis.Dot(position);
-    matrix(3, 1) = -yAxis.Dot(position);
-    matrix(3, 2) = -zAxis.Dot(position);
+    matrix(3, 0) = -xAxis.Dot(from);
+    matrix(3, 1) = -yAxis.Dot(from);
+    matrix(3, 2) = -zAxis.Dot(from);
     matrix(3, 3) = 1.0f;
     return matrix;
 }

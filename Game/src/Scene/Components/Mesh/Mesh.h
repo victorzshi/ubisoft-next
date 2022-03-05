@@ -9,5 +9,7 @@ struct Mesh
 {
     std::vector<Triangle> triangles;
 
+    Mesh();
+
     static Mesh LoadFromObjectFile(std::string file);
 };
