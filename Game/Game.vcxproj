@@ -195,10 +195,13 @@
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="src\Graphics\Box\Box.h" />
     <ClInclude Include="src\Graphics\Camera\Camera.h" />
-    <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
+    <ClInclude Include="src\Scene\Components\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\Triangle\Triangle.h" />
     <ClInclude Include="src\Math\Matrix\Matrix.h" />
     <ClInclude Include="src\Math\Vector3\Vector3.h" />
+    <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
+    <ClInclude Include="src\Scene\Pools\Asteroids\Asteroids.h" />
+    <ClInclude Include="src\Scene\Pools\Pool.h" />
     <ClInclude Include="src\Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
@@ -217,11 +220,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Graphics\Camera\Camera.cpp" />
-    <ClCompile Include="src\Graphics\Mesh\Mesh.cpp" />
+    <ClCompile Include="src\Scene\Components\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Triangle\Triangle.cpp" />
     <ClCompile Include="src\Math\Matrix\Matrix.cpp" />
     <ClCompile Include="src\Math\Matrix\MatrixTest.cpp" />
     <ClCompile Include="src\Math\Vector3\Vector3.cpp" />
+    <ClCompile Include="src\Scene\Components\Transform\Transform.cpp" />
+    <ClCompile Include="src\Scene\Pools\Asteroids\Asteroids.cpp" />
+    <ClCompile Include="src\Scene\Pools\Pool.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Math\Vector3\Vector3Test.cpp" />
   </ItemGroup>

@@ -2,14 +2,10 @@
 
 #include "Scene.h"
 
-Scene::Scene()
+Scene::Scene() : m_entity(0)
 {
-    // TODO: Allocate component arrays
-}
-
-Scene::~Scene()
-{
-    // TODO: Clean up stuff
+    m_meshes = new Mesh[MAX_ENTITIES];
+    m_transforms = new Transform[MAX_ENTITIES];
 }
 
 void Scene::Init()
@@ -20,7 +16,32 @@ void Scene::Init()
     SetViewMatrix();
     SetProjectionMatrix();
 
-    m_mesh = Mesh::LoadFromObjectFile("monkey.obj");
+    m_asteroids.Init(*this);
+}
+
+void Scene::Shutdown()
+{
+    delete[] m_meshes;
+    delete[] m_transforms;
+    m_meshes = nullptr;
+    m_transforms = nullptr;
+}
+
+Mesh *Scene::GetMeshes()
+{
+    return m_meshes;
+}
+
+Transform *Scene::GetTransforms()
+{
+    return m_transforms;
+}
+
+size_t Scene::CreateEntity()
+{
+    assert(m_entity < MAX_ENTITIES);
+    m_entity++;
+    return m_entity - 1; // Array index starts at 0
 }
 
 void Scene::Update(float deltaTime)
@@ -34,6 +55,7 @@ void Scene::Render()
 {
 #ifdef _DEBUG
     RenderBorder();
+    // TODO: Draw grid for visualizing 3D space
 #endif
     RenderTriangles();
 }
@@ -122,55 +144,73 @@ void Scene::UpdateTriangles()
 {
 
     m_triangles.clear();
-    for (auto &triangle : m_mesh.triangles)
+    for (int i = 0; i < MAX_ENTITIES; i++)
     {
-        Triangle transformed;
+        Mesh mesh = m_meshes[i];
 
-        // World transform
-        for (int i = 0; i < 3; i++)
+        if (mesh.triangles.empty())
         {
-            transformed.point[i] = m_world * triangle.point[i];
+            return;
         }
 
-        // Backface culling
-        Vector3 a = transformed.point[1] - transformed.point[0];
-        Vector3 b = transformed.point[2] - transformed.point[0];
-        Vector3 normal = a.Cross(b).Normalize();
-
-        if (normal.Dot((transformed.point[0] - m_camera.position).Normalize()) < 0.0f)
+        // Apply local transform
+        Matrix translate = Matrix::Translate(m_transforms[i].position);
+        for (auto &triangle : mesh.triangles)
         {
-            Triangle visible;
+            for (int j = 0; j < 3; j++)
+            {
+                triangle.point[j] = translate * triangle.point[j];
+            }
+        }
 
-            // Convert world space to view space
+        for (auto &triangle : mesh.triangles)
+        {
+            Triangle transformed;
+
+            // World transform
             for (int i = 0; i < 3; i++)
             {
-                visible.point[i] = m_view * transformed.point[i];
+                transformed.point[i] = m_world * triangle.point[i];
             }
 
-            // Project from 3D to 2D
-            for (int i = 0; i < 3; i++)
+            // Backface culling
+            Vector3 a = transformed.point[1] - transformed.point[0];
+            Vector3 b = transformed.point[2] - transformed.point[0];
+            Vector3 normal = a.Cross(b).Normalize();
+
+            if (normal.Dot((transformed.point[0] - m_camera.position).Normalize()) < 0.0f)
             {
-                visible.point[i] = m_projection * visible.point[i];
-            }
+                // Convert world space to view space
+                for (int i = 0; i < 3; i++)
+                {
+                    transformed.point[i] = m_view * transformed.point[i];
+                }
 
-            // Normalize with reciprocal divide
-            for (int i = 0; i < 3; i++)
-            {
-                float w = visible.point[i].w;
-                assert(w != 0.0f);
-                visible.point[i] /= w;
-            }
+                // Project from 3D to 2D
+                for (int i = 0; i < 3; i++)
+                {
+                    transformed.point[i] = m_projection * transformed.point[i];
+                }
 
-            // Offset into normalized space
-            Vector3 offset = Vector3(1.0f, 1.0f, 0.0f);
-            for (int i = 0; i < 3; i++)
-            {
-                visible.point[i] += offset;
-                visible.point[i].x *= m_viewport.w * 0.5f;
-                visible.point[i].y *= m_viewport.h * 0.5f;
-            }
+                // Normalize with reciprocal divide
+                for (int i = 0; i < 3; i++)
+                {
+                    float w = transformed.point[i].w;
+                    assert(w != 0.0f);
+                    transformed.point[i] /= w;
+                }
 
-            m_triangles.push_back(visible);
+                // Offset into normalized space
+                Vector3 offset = Vector3(1.0f, 1.0f, 0.0f);
+                for (int i = 0; i < 3; i++)
+                {
+                    transformed.point[i] += offset;
+                    transformed.point[i].x *= m_viewport.w * 0.5f;
+                    transformed.point[i].y *= m_viewport.h * 0.5f;
+                }
+
+                m_triangles.push_back(transformed);
+            }
         }
     }
 }
