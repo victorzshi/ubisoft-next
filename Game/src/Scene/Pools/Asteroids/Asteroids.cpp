@@ -2,6 +2,7 @@
 
 #include "Asteroids.h"
 
+#include "Math/Random/Random.h"
 #include "Scene/Scene.h"
 
 void Asteroids::Init(Scene &scene)
@@ -13,9 +14,9 @@ void Asteroids::Init(Scene &scene)
     {
         int id = scene.CreateId();
 
-        // Need to generate random position
         Transform transform;
-        transform.position = Vector3(0.0f, (float)i, 0.0f);
+        transform.position.x = Random::GetFloat(-5.0f, 5.0f);
+        transform.position.y = Random::GetFloat(-5.0f, 5.0f);
         scene.SetTransform(id, transform);
 
         scene.SetMesh(id, mesh);

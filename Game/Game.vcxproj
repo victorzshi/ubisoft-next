@@ -195,6 +195,7 @@
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="src\Graphics\Box\Box.h" />
     <ClInclude Include="src\Graphics\Camera\Camera.h" />
+    <ClInclude Include="src\Math\Random\Random.h" />
     <ClInclude Include="src\Scene\Components\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\Triangle\Triangle.h" />
     <ClInclude Include="src\Math\Matrix\Matrix.h" />
@@ -221,6 +222,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Graphics\Camera\Camera.cpp" />
+    <ClCompile Include="src\Math\Random\Random.cpp" />
     <ClCompile Include="src\Scene\Components\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Triangle\Triangle.cpp" />
     <ClCompile Include="src\Math\Matrix\Matrix.cpp" />
