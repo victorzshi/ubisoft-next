@@ -33,7 +33,6 @@ class Scene
 
   private:
     // Unique ID
-    static const int MAX_OBJECTS = 1000;
     int m_id;
 
     // 3D graphics
@@ -45,9 +44,9 @@ class Scene
     std::vector<Triangle> m_triangles;
 
     // Component arrays
-    Mesh *m_mesh;
-    Physics *m_physics;
-    Transform *m_transform;
+    std::vector<Mesh> m_mesh;
+    std::vector<Physics> m_physics;
+    std::vector<Transform> m_transform;
 
     // Object pools
     Asteroids m_asteroids;

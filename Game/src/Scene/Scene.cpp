@@ -6,9 +6,6 @@
 
 Scene::Scene() : m_id(0)
 {
-    m_mesh = new Mesh[MAX_OBJECTS];
-    m_physics = new Physics[MAX_OBJECTS];
-    m_transform = new Transform[MAX_OBJECTS];
 }
 
 void Scene::Init()
@@ -26,12 +23,6 @@ void Scene::Init()
 
 void Scene::Shutdown()
 {
-    // delete[] m_mesh;
-    // delete[] m_physics;
-    // delete[] m_transform;
-    // m_mesh = nullptr;
-    // m_physics = nullptr;
-    // m_transform = nullptr;
 }
 
 Mesh Scene::GetMesh(int id) const
@@ -69,9 +60,9 @@ void Scene::SetTransform(int id, Transform transform)
 
 int Scene::CreateId()
 {
-    assert(m_id < MAX_OBJECTS);
-
-    // Add component to every array.
+    m_mesh.push_back(Mesh());
+    m_physics.push_back(Physics());
+    m_transform.push_back(Transform());
 
     m_id++;
     return m_id - 1; // Array index starts at 0
