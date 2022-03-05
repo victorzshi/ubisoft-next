@@ -15,17 +15,21 @@ class Scene
     void Init();
     void Shutdown();
 
-    Mesh *GetMeshes();
-    Transform *GetTransforms();
+    Mesh GetMesh(int id) const;
+    Transform GetTransform(int id) const;
 
-    size_t CreateEntity();
+    void SetMesh(int id, Mesh mesh);
+    void SetTransform(int id, Transform transform);
+
+    int CreateId();
 
     void Update(float deltaTime);
     void Render();
 
   private:
-    static const size_t MAX_ENTITIES = 10;
-    size_t m_entity;
+    // Unique ID
+    static const int MAX_OBJECTS = 10;
+    int m_id;
 
     // 3D graphics
     Box m_viewport;
@@ -36,8 +40,8 @@ class Scene
     std::vector<Triangle> m_triangles;
 
     // Component arrays
-    Mesh *m_meshes;
-    Transform *m_transforms;
+    Mesh *m_mesh;
+    Transform *m_transform;
 
     // Object pools
     Asteroids m_asteroids;

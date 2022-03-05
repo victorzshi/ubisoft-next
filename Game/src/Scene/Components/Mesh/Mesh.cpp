@@ -6,6 +6,10 @@
 #include <iostream>
 #include <strstream>
 
+Mesh::Mesh()
+{
+}
+
 Mesh Mesh::LoadFromObjectFile(std::string file)
 {
     std::string path = "data/objects/" + file;

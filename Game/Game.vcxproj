@@ -199,6 +199,7 @@
     <ClInclude Include="src\Graphics\Triangle\Triangle.h" />
     <ClInclude Include="src\Math\Matrix\Matrix.h" />
     <ClInclude Include="src\Math\Vector3\Vector3.h" />
+    <ClInclude Include="src\Scene\Components\Physics\Physics.h" />
     <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
     <ClInclude Include="src\Scene\Pools\Asteroids\Asteroids.h" />
     <ClInclude Include="src\Scene\Pools\Pool.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="src\Math\Matrix\Matrix.cpp" />
     <ClCompile Include="src\Math\Matrix\MatrixTest.cpp" />
     <ClCompile Include="src\Math\Vector3\Vector3.cpp" />
+    <ClCompile Include="src\Scene\Components\Physics\Physics.cpp" />
     <ClCompile Include="src\Scene\Components\Transform\Transform.cpp" />
     <ClCompile Include="src\Scene\Pools\Asteroids\Asteroids.cpp" />
     <ClCompile Include="src\Scene\Pools\Pool.cpp" />

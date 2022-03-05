@@ -11,22 +11,22 @@ class Pool
 
     virtual void Init(Scene &scene) = 0;
 
-    std::vector<size_t> GetActiveEntities();
+    std::vector<int> GetIds();
 
-    bool Activate(int index);
-    bool Deactivate(int index);
+    bool Activate(int id);
+    bool Deactivate(int id);
 
   protected:
     void SetScene(Scene *scene);
-    void SetBegin(size_t index);
-    void SetSize(size_t index);
-    void SetEnd(size_t index);
+    void SetBegin(int id);
+    void SetSize(int id);
+    void SetEnd(int id);
 
   private:
     Scene *m_scene;
-    size_t m_begin;
-    size_t m_size;
-    size_t m_end;
+    int m_begin;
+    int m_size;
+    int m_end;
 
-    void MemorySwap(int index);
+    void MemorySwap(int id);
 };

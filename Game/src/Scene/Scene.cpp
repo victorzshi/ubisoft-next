@@ -2,10 +2,10 @@
 
 #include "Scene.h"
 
-Scene::Scene() : m_entity(0)
+Scene::Scene() : m_id(0)
 {
-    m_meshes = new Mesh[MAX_ENTITIES];
-    m_transforms = new Transform[MAX_ENTITIES];
+    m_mesh = new Mesh[MAX_OBJECTS];
+    m_transform = new Transform[MAX_OBJECTS];
 }
 
 void Scene::Init()
@@ -21,27 +21,39 @@ void Scene::Init()
 
 void Scene::Shutdown()
 {
-    delete[] m_meshes;
-    delete[] m_transforms;
-    m_meshes = nullptr;
-    m_transforms = nullptr;
+    delete[] m_mesh;
+    delete[] m_transform;
+    m_mesh = nullptr;
+    m_transform = nullptr;
 }
 
-Mesh *Scene::GetMeshes()
+Mesh Scene::GetMesh(int id) const
 {
-    return m_meshes;
+    Mesh mesh = m_mesh[id];
+    return mesh;
 }
 
-Transform *Scene::GetTransforms()
+Transform Scene::GetTransform(int id) const
 {
-    return m_transforms;
+    Transform transform = m_transform[id];
+    return transform;
 }
 
-size_t Scene::CreateEntity()
+void Scene::SetMesh(int id, Mesh mesh)
 {
-    assert(m_entity < MAX_ENTITIES);
-    m_entity++;
-    return m_entity - 1; // Array index starts at 0
+    m_mesh[id] = mesh;
+}
+
+void Scene::SetTransform(int id, Transform transform)
+{
+    m_transform[id] = transform;
+}
+
+int Scene::CreateId()
+{
+    assert(m_id < MAX_OBJECTS);
+    m_id++;
+    return m_id - 1; // Array index starts at 0
 }
 
 void Scene::Update(float deltaTime)
@@ -144,11 +156,11 @@ void Scene::UpdateTriangles()
 {
     m_triangles.clear();
 
-    std::vector<size_t> active = m_asteroids.GetActiveEntities();
+    std::vector<int> ids = m_asteroids.GetIds();
 
-    for (auto &id : active)
+    for (auto &id : ids)
     {
-        Mesh mesh = m_meshes[id];
+        Mesh mesh = GetMesh(id);
 
         // Early exit
         if (mesh.triangles.empty())
@@ -157,7 +169,7 @@ void Scene::UpdateTriangles()
         }
 
         // Apply local transform
-        Matrix translate = Matrix::Translate(m_transforms[id].position);
+        Matrix translate = Matrix::Translate(GetTransform(id).position);
         for (auto &triangle : mesh.triangles)
         {
             for (int i = 0; i < 3; i++)
@@ -204,10 +216,9 @@ void Scene::UpdateTriangles()
                 }
 
                 // Offset into normalized space
-                Vector3 offset = Vector3(1.0f, 1.0f, 0.0f);
                 for (int i = 0; i < 3; i++)
                 {
-                    transformed.point[i] += offset;
+                    transformed.point[i] += Vector3(1.0f, 1.0f, 0.0f);
                     transformed.point[i].x *= m_viewport.w * 0.5f;
                     transformed.point[i].y *= m_viewport.h * 0.5f;
                 }

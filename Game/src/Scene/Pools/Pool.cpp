@@ -2,33 +2,29 @@
 
 #include "pool.h"
 
-#include <assert.h>
-
-#include "Scene/Components/Mesh/Mesh.h"
-#include "Scene/Components/Transform/Transform.h"
 #include "Scene/Scene.h"
 
 Pool::Pool() : m_scene(nullptr), m_begin(0), m_size(0), m_end(0)
 {
 }
 
-std::vector<size_t> Pool::GetActiveEntities()
+std::vector<int> Pool::GetIds()
 {
     assert(m_end != 0);
 
-    std::vector<size_t> active;
+    std::vector<int> ids;
 
-    for (size_t id = m_begin; id < m_size; id++)
+    for (int id = m_begin; id < m_size; id++)
     {
-        active.push_back(id);
+        ids.push_back(id);
     }
 
-    return active;
+    return ids;
 }
 
-bool Pool::Activate(int index)
+bool Pool::Activate(int id)
 {
-    assert(index >= m_size);
+    assert(id >= m_size);
 
     // Do not blow memory up
     if (m_size > m_end)
@@ -36,20 +32,20 @@ bool Pool::Activate(int index)
         return false;
     }
 
-    MemorySwap(index);
+    MemorySwap(id);
 
     m_size++;
 
     return true;
 }
 
-bool Pool::Deactivate(int index)
+bool Pool::Deactivate(int id)
 {
-    assert(index < m_size);
+    assert(id < m_size);
 
     m_size--;
 
-    MemorySwap(index);
+    MemorySwap(id);
 
     return true;
 }
@@ -59,38 +55,35 @@ void Pool::SetScene(Scene *scene)
     m_scene = scene;
 }
 
-void Pool::SetBegin(size_t index)
+void Pool::SetBegin(int id)
 {
-    m_begin = index;
+    m_begin = id;
 }
 
-void Pool::SetSize(size_t index)
+void Pool::SetSize(int id)
 {
-    m_size = index;
+    m_size = id;
 }
 
-void Pool::SetEnd(size_t index)
+void Pool::SetEnd(int id)
 {
-    m_end = index;
+    m_end = id;
 }
 
-void Pool::MemorySwap(int index)
+void Pool::MemorySwap(int id)
 {
     assert(m_scene != nullptr);
 
-    if (m_size == index)
+    if (m_size == id)
     {
         return;
     }
 
-    Mesh *meshes = m_scene->GetMeshes();
-    Transform *transforms = m_scene->GetTransforms();
+    Mesh mesh = m_scene->GetMesh(m_size);
+    m_scene->SetMesh(m_size, m_scene->GetMesh(id));
+    m_scene->SetMesh(id, mesh);
 
-    Mesh mesh = meshes[m_size];
-    meshes[m_size] = meshes[index];
-    meshes[index] = mesh;
-
-    Transform transform = transforms[m_size];
-    transforms[m_size] = transforms[index];
-    transforms[index] = transform;
+    Transform transform = m_scene->GetTransform(m_size);
+    m_scene->SetTransform(m_size, m_scene->GetTransform(id));
+    m_scene->SetTransform(id, transform);
 }
