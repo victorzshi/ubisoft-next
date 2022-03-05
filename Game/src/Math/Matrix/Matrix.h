@@ -18,11 +18,11 @@ struct Matrix
     Vector3 operator*(const Vector3 &v) const;
 
     static Matrix Identity();
-    static Matrix Translate(Vector3 v);
+    static Matrix Translate(Vector3 &v);
     static Matrix RotateX(float theta);
     static Matrix RotateY(float theta);
     static Matrix RotateZ(float theta);
-    static Matrix Scale(float x, float y, float z);
+    static Matrix Scale(Vector3 &v);
     static Matrix Perspective(float distancePlane, float aspectRatio, float zNear, float zFar);
     static Matrix LookAt(Vector3 &from, Vector3 &to, Vector3 &up);
 };

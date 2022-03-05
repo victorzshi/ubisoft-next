@@ -21,7 +21,7 @@ class MatrixTest
         TestRotateX(n);
         TestRotateY(n);
         TestRotateZ(n);
-        TestScale(n);
+        TestScale(v);
     }
 
   private:
@@ -146,24 +146,21 @@ class MatrixTest
         assert(m(3, 3) == 1.0f);
     }
 
-    static void TestScale(float &n)
+    static void TestScale(Vector3& v)
     {
-        float x = n * 1;
-        float y = n * 2;
-        float z = n * 3;
-        Matrix m = Matrix::Scale(x, y, z);
+        Matrix m = Matrix::Scale(v);
 
-        assert(m(0, 0) == x);
+        assert(m(0, 0) == v.x);
         assert(m(0, 1) == 0.0f);
         assert(m(0, 2) == 0.0f);
         assert(m(0, 3) == 0.0f);
         assert(m(1, 0) == 0.0f);
-        assert(m(1, 1) == y);
+        assert(m(1, 1) == v.y);
         assert(m(1, 2) == 0.0f);
         assert(m(1, 3) == 0.0f);
         assert(m(2, 0) == 0.0f);
         assert(m(2, 1) == 0.0f);
-        assert(m(2, 2) == z);
+        assert(m(2, 2) == v.z);
         assert(m(2, 3) == 0.0f);
         assert(m(3, 0) == 0.0f);
         assert(m(3, 1) == 0.0f);

@@ -59,7 +59,7 @@ Matrix Matrix::Identity()
     return matrix;
 }
 
-Matrix Matrix::Translate(Vector3 v)
+Matrix Matrix::Translate(Vector3 &v)
 {
     Matrix matrix = Matrix::Identity();
     matrix(3, 0) = v.x;
@@ -98,12 +98,12 @@ Matrix Matrix::RotateZ(float theta)
     return matrix;
 }
 
-Matrix Matrix::Scale(float x, float y, float z)
+Matrix Matrix::Scale(Vector3 &v)
 {
     Matrix matrix = Matrix::Identity();
-    matrix(0, 0) = x;
-    matrix(1, 1) = y;
-    matrix(2, 2) = z;
+    matrix(0, 0) = v.x;
+    matrix(1, 1) = v.y;
+    matrix(2, 2) = v.z;
     return matrix;
 }
 

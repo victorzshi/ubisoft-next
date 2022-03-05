@@ -91,10 +91,10 @@ void Scene::SetCamera()
 
 void Scene::SetWorldMatrix()
 {
-    Matrix scaling = Matrix::Scale(1.0f, 1.0f, 1.0f);
-    Matrix rotation = Matrix::Identity();
-    Matrix translation = Matrix::Translate(Vector3(0.0f, 0.0f, 20.0f));
-    m_world = scaling * rotation * translation;
+    Matrix scale = Matrix::Scale(Vector3(1.0f, 1.0f, 1.0f));
+    Matrix rotate = Matrix::Identity();
+    Matrix translate = Matrix::Translate(Vector3(0.0f, 0.0f, 20.0f));
+    m_world = scale * rotate * translate;
 }
 
 void Scene::SetViewMatrix()
@@ -169,12 +169,18 @@ void Scene::UpdateTriangles()
         }
 
         // Apply local transform
-        Matrix translate = Matrix::Translate(GetTransform(id).position);
+        Transform transform = GetTransform(id);
+        Matrix translate = Matrix::Translate(transform.position);
+        Matrix rotate = Matrix::RotateZ(transform.rotation.z);
+        rotate = rotate * Matrix::RotateY(transform.rotation.y);
+        rotate = rotate * Matrix::RotateX(transform.rotation.x);
+        Matrix scale = Matrix::Scale(transform.scaling);
+        Matrix local = scale * rotate * translate;
         for (auto &triangle : mesh.triangles)
         {
             for (int i = 0; i < 3; i++)
             {
-                triangle.point[i] = translate * triangle.point[i];
+                triangle.point[i] = local * triangle.point[i];
             }
         }
 
