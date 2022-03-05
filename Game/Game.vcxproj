@@ -193,9 +193,9 @@
     <ClInclude Include="external\App\TextureLoader.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
-    <ClInclude Include="src\Graphics\Box\Box.h" />
     <ClInclude Include="src\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\Math\Random\Random.h" />
+    <ClInclude Include="src\Math\Rect\Rect.h" />
     <ClInclude Include="src\Scene\Components\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\Triangle\Triangle.h" />
     <ClInclude Include="src\Math\Matrix\Matrix.h" />
@@ -203,6 +203,7 @@
     <ClInclude Include="src\Scene\Components\Physics\Physics.h" />
     <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
     <ClInclude Include="src\Scene\Pools\Asteroids\Asteroids.h" />
+    <ClInclude Include="src\Scene\Pools\Grid\Grid.h" />
     <ClInclude Include="src\Scene\Pools\Pool.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\Systems\Systems.h" />
@@ -214,7 +215,6 @@
     <ClCompile Include="external\App\SimpleSound.cpp" />
     <ClCompile Include="external\App\SimpleSprite.cpp" />
     <ClCompile Include="external\App\TextureLoader.cpp" />
-    <ClCompile Include="src\Graphics\Box\Box.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="include\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -224,6 +224,7 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="src\Math\Random\Random.cpp" />
+    <ClCompile Include="src\Math\Rect\Rect.cpp" />
     <ClCompile Include="src\Scene\Components\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Triangle\Triangle.cpp" />
     <ClCompile Include="src\Math\Matrix\Matrix.cpp" />
@@ -232,6 +233,7 @@
     <ClCompile Include="src\Scene\Components\Physics\Physics.cpp" />
     <ClCompile Include="src\Scene\Components\Transform\Transform.cpp" />
     <ClCompile Include="src\Scene\Pools\Asteroids\Asteroids.cpp" />
+    <ClCompile Include="src\Scene\Pools\Grid\Grid.cpp" />
     <ClCompile Include="src\Scene\Pools\Pool.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Math\Vector3\Vector3Test.cpp" />

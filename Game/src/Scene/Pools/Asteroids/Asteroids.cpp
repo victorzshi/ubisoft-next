@@ -10,7 +10,7 @@ void Asteroids::Init(Scene &scene)
     Mesh mesh = Mesh::LoadFromObjectFile(file);
 
     int index = 0;
-    for (int i = 0; i < total; i++)
+    for (int i = 0; i < TOTAL; i++)
     {
         int id = scene.CreateId();
 
@@ -32,7 +32,7 @@ void Asteroids::Init(Scene &scene)
     }
 
     SetScene(&scene);
-    SetBegin(index - (total - 1));
+    SetBegin(index - (TOTAL - 1));
     SetSize(index + 1);
     SetEnd(index);
 }

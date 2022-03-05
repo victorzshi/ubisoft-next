@@ -11,22 +11,24 @@ void Systems::UpdatePosition(Scene &scene, int id, float deltaTime)
 
     transform.position += physics.velocity * deltaTime / 1000.0f;
 
-    float distance = 4.0f;
-    if (transform.position.x > distance)
+    float width = 7.0f;
+    if (transform.position.x > width)
     {
-        transform.position.x = -distance;
+        transform.position.x = -width;
     }
-    else if (transform.position.x < -distance)
+    else if (transform.position.x < -width)
     {
-        transform.position.x = distance;
+        transform.position.x = width;
     }
-    if (transform.position.y > distance)
+
+    float height = 4.0f;
+    if (transform.position.y > height)
     {
-        transform.position.y = -distance;
+        transform.position.y = -height;
     }
-    else if (transform.position.y < -distance)
+    else if (transform.position.y < -height)
     {
-        transform.position.y = distance;
+        transform.position.y = height;
     }
 
     scene.SetTransform(id, transform);

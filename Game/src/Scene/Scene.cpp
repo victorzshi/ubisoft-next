@@ -20,13 +20,16 @@ void Scene::Init()
     SetProjectionMatrix();
 
     m_asteroids.Init(*this);
+    m_grid.Init(*this);
 }
 
 void Scene::Shutdown()
 {
     delete[] m_mesh;
+    delete[] m_physics;
     delete[] m_transform;
     m_mesh = nullptr;
+    m_physics = nullptr;
     m_transform = nullptr;
 }
 
@@ -176,7 +179,15 @@ void Scene::UpdateTriangles()
 {
     m_triangles.clear();
 
-    std::vector<int> ids = m_asteroids.GetIds();
+    std::vector<int> ids;
+    for (auto &id : m_asteroids.GetIds())
+    {
+        ids.push_back(id);
+    }
+    for (auto &id : m_grid.GetIds())
+    {
+        ids.push_back(id);
+    }
 
     for (auto &id : ids)
     {

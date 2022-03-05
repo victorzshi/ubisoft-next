@@ -1,8 +1,8 @@
 #pragma once
 
-struct Box
+struct Rect
 {
     float x, y, w, h;
 
-    Box();
+    Rect();
 };

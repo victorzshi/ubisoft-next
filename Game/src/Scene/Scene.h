@@ -3,10 +3,11 @@
 #include "Components/Mesh/Mesh.h"
 #include "Components/Physics/Physics.h"
 #include "Components/Transform/Transform.h"
-#include "Graphics/Box/Box.h"
 #include "Graphics/Camera/Camera.h"
 #include "Math/Matrix/Matrix.h"
+#include "Math/Rect/Rect.h"
 #include "Pools/Asteroids/Asteroids.h"
+#include "Pools/Grid/Grid.h"
 
 class Scene
 {
@@ -31,11 +32,11 @@ class Scene
 
   private:
     // Unique ID
-    static const int MAX_OBJECTS = 10;
+    static const int MAX_OBJECTS = 1000;
     int m_id;
 
     // 3D graphics
-    Box m_viewport;
+    Rect m_viewport;
     Camera m_camera;
     Matrix m_world;
     Matrix m_view;
@@ -49,6 +50,7 @@ class Scene
 
     // Object pools
     Asteroids m_asteroids;
+    Grid m_grid;
 
     // Helper functions
     void SetViewport();
