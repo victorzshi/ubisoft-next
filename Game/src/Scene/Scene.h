@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Components/Mesh/Mesh.h"
+#include "Components/Physics/Physics.h"
 #include "Components/Transform/Transform.h"
 #include "Graphics/Box/Box.h"
 #include "Graphics/Camera/Camera.h"
@@ -16,9 +17,11 @@ class Scene
     void Shutdown();
 
     Mesh GetMesh(int id) const;
+    Physics GetPhysics(int id) const;
     Transform GetTransform(int id) const;
 
     void SetMesh(int id, Mesh mesh);
+    void SetPhysics(int id, Physics physics);
     void SetTransform(int id, Transform transform);
 
     int CreateId();
@@ -41,6 +44,7 @@ class Scene
 
     // Component arrays
     Mesh *m_mesh;
+    Physics *m_physics;
     Transform *m_transform;
 
     // Object pools

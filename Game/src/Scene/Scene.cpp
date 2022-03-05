@@ -2,9 +2,12 @@
 
 #include "Scene.h"
 
+#include "Systems/Systems.h"
+
 Scene::Scene() : m_id(0)
 {
     m_mesh = new Mesh[MAX_OBJECTS];
+    m_physics = new Physics[MAX_OBJECTS];
     m_transform = new Transform[MAX_OBJECTS];
 }
 
@@ -33,6 +36,12 @@ Mesh Scene::GetMesh(int id) const
     return mesh;
 }
 
+Physics Scene::GetPhysics(int id) const
+{
+    Physics physics = m_physics[id];
+    return physics;
+}
+
 Transform Scene::GetTransform(int id) const
 {
     Transform transform = m_transform[id];
@@ -42,6 +51,11 @@ Transform Scene::GetTransform(int id) const
 void Scene::SetMesh(int id, Mesh mesh)
 {
     m_mesh[id] = mesh;
+}
+
+void Scene::SetPhysics(int id, Physics physics)
+{
+    m_physics[id] = physics;
 }
 
 void Scene::SetTransform(int id, Transform transform)
@@ -59,6 +73,14 @@ int Scene::CreateId()
 void Scene::Update(float deltaTime)
 {
     HandleInput();
+
+    std::vector<int> ids = m_asteroids.GetIds();
+    for (auto id : ids)
+    {
+        Systems::UpdatePosition(*this, id, deltaTime);
+        Systems::UpdateRotation(*this, id, deltaTime);
+    }
+
     SetViewMatrix();
     UpdateTriangles();
 }

@@ -205,6 +205,7 @@
     <ClInclude Include="src\Scene\Pools\Asteroids\Asteroids.h" />
     <ClInclude Include="src\Scene\Pools\Pool.h" />
     <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Scene\Systems\Systems.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="external\App\app.cpp" />
@@ -234,6 +235,7 @@
     <ClCompile Include="src\Scene\Pools\Pool.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Math\Vector3\Vector3Test.cpp" />
+    <ClCompile Include="src\Scene\Systems\Systems.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\objects\sphere.txt">

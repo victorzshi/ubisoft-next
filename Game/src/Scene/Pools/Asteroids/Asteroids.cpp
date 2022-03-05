@@ -14,16 +14,19 @@ void Asteroids::Init(Scene &scene)
     {
         int id = scene.CreateId();
 
+        scene.SetMesh(id, mesh);
+
+        Physics physics;
+        physics.velocity.x = Random::GetFloat(-1.0f, 1.0f);
+        physics.velocity.y = Random::GetFloat(-1.0f, 1.0f);
+        scene.SetPhysics(id, physics);
+
         Transform transform;
-        transform.position.x = Random::GetFloat(-5.0f, 5.0f);
-        transform.position.y = Random::GetFloat(-5.0f, 5.0f);
         transform.rotation.x = Random::GetFloat(0.0f, 360.0f);
         transform.rotation.y = Random::GetFloat(0.0f, 360.0f);
         transform.rotation.z = Random::GetFloat(0.0f, 360.0f);
-        transform.scaling = Vector3(0.2f, 0.2f, 0.2f);
+        transform.scaling = Vector3(0.5f, 0.5f, 0.5f);
         scene.SetTransform(id, transform);
-
-        scene.SetMesh(id, mesh);
 
         index = id;
     }

@@ -6,7 +6,7 @@ class Asteroids : public Pool
 {
   public:
     const int total = 10;
-    const std::string file = "monkey.obj";
+    const std::string file = "sphere.obj";
 
     virtual void Init(Scene &scene) override;
 };
