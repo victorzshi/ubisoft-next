@@ -8,7 +8,5 @@ struct Triangle
 
     Triangle();
 
-    Triangle(Vector3 p1, Vector3 p2, Vector3 p3);
-
     void Render();
 };

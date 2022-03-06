@@ -2,19 +2,8 @@
 
 #include "Triangle.h"
 
-Triangle::Triangle()
+Triangle::Triangle() : point{Vector3()}
 {
-    for (int i = 0; i < 3; i++)
-    {
-        point[i] = Vector3();
-    }
-}
-
-Triangle::Triangle(Vector3 p1, Vector3 p2, Vector3 p3)
-{
-    point[0] = p1;
-    point[1] = p2;
-    point[2] = p3;
 }
 
 void Triangle::Render()
