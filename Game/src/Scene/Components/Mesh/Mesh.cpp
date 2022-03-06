@@ -31,18 +31,37 @@ Mesh Mesh::LoadFromObjectFile(std::string file)
         char c;
         if (line[0] == 'v')
         {
+            float vertex[3] = {0.0f};
+            s >> c >> vertex[0] >> vertex[1] >> vertex[2];
+
             Vector3 v;
-            s >> c >> v.x >> v.y >> v.z;
+            v.x = vertex[0];
+            v.y = vertex[1];
+            v.z = vertex[2];
             vertices.push_back(v);
         }
         else if (line[0] == 'f')
         {
-            size_t f[3] = {};
-            s >> c >> f[0] >> f[1] >> f[2];
-            Vector3 p1 = vertices[f[0] - 1];
-            Vector3 p2 = vertices[f[1] - 1];
-            Vector3 p3 = vertices[f[2] - 1];
-            mesh.triangles.push_back(Triangle(p1, p2, p3));
+            size_t face[4] = {0};
+            s >> c >> face[0] >> face[1] >> face[2] >> face[3];
+
+            if (face[3] == 0)
+            {
+                Triangle triangle;
+                triangle.point[0] = vertices[face[0] - 1];
+                triangle.point[1] = vertices[face[1] - 1];
+                triangle.point[2] = vertices[face[2] - 1];
+                mesh.triangles.push_back(triangle);
+            }
+            else
+            {
+                Quad quad;
+                quad.point[0] = vertices[face[0] - 1];
+                quad.point[1] = vertices[face[1] - 1];
+                quad.point[2] = vertices[face[2] - 1];
+                quad.point[3] = vertices[face[3] - 1];
+                mesh.quads.push_back(quad);
+            }
         }
     }
 

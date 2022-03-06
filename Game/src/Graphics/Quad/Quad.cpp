@@ -1,17 +1,17 @@
 #include "stdafx.h"
 
-#include "Triangle.h"
+#include "Quad.h"
 
-Triangle::Triangle() : point{Vector3()}
+Quad::Quad() : point{Vector3()}
 {
 }
 
-void Triangle::Render()
+void Quad::Render()
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         int a = i;
-        int b = (i + 1) % 3;
+        int b = (i + 1) % 4;
         float sx = point[a].x;
         float sy = point[a].y;
         float ex = point[b].x;

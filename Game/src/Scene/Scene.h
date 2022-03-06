@@ -41,7 +41,8 @@ class Scene
     Matrix m_world;
     Matrix m_view;
     Matrix m_projection;
-    std::vector<Triangle> m_visible;
+    std::vector<Triangle> m_triangles;
+    std::vector<Quad> m_quads;
 
     // Component arrays
     std::vector<Mesh> m_mesh;

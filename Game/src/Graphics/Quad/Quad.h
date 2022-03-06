@@ -2,11 +2,11 @@
 
 #include "Math/Vector3/Vector3.h"
 
-struct Triangle
+struct Quad
 {
-    Vector3 point[3];
+    Vector3 point[4];
 
-    Triangle();
+    Quad();
 
     void Render();
 };

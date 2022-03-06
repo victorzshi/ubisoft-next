@@ -180,7 +180,8 @@ void Scene::MoveCamera(float deltaTime)
 
 void Scene::UpdateVisible()
 {
-    m_visible.clear();
+    m_triangles.clear();
+    m_quads.clear();
 
     std::vector<int> ids;
     for (auto &id : m_asteroids.GetIds())
@@ -201,71 +202,121 @@ void Scene::UpdateVisible()
         Mesh mesh = GetMesh(id);
 
         // Early exit
-        if (mesh.triangles.empty())
+        if (mesh.triangles.empty() && mesh.quads.empty())
         {
             return;
         }
 
-        // Apply local transform
+        // Calculate local transform
         Transform transform = GetTransform(id);
         Matrix translate = Matrix::Translate(transform.position);
         Matrix rotate = Matrix::Rotate(transform.rotation);
         Matrix scale = Matrix::Scale(transform.scaling);
         Matrix local = scale * rotate * translate;
+
         for (auto &triangle : mesh.triangles)
         {
+            // Apply local transform
             for (int i = 0; i < 3; i++)
             {
                 triangle.point[i] = local * triangle.point[i];
             }
-        }
 
-        for (auto &triangle : mesh.triangles)
-        {
-            Triangle transformed;
-
-            // World transform
+            // Apply world transform
             for (int i = 0; i < 3; i++)
             {
-                transformed.point[i] = m_world * triangle.point[i];
+                triangle.point[i] = m_world * triangle.point[i];
             }
 
-            // Backface culling
-            Vector3 a = transformed.point[1] - transformed.point[0];
-            Vector3 b = transformed.point[2] - transformed.point[0];
+            // Calculate normal for backface culling
+            Vector3 a = triangle.point[1] - triangle.point[0];
+            Vector3 b = triangle.point[2] - triangle.point[0];
             Vector3 normal = a.Cross(b).Normalize();
 
-            if (normal.Dot((transformed.point[0] - m_camera.position).Normalize()) < 0.0f)
+            if (normal.Dot((triangle.point[0] - m_camera.position).Normalize()) < 0.0f)
             {
                 // Convert world space to view space
                 for (int i = 0; i < 3; i++)
                 {
-                    transformed.point[i] = m_view * transformed.point[i];
+                    triangle.point[i] = m_view * triangle.point[i];
                 }
 
                 // Project from 3D to 2D
                 for (int i = 0; i < 3; i++)
                 {
-                    transformed.point[i] = m_projection * transformed.point[i];
+                    triangle.point[i] = m_projection * triangle.point[i];
                 }
 
                 // Normalize with reciprocal divide
                 for (int i = 0; i < 3; i++)
                 {
-                    float w = transformed.point[i].w;
+                    float w = triangle.point[i].w;
                     assert(w != 0.0f);
-                    transformed.point[i] /= w;
+                    triangle.point[i] /= w;
                 }
 
                 // Offset into normalized space
                 for (int i = 0; i < 3; i++)
                 {
-                    transformed.point[i] += Vector3(1.0f, 1.0f, 0.0f);
-                    transformed.point[i].x *= m_viewport.w * 0.5f;
-                    transformed.point[i].y *= m_viewport.h * 0.5f;
+                    triangle.point[i] += Vector3(1.0f, 1.0f, 0.0f);
+                    triangle.point[i].x *= m_viewport.w * 0.5f;
+                    triangle.point[i].y *= m_viewport.h * 0.5f;
                 }
 
-                m_visible.push_back(transformed);
+                m_triangles.push_back(triangle);
+            }
+        }
+
+        for (auto &quad : mesh.quads)
+        {
+            // Apply local transform
+            for (int i = 0; i < 4; i++)
+            {
+                quad.point[i] = local * quad.point[i];
+            }
+
+            // Apply world transform
+            for (int i = 0; i < 4; i++)
+            {
+                quad.point[i] = m_world * quad.point[i];
+            }
+
+            // Calculate normal for backface culling
+            Vector3 a = quad.point[1] - quad.point[0];
+            Vector3 b = quad.point[2] - quad.point[0];
+            Vector3 normal = a.Cross(b).Normalize();
+
+            if (normal.Dot((quad.point[0] - m_camera.position).Normalize()) < 0.0f)
+            {
+                // Convert world space to view space
+                for (int i = 0; i < 4; i++)
+                {
+                    quad.point[i] = m_view * quad.point[i];
+                }
+
+                // Project from 3D to 2D
+                for (int i = 0; i < 4; i++)
+                {
+                    quad.point[i] = m_projection * quad.point[i];
+                }
+
+                // Normalize with reciprocal divide
+                for (int i = 0; i < 4; i++)
+                {
+                    float w = quad.point[i].w;
+                    assert(w != 0.0f);
+                    quad.point[i] /= w;
+                }
+
+                // Offset into normalized space
+                for (int i = 0; i < 4; i++)
+                {
+                    quad.point[i] += Vector3(1.0f, 1.0f, 0.0f);
+                    quad.point[i].x *= m_viewport.w * 0.5f;
+                    quad.point[i].y *= m_viewport.h * 0.5f;
+                }
+
+                m_quads.push_back(quad);
             }
         }
     }
@@ -273,9 +324,13 @@ void Scene::UpdateVisible()
 
 void Scene::RenderVisible()
 {
-    for (auto &triangle : m_visible)
+    for (auto &triangle : m_triangles)
     {
         triangle.Render();
+    }
+    for (auto &quad : m_quads)
+    {
+        quad.Render();
     }
 }
 

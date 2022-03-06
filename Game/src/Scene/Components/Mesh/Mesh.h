@@ -3,13 +3,14 @@
 #include <string>
 #include <vector>
 
+#include "Graphics/Quad/Quad.h"
 #include "Graphics/Triangle/Triangle.h"
 
 struct Mesh
 {
     std::vector<Triangle> triangles;
+    std::vector<Quad> quads;
     // TODO: Enable/disable backface culling.
-    // TODO: Support quads.
 
     Mesh();
 
