@@ -32,7 +32,7 @@ bool Pool::Activate(int id)
         return false;
     }
 
-    MemorySwap(id);
+    SwapMemory(id);
 
     m_size++;
 
@@ -45,7 +45,7 @@ bool Pool::Deactivate(int id)
 
     m_size--;
 
-    MemorySwap(id);
+    SwapMemory(id);
 
     return true;
 }
@@ -70,7 +70,7 @@ void Pool::SetEnd(int id)
     m_end = id;
 }
 
-void Pool::MemorySwap(int id)
+void Pool::SwapMemory(int id)
 {
     assert(m_scene != nullptr);
 

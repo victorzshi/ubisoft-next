@@ -70,12 +70,14 @@ int Scene::CreateId()
 
 void Scene::Update(float deltaTime)
 {
+#ifdef _DEBUG
     MoveCamera(deltaTime);
+#endif
 
     std::vector<int> ids = m_ships.GetIds();
     for (auto id : ids)
     {
-        Systems::ProcessInput(*this, id);
+        Systems::MoveShip(*this, id);
         Systems::UpdatePosition(*this, id, deltaTime);
     }
 
@@ -93,16 +95,15 @@ void Scene::Update(float deltaTime)
     Vector3 up = m_camera.up;
     m_view = Matrix::LookAt(from, to, up);
 
-    UpdateTriangles();
+    UpdateVisible();
 }
 
 void Scene::Render()
 {
 #ifdef _DEBUG
     RenderBorder();
-    // TODO: Draw grid for visualizing 3D space
 #endif
-    RenderTriangles();
+    RenderVisible();
 }
 
 void Scene::SetViewport()
@@ -177,9 +178,9 @@ void Scene::MoveCamera(float deltaTime)
     }
 }
 
-void Scene::UpdateTriangles()
+void Scene::UpdateVisible()
 {
-    m_triangles.clear();
+    m_visible.clear();
 
     std::vector<int> ids;
     for (auto &id : m_asteroids.GetIds())
@@ -264,15 +265,15 @@ void Scene::UpdateTriangles()
                     transformed.point[i].y *= m_viewport.h * 0.5f;
                 }
 
-                m_triangles.push_back(transformed);
+                m_visible.push_back(transformed);
             }
         }
     }
 }
 
-void Scene::RenderTriangles()
+void Scene::RenderVisible()
 {
-    for (auto &triangle : m_triangles)
+    for (auto &triangle : m_visible)
     {
         triangle.Render();
     }

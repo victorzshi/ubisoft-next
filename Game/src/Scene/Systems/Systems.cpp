@@ -4,7 +4,7 @@
 
 #include "Scene/Scene.h"
 
-void Systems::ProcessInput(Scene &scene, int id)
+void Systems::MoveShip(Scene &scene, int id)
 {
     Physics physics = scene.GetPhysics(id);
 

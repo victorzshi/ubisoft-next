@@ -14,4 +14,6 @@ struct Mesh
     Mesh();
 
     static Mesh LoadFromObjectFile(std::string file);
+
+    // TODO: Store mesh data statically.
 };
