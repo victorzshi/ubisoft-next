@@ -29,5 +29,5 @@ class Pool
     int m_size;
     int m_end;
 
-    void MemorySwap(int id);
+    void SwapMemory(int id);
 };
