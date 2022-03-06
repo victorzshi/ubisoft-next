@@ -18,7 +18,8 @@ void Grid::Init(Scene &scene)
 
         Transform transform;
         transform.position = position;
-        transform.scaling = Vector3(1.0f, 1.0f, 0.001f);
+        transform.rotation.x = -90.0f;
+        transform.scaling = Vector3(0.9f, 0.9f, 0.9f);
         scene.SetTransform(id, transform);
 
         index = id;

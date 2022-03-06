@@ -42,14 +42,26 @@ Mesh Mesh::LoadFromObjectFile(std::string file)
         }
         else if (line[0] == 'f')
         {
-            size_t face[3] = {0};
-            s >> c >> face[0] >> face[1] >> face[2];
+            size_t face[4] = {0};
+            s >> c >> face[0] >> face[1] >> face[2] >> face[3];
 
-            Triangle triangle;
-            triangle.point[0] = vertices[face[0] - 1];
-            triangle.point[1] = vertices[face[1] - 1];
-            triangle.point[2] = vertices[face[2] - 1];
-            mesh.triangles.push_back(triangle);
+            if (face[3] == 0)
+            {
+                Triangle triangle;
+                triangle.point[0] = vertices[face[0] - 1];
+                triangle.point[1] = vertices[face[1] - 1];
+                triangle.point[2] = vertices[face[2] - 1];
+                mesh.triangles.push_back(triangle);
+            }
+            else
+            {
+                Quad quad;
+                quad.point[0] = vertices[face[0] - 1];
+                quad.point[1] = vertices[face[1] - 1];
+                quad.point[2] = vertices[face[2] - 1];
+                quad.point[3] = vertices[face[3] - 1];
+                mesh.quads.push_back(quad);
+            }
         }
     }
 

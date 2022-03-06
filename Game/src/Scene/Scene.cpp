@@ -181,6 +181,7 @@ void Scene::MoveCamera(float deltaTime)
 void Scene::UpdateVisible()
 {
     m_triangles.clear();
+    m_quads.clear();
 
     std::vector<int> ids;
     for (auto &id : m_asteroids.GetIds())
@@ -201,7 +202,7 @@ void Scene::UpdateVisible()
         Mesh mesh = GetMesh(id);
 
         // Early exit
-        if (mesh.triangles.empty())
+        if (mesh.triangles.empty() && mesh.quads.empty())
         {
             return;
         }
@@ -265,6 +266,59 @@ void Scene::UpdateVisible()
                 m_triangles.push_back(triangle);
             }
         }
+
+        for (auto &quad : mesh.quads)
+        {
+            // Apply local transform
+            for (int i = 0; i < 4; i++)
+            {
+                quad.point[i] = local * quad.point[i];
+            }
+
+            // Apply world transform
+            for (int i = 0; i < 4; i++)
+            {
+                quad.point[i] = m_world * quad.point[i];
+            }
+
+            // Calculate normal for backface culling
+            Vector3 a = quad.point[1] - quad.point[0];
+            Vector3 b = quad.point[2] - quad.point[0];
+            Vector3 normal = a.Cross(b).Normalize();
+
+            if (normal.Dot((quad.point[0] - m_camera.position).Normalize()) < 0.0f)
+            {
+                // Convert world space to view space
+                for (int i = 0; i < 4; i++)
+                {
+                    quad.point[i] = m_view * quad.point[i];
+                }
+
+                // Project from 3D to 2D
+                for (int i = 0; i < 4; i++)
+                {
+                    quad.point[i] = m_projection * quad.point[i];
+                }
+
+                // Normalize with reciprocal divide
+                for (int i = 0; i < 4; i++)
+                {
+                    float w = quad.point[i].w;
+                    assert(w != 0.0f);
+                    quad.point[i] /= w;
+                }
+
+                // Offset into normalized space
+                for (int i = 0; i < 4; i++)
+                {
+                    quad.point[i] += Vector3(1.0f, 1.0f, 0.0f);
+                    quad.point[i].x *= m_viewport.w * 0.5f;
+                    quad.point[i].y *= m_viewport.h * 0.5f;
+                }
+
+                m_quads.push_back(quad);
+            }
+        }
     }
 }
 
@@ -273,6 +327,10 @@ void Scene::RenderVisible()
     for (auto &triangle : m_triangles)
     {
         triangle.Render();
+    }
+    for (auto &quad : m_quads)
+    {
+        quad.Render();
     }
 }
 
