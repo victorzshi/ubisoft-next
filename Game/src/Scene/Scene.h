@@ -41,6 +41,9 @@ class Scene
     Matrix m_world;
     Matrix m_view;
     Matrix m_projection;
+    Matrix m_viewToWorld;
+    Vector3 m_click;
+
     std::vector<Triangle> m_triangles;
     std::vector<Quad> m_quads;
 
@@ -60,6 +63,9 @@ class Scene
     void SetWorldMatrix();
     void SetViewMatrix();
     void SetProjectionMatrix();
+
+    Vector3 GetPickRay(float sx, float sy, float fov, float width, float height);
+    Vector3 TransformPoint(Matrix &m, Vector3 &v) const;
 
     void MoveCamera(float deltaTime);
     void UpdateVisible();

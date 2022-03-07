@@ -4,20 +4,8 @@
 
 #include "Math/Vector3/Vector3.h"
 
-Matrix::Matrix()
+Matrix::Matrix() : m{0.0f}
 {
-    for (int i = 0; i < 16; i++)
-    {
-        m[i] = 0.0f;
-    }
-}
-
-Matrix::Matrix(float n)
-{
-    for (int i = 0; i < 16; i++)
-    {
-        m[i] = n;
-    }
 }
 
 float &Matrix::operator()(int row, int col)
@@ -130,9 +118,9 @@ Matrix Matrix::LookAt(Vector3 &from, Vector3 &to, Vector3 &up)
     Vector3 zAxis = (to - from).Normalize();     // Forward
     Vector3 xAxis = zAxis.Cross(up).Normalize(); // Right
     Vector3 yAxis = xAxis.Cross(zAxis);          // Up
-    
+
     zAxis *= -1;
-    
+
     Matrix matrix;
     matrix(0, 0) = xAxis.x;
     matrix(0, 1) = yAxis.x;
@@ -149,6 +137,34 @@ Matrix Matrix::LookAt(Vector3 &from, Vector3 &to, Vector3 &up)
     matrix(3, 0) = -xAxis.Dot(from);
     matrix(3, 1) = -yAxis.Dot(from);
     matrix(3, 2) = -zAxis.Dot(from);
+    matrix(3, 3) = 1.0f;
+    return matrix;
+}
+
+Matrix Matrix::ViewToWorld(Vector3 &from, Vector3 &to, Vector3 &up)
+{
+    Vector3 zAxis = (to - from).Normalize();     // Forward
+    Vector3 xAxis = zAxis.Cross(up).Normalize(); // Right
+    Vector3 yAxis = xAxis.Cross(zAxis);          // Up
+
+    zAxis *= -1;
+
+    Matrix matrix;
+    matrix(0, 0) = xAxis.x;
+    matrix(0, 1) = yAxis.x;
+    matrix(0, 2) = zAxis.x;
+    matrix(0, 3) = 0.0f;
+    matrix(1, 0) = xAxis.y;
+    matrix(1, 1) = yAxis.y;
+    matrix(1, 2) = zAxis.y;
+    matrix(1, 3) = 0.0f;
+    matrix(2, 0) = xAxis.z;
+    matrix(2, 1) = yAxis.z;
+    matrix(2, 2) = zAxis.z;
+    matrix(2, 3) = 0.0f;
+    matrix(3, 0) = from.x;
+    matrix(3, 1) = from.y;
+    matrix(3, 2) = from.z;
     matrix(3, 3) = 1.0f;
     return matrix;
 }

@@ -12,11 +12,11 @@ void Systems::MoveShip(Scene &scene, int id)
 
     if (App::GetController().GetLeftThumbStickX() > 0.5f)
     {
-        physics.velocity.x = -deltaVelocity;
+        physics.velocity.x = +deltaVelocity;
     }
     if (App::GetController().GetLeftThumbStickX() < -0.5f)
     {
-        physics.velocity.x = +deltaVelocity;
+        physics.velocity.x = -deltaVelocity;
     }
     if (App::GetController().GetLeftThumbStickX() == 0.0f)
     {

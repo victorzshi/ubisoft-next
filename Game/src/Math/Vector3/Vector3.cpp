@@ -97,3 +97,8 @@ Vector3 Vector3::Cross(const Vector3 &other) const
 {
     return Vector3(y * other.z - other.y * z, z * other.x - other.z * x, x * other.y - other.x * y);
 }
+
+std::string Vector3::ToString() const
+{
+    return "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";
+}

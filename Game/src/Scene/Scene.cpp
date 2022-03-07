@@ -74,6 +74,25 @@ void Scene::Update(float deltaTime)
     MoveCamera(deltaTime);
 #endif
 
+    if (App::IsKeyPressed(VK_LBUTTON))
+    {
+        // Track mouse location
+        float x, y;
+        App::GetMousePos(x, y);
+
+        // get the pick ray
+        Vector3 ray = GetPickRay(x, y, 90.0f, m_viewport.w, m_viewport.h);
+
+        // compute intersection with z=0 plane
+        float t = -m_camera.position.z / ray.z;
+        m_click = m_camera.position + ray * t;
+
+        int id = m_ships.GetIds().front();
+        Transform transform = GetTransform(id);
+        transform.position = m_click;
+        SetTransform(id, transform);
+    }
+
     std::vector<int> ids = m_ships.GetIds();
     for (auto id : ids)
     {
@@ -94,6 +113,7 @@ void Scene::Update(float deltaTime)
     Vector3 to = GetTransform(id).position;
     Vector3 up = m_camera.up;
     m_view = Matrix::LookAt(from, to, up);
+    m_viewToWorld = Matrix::ViewToWorld(from, to, up);
 
     UpdateVisible();
 }
@@ -102,6 +122,8 @@ void Scene::Render()
 {
 #ifdef _DEBUG
     RenderBorder();
+
+    App::Print(10.0f, 100.0f, m_click.ToString().c_str());
 #endif
     RenderVisible();
 }
@@ -116,7 +138,7 @@ void Scene::SetViewport()
 
 void Scene::SetCamera()
 {
-    m_camera.position = Vector3(0.0f, 0.0f, -20.0f);
+    m_camera.position = Vector3(0.0f, 0.0f, 20.0f);
     m_camera.facing = Vector3(0.0f, 0.0f, 1.0f);
     m_camera.up = Vector3(0.0f, 1.0f, 0.0f);
     m_camera.rotation = Vector3(0.0f, 0.0f, 0.0f);
@@ -147,25 +169,45 @@ void Scene::SetProjectionMatrix()
     m_projection = Matrix::Perspective(fov, aspectRatio, zNear, zFar);
 }
 
+Vector3 Scene::GetPickRay(float sx, float sy, float fov, float width, float height)
+{
+    float d = 1.0f / tanf(fov * PI / 360.0f);
+    float aspect = width / height;
+    Vector3 viewPoint(2.0f * aspect * sx / width - aspect, -2.0f * sy / height + 1.0f, -d);
+
+    viewPoint = TransformPoint(m_viewToWorld, viewPoint);
+
+    return viewPoint - m_camera.position;
+}
+
+Vector3 Scene::TransformPoint(Matrix &m, Vector3 &v) const
+{
+    Vector3 result;
+    result.x = m(0, 0) * v.x + m(0, 1) * v.y + m(0, 2) * v.z + m(0, 3);
+    result.y = m(1, 0) * v.x + m(1, 1) * v.y + m(1, 2) * v.z + m(1, 3);
+    result.z = m(2, 0) * v.x + m(2, 1) * v.y + m(2, 2) * v.z + m(2, 3);
+    return result;
+}
+
 void Scene::MoveCamera(float deltaTime)
 {
     float deltaVelocity = deltaTime / 100.0f;
 
     if (App::IsKeyPressed(VK_NUMPAD6))
     {
-        m_camera.position.x -= deltaVelocity;
+        m_camera.position.x += deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD4))
     {
-        m_camera.position.x += deltaVelocity;
+        m_camera.position.x -= deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD8))
     {
-        m_camera.position.z += deltaVelocity;
+        m_camera.position.z -= deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD2))
     {
-        m_camera.position.z -= deltaVelocity;
+        m_camera.position.z += deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD7))
     {

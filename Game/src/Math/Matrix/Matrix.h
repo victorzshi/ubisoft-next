@@ -7,8 +7,6 @@ struct Matrix
 {
     Matrix();
 
-    explicit Matrix(float n);
-
     float &operator()(int row, int col);
 
     Matrix operator*(const Matrix &other) const;
@@ -21,6 +19,7 @@ struct Matrix
     static Matrix Scale(Vector3 &v);
     static Matrix Perspective(float distancePlane, float aspectRatio, float zNear, float zFar);
     static Matrix LookAt(Vector3 &from, Vector3 &to, Vector3 &up);
+    static Matrix ViewToWorld(Vector3 &from, Vector3 &to, Vector3 &up);
 
   private:
     float m[16];
