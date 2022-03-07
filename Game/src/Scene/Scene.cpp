@@ -133,8 +133,7 @@ void Scene::SetWorldMatrix()
 void Scene::SetViewMatrix()
 {
     Vector3 from = m_camera.position;
-    Vector3 direction = Matrix::Rotate(m_camera.rotation) * m_camera.facing;
-    Vector3 to = m_camera.position + direction;
+    Vector3 to = m_camera.facing;
     Vector3 up = m_camera.up;
     m_view = Matrix::LookAt(from, to, up);
 }
@@ -144,7 +143,7 @@ void Scene::SetProjectionMatrix()
     float fov = 90.0f;
     float aspectRatio = m_viewport.w / m_viewport.h;
     float zNear = 0.1f;
-    float zFar = 100.0f;
+    float zFar = 25.0f;
     m_projection = Matrix::Perspective(fov, aspectRatio, zNear, zFar);
 }
 
@@ -154,11 +153,11 @@ void Scene::MoveCamera(float deltaTime)
 
     if (App::IsKeyPressed(VK_NUMPAD6))
     {
-        m_camera.position.x += deltaVelocity;
+        m_camera.position.x -= deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD4))
     {
-        m_camera.position.x -= deltaVelocity;
+        m_camera.position.x += deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD8))
     {
@@ -251,16 +250,21 @@ void Scene::UpdateVisible()
                 for (int i = 0; i < 3; i++)
                 {
                     float w = triangle.point[i].w;
-                    assert(w != 0.0f);
-                    triangle.point[i] /= w;
+                    if (w != 0.0f)
+                    {
+                        triangle.point[i] /= w;
+                    }
                 }
 
                 // Offset into normalized space
                 for (int i = 0; i < 3; i++)
                 {
-                    triangle.point[i] += Vector3(1.0f, 1.0f, 0.0f);
                     triangle.point[i].x *= m_viewport.w * 0.5f;
-                    triangle.point[i].y *= m_viewport.h * 0.5f;
+                    triangle.point[i].y *= -m_viewport.h * 0.5f;
+                    triangle.point[i].z *= 0.5f;
+                    triangle.point[i].x += m_viewport.w * 0.5f;
+                    triangle.point[i].y += m_viewport.h * 0.5f;
+                    triangle.point[i].z += 0.5f;
                 }
 
                 m_triangles.push_back(triangle);
@@ -304,16 +308,21 @@ void Scene::UpdateVisible()
                 for (int i = 0; i < 4; i++)
                 {
                     float w = quad.point[i].w;
-                    assert(w != 0.0f);
-                    quad.point[i] /= w;
+                    if (w != 0.0f)
+                    {
+                        quad.point[i] /= w;
+                    }
                 }
 
                 // Offset into normalized space
                 for (int i = 0; i < 4; i++)
                 {
-                    quad.point[i] += Vector3(1.0f, 1.0f, 0.0f);
                     quad.point[i].x *= m_viewport.w * 0.5f;
-                    quad.point[i].y *= m_viewport.h * 0.5f;
+                    quad.point[i].y *= -m_viewport.h * 0.5f;
+                    quad.point[i].z *= 0.5f;
+                    quad.point[i].x += m_viewport.w * 0.5f;
+                    quad.point[i].y += m_viewport.h * 0.5f;
+                    quad.point[i].z += 0.5f;
                 }
 
                 m_quads.push_back(quad);

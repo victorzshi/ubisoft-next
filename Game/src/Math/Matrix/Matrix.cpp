@@ -111,8 +111,8 @@ Matrix Matrix::Scale(Vector3 &v)
 
 Matrix Matrix::Perspective(float fov, float aspectRatio, float zNear, float zFar)
 {
-    float radians = fov * (PI / 180.0f);
-    float distance = 1.0f / tanf(radians * 0.5f);
+    float theta = fov * (PI / 180.0f);
+    float distance = 1.0f / tanf(theta * 0.5f);
     float reciprocal = 1.0f / (zNear - zFar);
 
     Matrix matrix;
@@ -130,7 +130,9 @@ Matrix Matrix::LookAt(Vector3 &from, Vector3 &to, Vector3 &up)
     Vector3 zAxis = (to - from).Normalize();     // Forward
     Vector3 xAxis = zAxis.Cross(up).Normalize(); // Right
     Vector3 yAxis = xAxis.Cross(zAxis);          // Up
-
+    
+    zAxis *= -1;
+    
     Matrix matrix;
     matrix(0, 0) = xAxis.x;
     matrix(0, 1) = yAxis.x;
