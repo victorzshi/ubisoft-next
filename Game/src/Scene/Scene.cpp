@@ -10,7 +10,6 @@ Scene::Scene() : m_id(0)
 
 void Scene::Init()
 {
-    SetViewport();
     SetCamera();
     SetWorldMatrix();
     SetViewMatrix();
@@ -76,21 +75,11 @@ void Scene::Update(float deltaTime)
 
     if (App::IsKeyPressed(VK_LBUTTON))
     {
-        // Track mouse location
-        float x, y;
-        App::GetMousePos(x, y);
+        Vector3 ray = GetPickRay();
 
-        // get the pick ray
-        Vector3 ray = GetPickRay(x, y, 90.0f, m_viewport.w, m_viewport.h);
-
-        // compute intersection with z=0 plane
+        // Intersection with z=0 plane
         float t = -m_camera.position.z / ray.z;
         m_click = m_camera.position + ray * t;
-
-        int id = m_ships.GetIds().front();
-        Transform transform = GetTransform(id);
-        transform.position = m_click;
-        SetTransform(id, transform);
     }
 
     std::vector<int> ids = m_ships.GetIds();
@@ -109,12 +98,9 @@ void Scene::Update(float deltaTime)
 
     // Look at ship
     int id = m_ships.GetIds().front();
-    Vector3 from = m_camera.position;
-    Vector3 to = GetTransform(id).position;
-    Vector3 up = m_camera.up;
-    m_view = Matrix::LookAt(from, to, up);
-    m_viewToWorld = Matrix::ViewToWorld(from, to, up);
+    m_camera.facing = GetTransform(id).position;
 
+    SetViewMatrix();
     UpdateVisible();
 }
 
@@ -123,17 +109,10 @@ void Scene::Render()
 #ifdef _DEBUG
     RenderBorder();
 
-    App::Print(10.0f, 100.0f, m_click.ToString().c_str());
+    std::string text = "Click: " + m_click.ToString();
+    App::Print(10.0f, 100.0f, text.c_str());
 #endif
     RenderVisible();
-}
-
-void Scene::SetViewport()
-{
-    m_viewport.x = 0.0f;
-    m_viewport.y = 0.0f;
-    m_viewport.w = 960.0f;
-    m_viewport.h = 540.0f;
 }
 
 void Scene::SetCamera()
@@ -158,35 +137,41 @@ void Scene::SetViewMatrix()
     Vector3 to = m_camera.facing;
     Vector3 up = m_camera.up;
     m_view = Matrix::LookAt(from, to, up);
+    m_viewInverse = Matrix::ViewToWorld(from, to, up);
 }
 
 void Scene::SetProjectionMatrix()
 {
     float fov = 90.0f;
-    float aspectRatio = m_viewport.w / m_viewport.h;
+    float aspectRatio = m_SCREEN_WIDTH / m_SCREEN_HEIGHT;
     float zNear = 0.1f;
     float zFar = 25.0f;
     m_projection = Matrix::Perspective(fov, aspectRatio, zNear, zFar);
 }
 
-Vector3 Scene::GetPickRay(float sx, float sy, float fov, float width, float height)
+Vector3 Scene::GetPickRay()
 {
-    float d = 1.0f / tanf(fov * PI / 360.0f);
-    float aspect = width / height;
-    Vector3 viewPoint(2.0f * aspect * sx / width - aspect, -2.0f * sy / height + 1.0f, -d);
+    float x, y;
+    App::GetMousePos(x, y);
 
-    viewPoint = TransformPoint(m_viewToWorld, viewPoint);
+    float theta = m_FOV * (PI / 180.0f);
+    float distance = 1.0f / tanf(theta * 0.5f);
+    float aspectRatio = m_SCREEN_WIDTH / m_SCREEN_HEIGHT;
 
-    return viewPoint - m_camera.position;
-}
+    Vector3 viewPoint;
+    viewPoint.x = 2.0f * aspectRatio * x / m_SCREEN_WIDTH - aspectRatio;
+    viewPoint.y = -2.0f * y / m_SCREEN_HEIGHT + 1.0f;
+    viewPoint.z = -distance;
 
-Vector3 Scene::TransformPoint(Matrix &m, Vector3 &v) const
-{
     Vector3 result;
-    result.x = m(0, 0) * v.x + m(0, 1) * v.y + m(0, 2) * v.z + m(0, 3);
-    result.y = m(1, 0) * v.x + m(1, 1) * v.y + m(1, 2) * v.z + m(1, 3);
-    result.z = m(2, 0) * v.x + m(2, 1) * v.y + m(2, 2) * v.z + m(2, 3);
-    return result;
+    result.x = m_viewInverse(0, 0) * viewPoint.x + m_viewInverse(0, 1) * viewPoint.y +
+               m_viewInverse(0, 2) * viewPoint.z + m_viewInverse(0, 3);
+    result.y = m_viewInverse(1, 0) * viewPoint.x + m_viewInverse(1, 1) * viewPoint.y +
+               m_viewInverse(1, 2) * viewPoint.z + m_viewInverse(1, 3);
+    result.z = m_viewInverse(2, 0) * viewPoint.x + m_viewInverse(2, 1) * viewPoint.y +
+               m_viewInverse(2, 2) * viewPoint.z + m_viewInverse(2, 3);
+
+    return result - m_camera.position;
 }
 
 void Scene::MoveCamera(float deltaTime)
@@ -299,14 +284,13 @@ void Scene::UpdateVisible()
                 }
 
                 // Offset into normalized space
+                float offsetWidth = m_SCREEN_WIDTH * 0.5f;
+                float offsetHeight = m_SCREEN_HEIGHT * 0.5f;
                 for (int i = 0; i < 3; i++)
                 {
-                    triangle.point[i].x *= m_viewport.w * 0.5f;
-                    triangle.point[i].y *= -m_viewport.h * 0.5f;
-                    triangle.point[i].z *= 0.5f;
-                    triangle.point[i].x += m_viewport.w * 0.5f;
-                    triangle.point[i].y += m_viewport.h * 0.5f;
-                    triangle.point[i].z += 0.5f;
+                    triangle.point[i].x = offsetWidth * triangle.point[i].x + offsetWidth;
+                    triangle.point[i].y = -offsetHeight * triangle.point[i].y + offsetHeight;
+                    triangle.point[i].z = 0.5f * triangle.point[i].z + 0.5f;
                 }
 
                 m_triangles.push_back(triangle);
@@ -357,14 +341,13 @@ void Scene::UpdateVisible()
                 }
 
                 // Offset into normalized space
+                float offsetWidth = m_SCREEN_WIDTH * 0.5f;
+                float offsetHeight = m_SCREEN_HEIGHT * 0.5f;
                 for (int i = 0; i < 4; i++)
                 {
-                    quad.point[i].x *= m_viewport.w * 0.5f;
-                    quad.point[i].y *= -m_viewport.h * 0.5f;
-                    quad.point[i].z *= 0.5f;
-                    quad.point[i].x += m_viewport.w * 0.5f;
-                    quad.point[i].y += m_viewport.h * 0.5f;
-                    quad.point[i].z += 0.5f;
+                    quad.point[i].x = offsetWidth * quad.point[i].x + offsetWidth;
+                    quad.point[i].y = -offsetHeight * quad.point[i].y + offsetHeight;
+                    quad.point[i].z = 0.5f * quad.point[i].z + 0.5f;
                 }
 
                 m_quads.push_back(quad);
@@ -390,10 +373,10 @@ void Scene::RenderBorder()
     float r = 0.0f;
     float g = 1.0f;
     float b = 0.0f;
-    float x = m_viewport.x + 1.0f; // Offset into visible area
-    float y = m_viewport.y;
-    float w = m_viewport.w;
-    float h = m_viewport.h - 1.0f; // Offset into visible area
+    float x = 1.0f; // Offset into visible area
+    float y = 0.0f;
+    float w = m_SCREEN_WIDTH;
+    float h = m_SCREEN_HEIGHT - 1.0f; // Offset into visible area
     App::DrawLine(x, y, x, h, r, g, b);
     App::DrawLine(x, h, w, h, r, g, b);
     App::DrawLine(w, h, w, y, r, g, b);

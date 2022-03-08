@@ -151,15 +151,15 @@ Matrix Matrix::ViewToWorld(Vector3 &from, Vector3 &to, Vector3 &up)
 
     Matrix matrix;
     matrix(0, 0) = xAxis.x;
-    matrix(0, 1) = yAxis.x;
-    matrix(0, 2) = zAxis.x;
+    matrix(0, 1) = xAxis.y;
+    matrix(0, 2) = xAxis.z;
     matrix(0, 3) = 0.0f;
-    matrix(1, 0) = xAxis.y;
+    matrix(1, 0) = yAxis.x;
     matrix(1, 1) = yAxis.y;
-    matrix(1, 2) = zAxis.y;
+    matrix(1, 2) = yAxis.z;
     matrix(1, 3) = 0.0f;
-    matrix(2, 0) = xAxis.z;
-    matrix(2, 1) = yAxis.z;
+    matrix(2, 0) = zAxis.x;
+    matrix(2, 1) = zAxis.y;
     matrix(2, 2) = zAxis.z;
     matrix(2, 3) = 0.0f;
     matrix(3, 0) = from.x;

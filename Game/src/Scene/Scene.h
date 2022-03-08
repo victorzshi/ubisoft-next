@@ -4,7 +4,6 @@
 #include "Components/Physics/Physics.h"
 #include "Components/Transform/Transform.h"
 #include "Graphics/Camera/Camera.h"
-#include "Graphics/Rect/Rect.h"
 #include "Math/Matrix/Matrix.h"
 #include "Pools/Asteroids/Asteroids.h"
 #include "Pools/Grid/Grid.h"
@@ -32,18 +31,21 @@ class Scene
     void Render();
 
   private:
+    // Constants
+    const float m_FOV = 90.0f;
+    const float m_SCREEN_WIDTH = 960.0f;
+    const float m_SCREEN_HEIGHT = 540.0f;
+
     // Unique ID
     int m_id;
 
     // 3D graphics
-    Rect m_viewport;
     Camera m_camera;
     Matrix m_world;
     Matrix m_view;
+    Matrix m_viewInverse;
     Matrix m_projection;
-    Matrix m_viewToWorld;
     Vector3 m_click;
-
     std::vector<Triangle> m_triangles;
     std::vector<Quad> m_quads;
 
@@ -58,14 +60,12 @@ class Scene
     Ships m_ships;
 
     // Helper functions
-    void SetViewport();
     void SetCamera();
     void SetWorldMatrix();
     void SetViewMatrix();
     void SetProjectionMatrix();
 
-    Vector3 GetPickRay(float sx, float sy, float fov, float width, float height);
-    Vector3 TransformPoint(Matrix &m, Vector3 &v) const;
+    Vector3 GetPickRay();
 
     void MoveCamera(float deltaTime);
     void UpdateVisible();
