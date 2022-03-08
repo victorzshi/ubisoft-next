@@ -100,9 +100,11 @@ void Scene::Update(float deltaTime)
         Systems::AddRotation(*this, id, deltaTime);
     }
 
-    // Look at ship
+    // Follow ship with camera
     int id = m_ships.GetIds().front();
-    m_camera.to = GetTransform(id).position;
+    Transform transform = GetTransform(id);
+    m_camera.from = transform.position + Vector3(0.0f, 5.0f, 10.0f);
+    m_camera.to = transform.position;
 
     SetViewMatrix();
     UpdateVisible();
@@ -119,7 +121,7 @@ void Scene::Render()
 
 void Scene::SetCamera()
 {
-    m_camera.from = Vector3(0.0f, 0.0f, 20.0f);
+    m_camera.from = Vector3(0.0f, 5.0f, 10.0f);
     m_camera.to = Vector3(0.0f, 0.0f, 1.0f);
     m_camera.up = Vector3(0.0f, 1.0f, 0.0f);
 }
@@ -339,7 +341,8 @@ void Scene::UpdateVisible()
                 Vector3 light;
                 if (model.light == Light::OUTLINE)
                 {
-                    light = m_camera.from.Normalize();
+                    light = Vector3(0.0f, 1.0f, 2.0f).Normalize();
+                    // light = m_camera.from.Normalize();
                 }
                 else
                 {
