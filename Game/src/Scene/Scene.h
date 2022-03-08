@@ -6,6 +6,7 @@
 #include "Graphics/Camera/Camera.h"
 #include "Math/Matrix/Matrix.h"
 #include "Pools/Asteroids/Asteroids.h"
+#include "Pools/Bullets/Bullets.h"
 #include "Pools/Grid/Grid.h"
 #include "Pools/Ships/Ships.h"
 
@@ -17,9 +18,14 @@ class Scene
     void Init();
     void Shutdown();
 
+    Vector3 GetClickPosition() const;
     Model GetModel(int id) const;
     Physics GetPhysics(int id) const;
     Transform GetTransform(int id) const;
+    Asteroids &GetAsteroids();
+    Bullets &GetBullets();
+    Grid &GetGrid();
+    Ships &GetShips();
 
     void SetModel(int id, Model model);
     void SetPhysics(int id, Physics physics);
@@ -60,6 +66,7 @@ class Scene
 
     // Object pools
     Asteroids m_asteroids;
+    Bullets m_bullets;
     Grid m_grid;
     Ships m_ships;
 
@@ -69,6 +76,8 @@ class Scene
     void SetViewMatrix();
     void SetProjectionMatrix();
     void SetClickPosition();
+
+    std::vector<int> GetAllActiveIds() const;
 
     void MoveCamera(float deltaTime);
     void UpdateVisible();

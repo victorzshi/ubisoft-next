@@ -6,7 +6,7 @@
 
 void Systems::MoveShip(Scene &scene, int id)
 {
-    Physics physics = scene.GetPhysics(id);
+    Physics physics;
 
     float deltaVelocity = 2.0f;
 
@@ -36,6 +36,16 @@ void Systems::MoveShip(Scene &scene, int id)
     }
 
     scene.SetPhysics(id, physics);
+}
+
+void Systems::ShootBullet(Scene &scene, int id)
+{
+    if (App::IsKeyPressed(VK_LBUTTON))
+    {
+        Vector3 direction = scene.GetTransform(id).position + scene.GetClickPosition().Normalize();
+
+        scene.GetBullets().CreateBullet(direction);
+    }
 }
 
 void Systems::UpdatePosition(Scene &scene, int id, float deltaTime)

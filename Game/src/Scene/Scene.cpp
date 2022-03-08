@@ -18,6 +18,7 @@ void Scene::Init()
     SetProjectionMatrix();
 
     m_asteroids.Init(*this);
+    m_bullets.Init(*this);
     m_grid.Init(*this);
     m_ships.Init(*this);
 }
@@ -26,22 +27,44 @@ void Scene::Shutdown()
 {
 }
 
+Vector3 Scene::GetClickPosition() const
+{
+    return m_click;
+}
+
 Model Scene::GetModel(int id) const
 {
-    Model model = m_model[id];
-    return model;
+    return m_model[id];
 }
 
 Physics Scene::GetPhysics(int id) const
 {
-    Physics physics = m_physics[id];
-    return physics;
+    return m_physics[id];
 }
 
 Transform Scene::GetTransform(int id) const
 {
-    Transform transform = m_transform[id];
-    return transform;
+    return m_transform[id];
+}
+
+Asteroids &Scene::GetAsteroids()
+{
+    return m_asteroids;
+}
+
+Bullets &Scene::GetBullets()
+{
+    return m_bullets;
+}
+
+Grid &Scene::GetGrid()
+{
+    return m_grid;
+}
+
+Ships &Scene::GetShips()
+{
+    return m_ships;
 }
 
 void Scene::SetModel(int id, Model model)
@@ -75,25 +98,17 @@ void Scene::Update(float deltaTime)
     MoveCamera(deltaTime);
 #endif
 
-    if (App::IsKeyPressed(VK_LBUTTON))
-    {
-        SetClickPosition();
+    SetClickPosition();
 
-        // Test ship position
-        int id = m_ships.GetIds().front();
-        Transform transform = GetTransform(id);
-        transform.position = m_click;
-        SetTransform(id, transform);
-    }
-
-    std::vector<int> ids = m_ships.GetIds();
+    std::vector<int> ids = m_ships.GetActiveIds();
     for (auto id : ids)
     {
         Systems::MoveShip(*this, id);
+        Systems::ShootBullet(*this, id);
         Systems::UpdatePosition(*this, id, deltaTime);
     }
 
-    ids = m_asteroids.GetIds();
+    ids = m_asteroids.GetActiveIds();
     for (auto id : ids)
     {
         Systems::UpdatePosition(*this, id, deltaTime);
@@ -101,9 +116,8 @@ void Scene::Update(float deltaTime)
     }
 
     // Follow ship with camera
-    int id = m_ships.GetIds().front();
+    int id = m_ships.GetActiveIds().front();
     Transform transform = GetTransform(id);
-    m_camera.from = transform.position + Vector3(0.0f, 5.0f, 10.0f);
     m_camera.to = transform.position;
 
     SetViewMatrix();
@@ -114,6 +128,8 @@ void Scene::Update(float deltaTime)
 void Scene::Render()
 {
     RenderVisible();
+
+    App::Print(10.0f, 100.0f, m_click.ToString().c_str());
 #ifdef _DEBUG
     RenderBorder();
 #endif
@@ -121,7 +137,7 @@ void Scene::Render()
 
 void Scene::SetCamera()
 {
-    m_camera.from = Vector3(0.0f, 5.0f, 10.0f);
+    m_camera.from = Vector3(0.0f, 0.0f, 20.0f);
     m_camera.to = Vector3(0.0f, 0.0f, 1.0f);
     m_camera.up = Vector3(0.0f, 1.0f, 0.0f);
 }
@@ -218,6 +234,28 @@ void Scene::SetClickPosition()
     m_click = m_camera.from + ray * t;
 }
 
+std::vector<int> Scene::GetAllActiveIds() const
+{
+    std::vector<int> ids;
+    for (auto &id : m_asteroids.GetActiveIds())
+    {
+        ids.push_back(id);
+    }
+    for (auto &id : m_bullets.GetActiveIds())
+    {
+        ids.push_back(id);
+    }
+    for (auto &id : m_grid.GetActiveIds())
+    {
+        ids.push_back(id);
+    }
+    for (auto &id : m_ships.GetActiveIds())
+    {
+        ids.push_back(id);
+    }
+    return ids;
+}
+
 void Scene::MoveCamera(float deltaTime)
 {
     float deltaVelocity = deltaTime / 100.0f;
@@ -252,19 +290,7 @@ void Scene::UpdateVisible()
 {
     m_visible.clear();
 
-    std::vector<int> ids;
-    for (auto &id : m_asteroids.GetIds())
-    {
-        ids.push_back(id);
-    }
-    for (auto &id : m_grid.GetIds())
-    {
-        ids.push_back(id);
-    }
-    for (auto &id : m_ships.GetIds())
-    {
-        ids.push_back(id);
-    }
+    std::vector<int> ids = GetAllActiveIds();
 
     for (auto &id : ids)
     {
@@ -341,8 +367,7 @@ void Scene::UpdateVisible()
                 Vector3 light;
                 if (model.light == Light::OUTLINE)
                 {
-                    light = Vector3(0.0f, 1.0f, 2.0f).Normalize();
-                    // light = m_camera.from.Normalize();
+                    light = m_camera.from.Normalize();
                 }
                 else
                 {

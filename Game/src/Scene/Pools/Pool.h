@@ -12,12 +12,15 @@ class Pool
 
     virtual void Init(Scene &scene) = 0;
 
-    std::vector<int> GetIds();
+    int GetNextId() const;
+    std::vector<int> GetActiveIds() const;
 
     bool Activate(int id);
     bool Deactivate(int id);
 
   protected:
+    Scene *GetScene() const;
+
     void SetScene(Scene *scene);
     void SetBegin(int id);
     void SetSize(int id);

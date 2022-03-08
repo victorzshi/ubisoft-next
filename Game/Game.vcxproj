@@ -202,6 +202,7 @@
     <ClInclude Include="src\Scene\Components\Physics\Physics.h" />
     <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
     <ClInclude Include="src\Scene\Pools\Asteroids\Asteroids.h" />
+    <ClInclude Include="src\Scene\Pools\Bullets\Bullets.h" />
     <ClInclude Include="src\Scene\Pools\Grid\Grid.h" />
     <ClInclude Include="src\Scene\Pools\Pool.h" />
     <ClInclude Include="src\Scene\Pools\Ships\Ships.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="src\Scene\Components\Physics\Physics.cpp" />
     <ClCompile Include="src\Scene\Components\Transform\Transform.cpp" />
     <ClCompile Include="src\Scene\Pools\Asteroids\Asteroids.cpp" />
+    <ClCompile Include="src\Scene\Pools\Bullets\Bullets.cpp" />
     <ClCompile Include="src\Scene\Pools\Grid\Grid.cpp" />
     <ClCompile Include="src\Scene\Pools\Pool.cpp" />
     <ClCompile Include="src\Scene\Pools\Ships\Ships.cpp" />

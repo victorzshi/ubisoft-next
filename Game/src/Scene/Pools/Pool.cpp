@@ -8,7 +8,12 @@ Pool::Pool() : m_scene(nullptr), m_begin(0), m_size(0), m_end(0)
 {
 }
 
-std::vector<int> Pool::GetIds()
+int Pool::GetNextId() const
+{
+    return m_size;
+}
+
+std::vector<int> Pool::GetActiveIds() const
 {
     assert(m_end != 0);
 
@@ -48,6 +53,11 @@ bool Pool::Deactivate(int id)
     SwapMemory(id);
 
     return true;
+}
+
+Scene *Pool::GetScene() const
+{
+    return m_scene;
 }
 
 void Pool::SetScene(Scene *scene)
