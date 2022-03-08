@@ -31,37 +31,37 @@ Mesh Mesh::LoadFromObjectFile(std::string file)
         char c;
         if (line[0] == 'v')
         {
-            float vertex[3] = {0.0f};
-            s >> c >> vertex[0] >> vertex[1] >> vertex[2];
+            float v[3] = {0.0f};
+            s >> c >> v[0] >> v[1] >> v[2];
 
-            Vector3 v;
-            v.x = vertex[0];
-            v.y = vertex[1];
-            v.z = vertex[2];
-            vertices.push_back(v);
+            Vector3 vertex;
+            vertex.x = v[0];
+            vertex.y = v[1];
+            vertex.z = v[2];
+            vertices.push_back(vertex);
         }
         else if (line[0] == 'f')
         {
-            size_t face[4] = {0};
-            s >> c >> face[0] >> face[1] >> face[2] >> face[3];
+            size_t f[4] = {0};
+            s >> c >> f[0] >> f[1] >> f[2] >> f[3];
 
-            if (face[3] == 0)
+            Face face;
+            if (f[3] == 0)
             {
-                Triangle triangle;
-                triangle.point[0] = vertices[face[0] - 1];
-                triangle.point[1] = vertices[face[1] - 1];
-                triangle.point[2] = vertices[face[2] - 1];
-                mesh.triangles.push_back(triangle);
+                face.vertices = 3;
+                face.vertex[0] = vertices[f[0] - 1];
+                face.vertex[1] = vertices[f[1] - 1];
+                face.vertex[2] = vertices[f[2] - 1];
             }
             else
             {
-                Quad quad;
-                quad.point[0] = vertices[face[0] - 1];
-                quad.point[1] = vertices[face[1] - 1];
-                quad.point[2] = vertices[face[2] - 1];
-                quad.point[3] = vertices[face[3] - 1];
-                mesh.quads.push_back(quad);
+                face.vertices = 4;
+                face.vertex[0] = vertices[f[0] - 1];
+                face.vertex[1] = vertices[f[1] - 1];
+                face.vertex[2] = vertices[f[2] - 1];
+                face.vertex[3] = vertices[f[3] - 1];
             }
+            mesh.faces.push_back(face);
         }
     }
 

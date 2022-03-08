@@ -51,8 +51,7 @@ class Scene
     Matrix m_viewInverse;
     Matrix m_projection;
     Vector3 m_click;
-    std::vector<Triangle> m_triangles;
-    std::vector<Quad> m_quads;
+    std::vector<Face> m_visible;
 
     // Component arrays
     std::vector<Mesh> m_mesh;

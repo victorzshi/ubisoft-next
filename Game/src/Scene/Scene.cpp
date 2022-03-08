@@ -248,8 +248,7 @@ void Scene::MoveCamera(float deltaTime)
 
 void Scene::UpdateVisible()
 {
-    m_triangles.clear();
-    m_quads.clear();
+    m_visible.clear();
 
     std::vector<int> ids;
     for (auto &id : m_asteroids.GetIds())
@@ -270,7 +269,7 @@ void Scene::UpdateVisible()
         Mesh mesh = GetMesh(id);
 
         // Early exit
-        if (mesh.triangles.empty() && mesh.quads.empty())
+        if (mesh.faces.empty())
         {
             return;
         }
@@ -282,117 +281,60 @@ void Scene::UpdateVisible()
         Matrix scale = Matrix::Scale(transform.scaling);
         Matrix local = scale * rotate * translate;
 
-        for (auto &triangle : mesh.triangles)
+        for (auto &face : mesh.faces)
         {
             // Apply local transform
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < face.vertices; i++)
             {
-                triangle.point[i] = local * triangle.point[i];
+                face.vertex[i] = local * face.vertex[i];
             }
 
             // Apply world transform
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < face.vertices; i++)
             {
-                triangle.point[i] = m_world * triangle.point[i];
+                face.vertex[i] = m_world * face.vertex[i];
             }
 
             // Calculate normal for backface culling
-            Vector3 a = triangle.point[1] - triangle.point[0];
-            Vector3 b = triangle.point[2] - triangle.point[0];
+            Vector3 a = face.vertex[1] - face.vertex[0];
+            Vector3 b = face.vertex[2] - face.vertex[0];
             Vector3 normal = a.Cross(b).Normalize();
 
-            if (normal.Dot((triangle.point[0] - m_camera.from).Normalize()) < 0.0f)
+            if (normal.Dot((face.vertex[0] - m_camera.from).Normalize()) < 0.0f)
             {
                 // Convert world space to view space
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < face.vertices; i++)
                 {
-                    triangle.point[i] = m_view * triangle.point[i];
+                    face.vertex[i] = m_view * face.vertex[i];
                 }
 
                 // Project from 3D to 2D
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < face.vertices; i++)
                 {
-                    triangle.point[i] = m_projection * triangle.point[i];
+                    face.vertex[i] = m_projection * face.vertex[i];
                 }
 
                 // Normalize with reciprocal divide
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < face.vertices; i++)
                 {
-                    float w = triangle.point[i].w;
+                    float w = face.vertex[i].w;
                     if (w != 0.0f)
                     {
-                        triangle.point[i] /= w;
+                        face.vertex[i] /= w;
                     }
                 }
 
                 // Offset into normalized space
                 float offsetWidth = m_SCREEN_WIDTH * 0.5f;
                 float offsetHeight = m_SCREEN_HEIGHT * 0.5f;
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < face.vertices; i++)
                 {
-                    triangle.point[i].x = offsetWidth * triangle.point[i].x + offsetWidth;
-                    triangle.point[i].y = -offsetHeight * triangle.point[i].y + offsetHeight;
-                    triangle.point[i].z = 0.5f * triangle.point[i].z + 0.5f;
+                    face.vertex[i].x = offsetWidth * face.vertex[i].x + offsetWidth;
+                    face.vertex[i].y = -offsetHeight * face.vertex[i].y + offsetHeight;
+                    face.vertex[i].z = 0.5f * face.vertex[i].z + 0.5f;
                 }
 
-                m_triangles.push_back(triangle);
-            }
-        }
-
-        for (auto &quad : mesh.quads)
-        {
-            // Apply local transform
-            for (int i = 0; i < 4; i++)
-            {
-                quad.point[i] = local * quad.point[i];
-            }
-
-            // Apply world transform
-            for (int i = 0; i < 4; i++)
-            {
-                quad.point[i] = m_world * quad.point[i];
-            }
-
-            // Calculate normal for backface culling
-            Vector3 a = quad.point[1] - quad.point[0];
-            Vector3 b = quad.point[2] - quad.point[0];
-            Vector3 normal = a.Cross(b).Normalize();
-
-            if (normal.Dot((quad.point[0] - m_camera.from).Normalize()) < 0.0f)
-            {
-                // Convert world space to view space
-                for (int i = 0; i < 4; i++)
-                {
-                    quad.point[i] = m_view * quad.point[i];
-                }
-
-                // Project from 3D to 2D
-                for (int i = 0; i < 4; i++)
-                {
-                    quad.point[i] = m_projection * quad.point[i];
-                }
-
-                // Normalize with reciprocal divide
-                for (int i = 0; i < 4; i++)
-                {
-                    float w = quad.point[i].w;
-                    if (w != 0.0f)
-                    {
-                        quad.point[i] /= w;
-                    }
-                }
-
-                // Offset into normalized space
-                float offsetWidth = m_SCREEN_WIDTH * 0.5f;
-                float offsetHeight = m_SCREEN_HEIGHT * 0.5f;
-                for (int i = 0; i < 4; i++)
-                {
-                    quad.point[i].x = offsetWidth * quad.point[i].x + offsetWidth;
-                    quad.point[i].y = -offsetHeight * quad.point[i].y + offsetHeight;
-                    quad.point[i].z = 0.5f * quad.point[i].z + 0.5f;
-                }
-
-                m_quads.push_back(quad);
+                m_visible.push_back(face);
             }
         }
     }
@@ -400,13 +342,9 @@ void Scene::UpdateVisible()
 
 void Scene::RenderVisible()
 {
-    for (auto &triangle : m_triangles)
+    for (auto &face : m_visible)
     {
-        triangle.Render();
-    }
-    for (auto &quad : m_quads)
-    {
-        quad.Render();
+        face.Render();
     }
 }
 
