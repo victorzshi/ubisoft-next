@@ -72,6 +72,7 @@ class Scene
 
     void MoveCamera(float deltaTime);
     void UpdateVisible();
+    void SortVisible();
     void RenderVisible();
     void RenderBorder();
 };

@@ -14,9 +14,8 @@ void Asteroids::Init(Scene &scene)
 
         Model model;
         model.mesh = Mesh::TORUS;
-        model.color.r = 1.0f;
-        model.color.g = 0.0f;
-        model.color.b = 0.0f;
+        model.color = Color::RED;
+        model.light = Light::SHADOW;
         scene.SetModel(id, model);
 
         Physics physics;

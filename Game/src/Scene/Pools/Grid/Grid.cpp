@@ -14,9 +14,8 @@ void Grid::Init(Scene &scene)
 
         Model model;
         model.mesh = Mesh::PLANE;
-        model.color.r = 0.5f;
-        model.color.g = 0.5f;
-        model.color.b = 0.5f;
+        model.color = Color::GREY;
+        model.light = Light::BRIGHT;
         scene.SetModel(id, model);
 
         Transform transform;
@@ -36,7 +35,7 @@ void Grid::Init(Scene &scene)
 
 std::vector<Vector3> Grid::CreatePositions()
 {
-    // Cube model should be unit cube.
+    // Assumes unit length model.
     float WIDTH = 1.0f;
     float HEIGHT = 1.0f;
 
