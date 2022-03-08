@@ -38,4 +38,6 @@ struct Vector3
     float Dot(const Vector3 &other) const;
 
     Vector3 Cross(const Vector3 &other) const;
+
+    std::string ToString() const;
 };

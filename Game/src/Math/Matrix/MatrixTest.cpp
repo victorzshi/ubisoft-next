@@ -9,8 +9,16 @@ class MatrixTest
   public:
     static void RunTests()
     {
-        Matrix a = Matrix(2.0f);
-        Matrix b = Matrix(3.0f);
+        Matrix a;
+        Matrix b;
+        for (int row = 0; row < 4; row++)
+        {
+            for (int col = 0; col < 4; col++)
+            {
+                a(row, col) = 2.0f;
+                b(row, col) = 3.0f;
+            }
+        }
         Vector3 v = Vector3(3.0f, 3.0f, 3.0f);
         float n = sqrtf(2.0f);
 
