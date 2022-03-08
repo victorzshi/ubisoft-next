@@ -79,9 +79,13 @@ void Pool::SwapMemory(int id)
         return;
     }
 
-    Mesh mesh = m_scene->GetMesh(m_size);
-    m_scene->SetMesh(m_size, m_scene->GetMesh(id));
-    m_scene->SetMesh(id, mesh);
+    Model model = m_scene->GetModel(m_size);
+    m_scene->SetModel(m_size, m_scene->GetModel(id));
+    m_scene->SetModel(id, model);
+
+    Physics physics = m_scene->GetPhysics(m_size);
+    m_scene->SetPhysics(m_size, m_scene->GetPhysics(id));
+    m_scene->SetPhysics(id, physics);
 
     Transform transform = m_scene->GetTransform(m_size);
     m_scene->SetTransform(m_size, m_scene->GetTransform(id));

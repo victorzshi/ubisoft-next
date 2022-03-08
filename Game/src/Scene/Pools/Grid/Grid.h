@@ -10,7 +10,6 @@ class Grid : public Pool
   public:
     const int ROWS = 8;
     const int COLUMNS = 14;
-    const std::string FILE = "plane.obj";
 
     virtual void Init(Scene &scene) override;
 

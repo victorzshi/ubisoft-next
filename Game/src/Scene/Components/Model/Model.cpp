@@ -1,25 +1,72 @@
 #include "stdafx.h"
 
-#include "Mesh.h"
+#include "Model.h"
 
 #include <fstream>
-#include <iostream>
 #include <strstream>
 
-Mesh::Mesh()
+std::vector<Face> Model::m_cube;
+std::vector<Face> Model::m_sphere;
+std::vector<Face> Model::m_torus;
+std::vector<Face> Model::m_plane;
+
+Model::Model() : mesh(Mesh::CUBE), color(Color())
 {
+    if (m_cube.empty())
+    {
+        m_cube = LoadFromObjectFile("cube.obj");
+    }
+    if (m_sphere.empty())
+    {
+        m_sphere = LoadFromObjectFile("sphere.obj");
+    }
+    if (m_torus.empty())
+    {
+        m_torus = LoadFromObjectFile("torus.obj");
+    }
+    if (m_plane.empty())
+    {
+        m_plane = LoadFromObjectFile("plane.obj");
+    }
 }
 
-Mesh Mesh::LoadFromObjectFile(std::string file)
+std::vector<Face> Model::GetFaces()
+{
+    std::vector<Face> faces;
+    switch (mesh)
+    {
+    case Mesh::CUBE:
+        faces = m_cube;
+        break;
+
+    case Mesh::SPHERE:
+        faces = m_sphere;
+        break;
+
+    case Mesh::TORUS:
+        faces = m_torus;
+        break;
+
+    case Mesh::PLANE:
+        faces = m_plane;
+        break;
+    default:
+        faces = {};
+        break;
+    }
+    assert(!faces.empty());
+    return faces;
+}
+
+std::vector<Face> Model::LoadFromObjectFile(std::string file)
 {
     std::string path = "data/objects/" + file;
 
     std::ifstream ifs(path);
     assert(ifs.is_open());
 
-    Mesh mesh;
     std::vector<Vector3> vertices;
-
+    std::vector<Face> faces;
     while (ifs.good())
     {
         char line[64];
@@ -61,9 +108,9 @@ Mesh Mesh::LoadFromObjectFile(std::string file)
                 face.vertex[2] = vertices[f[2] - 1];
                 face.vertex[3] = vertices[f[3] - 1];
             }
-            mesh.faces.push_back(face);
+            faces.push_back(face);
         }
     }
 
-    return mesh;
+    return faces;
 }

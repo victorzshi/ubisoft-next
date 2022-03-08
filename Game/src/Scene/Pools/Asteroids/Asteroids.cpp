@@ -7,14 +7,17 @@
 
 void Asteroids::Init(Scene &scene)
 {
-    Mesh mesh = Mesh::LoadFromObjectFile(FILE);
-
     int index = 0;
     for (int i = 0; i < TOTAL; i++)
     {
         int id = scene.CreateId();
 
-        scene.SetMesh(id, mesh);
+        Model model;
+        model.mesh = Mesh::TORUS;
+        model.color.r = 1.0f;
+        model.color.g = 0.0f;
+        model.color.b = 0.0f;
+        scene.SetModel(id, model);
 
         Physics physics;
         physics.velocity.x = Random::GetFloat(-1.0f, 1.0f);
