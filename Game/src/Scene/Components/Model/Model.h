@@ -13,14 +13,33 @@ enum class Mesh
     PLANE,
 };
 
+enum class Color
+{
+    WHITE,
+    GREY,
+    RED,
+    GREEN,
+    BLUE,
+};
+
+enum class Light
+{
+    BRIGHT,
+    SHADOW,
+    OUTLINE,
+};
+
 struct Model
 {
     Mesh mesh;
     Color color;
+    Light light;
 
     Model();
 
     std::vector<Face> GetFaces();
+
+    void SetColor(float dot, Face &face);
 
   private:
     static std::vector<Face> m_cube;

@@ -2,6 +2,8 @@
 
 #include "Scene.h"
 
+#include <algorithm>
+
 #include "Systems/Systems.h"
 
 Scene::Scene() : m_id(0)
@@ -104,17 +106,15 @@ void Scene::Update(float deltaTime)
 
     SetViewMatrix();
     UpdateVisible();
+    SortVisible();
 }
 
 void Scene::Render()
 {
+    RenderVisible();
 #ifdef _DEBUG
     RenderBorder();
-
-    std::string text = "Click: " + m_click.ToString();
-    App::Print(10.0f, 100.0f, text.c_str());
 #endif
-    RenderVisible();
 }
 
 void Scene::SetCamera()
@@ -266,7 +266,8 @@ void Scene::UpdateVisible()
 
     for (auto &id : ids)
     {
-        std::vector<Face> faces = GetModel(id).GetFaces();
+        Model model = GetModel(id);
+        std::vector<Face> faces = model.GetFaces();
 
         // Early exit
         if (faces.empty())
@@ -334,12 +335,37 @@ void Scene::UpdateVisible()
                     face.vertex[i].z = 0.5f * face.vertex[i].z + 0.5f;
                 }
 
-                // TODO: Try adding shading.
-                face.color = GetModel(id).color;
+                // Add lighting effect
+                Vector3 light = Vector3(0.0f, 0.0f, 1.0f).Normalize();
+                // Vector3 light = m_camera.from.Normalize();
+                model.SetColor(normal.Dot(light), face);
+
                 m_visible.push_back(face);
             }
         }
     }
+}
+
+void Scene::SortVisible()
+{
+    std::sort(m_visible.begin(), m_visible.end(), [](Face &a, Face &b) {
+        float z1 = 0.0f;
+        float z2 = 0.0f;
+
+        for (int i = 0; i < a.vertices; i++)
+        {
+            z1 += a.vertex[i].z;
+        }
+        for (int i = 0; i < b.vertices; i++)
+        {
+            z2 += b.vertex[i].z;
+        }
+
+        z1 /= a.vertices;
+        z2 /= b.vertices;
+
+        return z1 > z2;
+    });
 }
 
 void Scene::RenderVisible()

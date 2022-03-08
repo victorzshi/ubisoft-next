@@ -10,7 +10,7 @@ std::vector<Face> Model::m_sphere;
 std::vector<Face> Model::m_torus;
 std::vector<Face> Model::m_plane;
 
-Model::Model() : mesh(Mesh::CUBE), color(Color())
+Model::Model() : mesh(Mesh::CUBE), color(Color::WHITE), light(Light::BRIGHT)
 {
     if (m_cube.empty())
     {
@@ -33,6 +33,7 @@ Model::Model() : mesh(Mesh::CUBE), color(Color())
 std::vector<Face> Model::GetFaces()
 {
     std::vector<Face> faces;
+
     switch (mesh)
     {
     case Mesh::CUBE:
@@ -50,12 +51,73 @@ std::vector<Face> Model::GetFaces()
     case Mesh::PLANE:
         faces = m_plane;
         break;
-    default:
-        faces = {};
+    }
+
+    assert(!faces.empty());
+
+    return faces;
+}
+
+void Model::SetColor(float dot, Face &face)
+{
+    int r, g, b;
+    switch (color)
+    {
+    case Color::WHITE:
+        r = 255;
+        g = 255;
+        b = 255;
+        break;
+
+    case Color::GREY:
+        r = 128;
+        g = 128;
+        b = 128;
+        break;
+
+    case Color::RED:
+        r = 255;
+        g = 0;
+        b = 0;
+        break;
+
+    case Color::GREEN:
+        r = 0;
+        g = 255;
+        b = 0;
+        break;
+
+    case Color::BLUE:
+        r = 0;
+        g = 0;
+        b = 255;
         break;
     }
-    assert(!faces.empty());
-    return faces;
+
+    switch (light)
+    {
+    case Light::BRIGHT:
+        face.r = (float)r;
+        face.g = (float)g;
+        face.b = (float)b;
+        break;
+
+    case Light::SHADOW:
+        face.r = r * max(dot, 0.3f);
+        face.g = g * max(dot, 0.3f);
+        face.b = b * max(dot, 0.3f);
+        break;
+
+    case Light::OUTLINE:
+        face.r = r * (1.0f - dot);
+        face.g = g * (1.0f - dot);
+        face.b = b * (1.0f - dot);
+        break;
+    }
+
+    face.r /= 255.0f;
+    face.g /= 255.0f;
+    face.b /= 255.0f;
 }
 
 std::vector<Face> Model::LoadFromObjectFile(std::string file)
