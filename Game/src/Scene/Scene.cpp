@@ -336,8 +336,15 @@ void Scene::UpdateVisible()
                 }
 
                 // Add lighting effect
-                Vector3 light = Vector3(0.0f, 0.0f, 1.0f).Normalize();
-                // Vector3 light = m_camera.from.Normalize();
+                Vector3 light;
+                if (model.light == Light::OUTLINE)
+                {
+                    light = m_camera.from.Normalize();
+                }
+                else
+                {
+                    light = Vector3(0.0f, 0.0f, 1.0f).Normalize();
+                }
                 model.SetColor(normal.Dot(light), face);
 
                 m_visible.push_back(face);

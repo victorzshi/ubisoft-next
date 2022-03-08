@@ -60,7 +60,9 @@ std::vector<Face> Model::GetFaces()
 
 void Model::SetColor(float dot, Face &face)
 {
-    int r, g, b;
+    int r = 0;
+    int g = 0;
+    int b = 0;
     switch (color)
     {
     case Color::WHITE:
@@ -109,9 +111,9 @@ void Model::SetColor(float dot, Face &face)
         break;
 
     case Light::OUTLINE:
-        face.r = r * (1.0f - dot);
-        face.g = g * (1.0f - dot);
-        face.b = b * (1.0f - dot);
+        face.r = r * max((1.0f - dot), 0.3f);
+        face.g = g * max((1.0f - dot), 0.3f);
+        face.b = b * max((1.0f - dot), 0.3f);
         break;
     }
 
