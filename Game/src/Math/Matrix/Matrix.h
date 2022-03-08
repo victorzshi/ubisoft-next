@@ -17,9 +17,6 @@ struct Matrix
     static Matrix Translate(Vector3 &v);
     static Matrix Rotate(Vector3 &v);
     static Matrix Scale(Vector3 &v);
-    static Matrix Perspective(float distancePlane, float aspectRatio, float zNear, float zFar);
-    static Matrix LookAt(Vector3 &from, Vector3 &to, Vector3 &up);
-    static Matrix ViewToWorld(Vector3 &from, Vector3 &to, Vector3 &up);
 
   private:
     float m[16];

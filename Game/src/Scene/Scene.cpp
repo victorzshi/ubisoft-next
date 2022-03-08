@@ -75,11 +75,13 @@ void Scene::Update(float deltaTime)
 
     if (App::IsKeyPressed(VK_LBUTTON))
     {
-        Vector3 ray = GetPickRay();
+        SetClickPosition();
 
-        // Intersection with z=0 plane
-        float t = -m_camera.from.z / ray.z;
-        m_click = m_camera.from + ray * t;
+        // Test ship position
+        int id = m_ships.GetIds().front();
+        Transform transform = GetTransform(id);
+        transform.position = m_click;
+        SetTransform(id, transform);
     }
 
     std::vector<int> ids = m_ships.GetIds();
@@ -132,37 +134,72 @@ void Scene::SetWorldMatrix()
 
 void Scene::SetViewMatrix()
 {
-    // TODO: Set LookAt and PointAt here.
     Vector3 from = m_camera.from;
     Vector3 to = m_camera.to;
     Vector3 up = m_camera.up;
-    m_view = Matrix::LookAt(from, to, up);
-    m_viewInverse = Matrix::ViewToWorld(from, to, up);
+
+    Vector3 zAxis = (to - from).Normalize();        // Forward
+    Vector3 xAxis = zAxis.Cross(up).Normalize();    // Right
+    Vector3 yAxis = xAxis.Cross(zAxis).Normalize(); // Up
+
+    zAxis *= -1;
+
+    m_view(0, 0) = xAxis.x;
+    m_view(0, 1) = yAxis.x;
+    m_view(0, 2) = zAxis.x;
+    m_view(0, 3) = 0.0f;
+    m_view(1, 0) = xAxis.y;
+    m_view(1, 1) = yAxis.y;
+    m_view(1, 2) = zAxis.y;
+    m_view(1, 3) = 0.0f;
+    m_view(2, 0) = xAxis.z;
+    m_view(2, 1) = yAxis.z;
+    m_view(2, 2) = zAxis.z;
+    m_view(2, 3) = 0.0f;
+    m_view(3, 0) = -xAxis.Dot(from);
+    m_view(3, 1) = -yAxis.Dot(from);
+    m_view(3, 2) = -zAxis.Dot(from);
+    m_view(3, 3) = 1.0f;
+
+    m_viewInverse(0, 0) = xAxis.x;
+    m_viewInverse(0, 1) = xAxis.y;
+    m_viewInverse(0, 2) = xAxis.z;
+    m_viewInverse(0, 3) = 0.0f;
+    m_viewInverse(1, 0) = yAxis.x;
+    m_viewInverse(1, 1) = yAxis.y;
+    m_viewInverse(1, 2) = yAxis.z;
+    m_viewInverse(1, 3) = 0.0f;
+    m_viewInverse(2, 0) = zAxis.x;
+    m_viewInverse(2, 1) = zAxis.y;
+    m_viewInverse(2, 2) = zAxis.z;
+    m_viewInverse(2, 3) = 0.0f;
+    m_viewInverse(3, 0) = from.x;
+    m_viewInverse(3, 1) = from.y;
+    m_viewInverse(3, 2) = from.z;
+    m_viewInverse(3, 3) = 1.0f;
 }
 
 void Scene::SetProjectionMatrix()
 {
-    // Calculate projection here.
-    float fov = 90.0f;
-    float aspectRatio = m_SCREEN_WIDTH / m_SCREEN_HEIGHT;
-    float zNear = 0.1f;
-    float zFar = 25.0f;
-    m_projection = Matrix::Perspective(fov, aspectRatio, zNear, zFar);
+    float reciprocal = 1.0f / (m_Z_NEAR - m_Z_FAR);
+
+    m_projection(0, 0) = m_DISTANCE / m_ASPECT_RATIO;
+    m_projection(1, 1) = m_DISTANCE;
+    m_projection(2, 2) = (m_Z_NEAR + m_Z_FAR) * reciprocal;
+    m_projection(2, 3) = 2.0f * m_Z_NEAR * m_Z_FAR * reciprocal;
+    m_projection(3, 2) = -1.0f;
+    m_projection(3, 3) = 0.0f;
 }
 
-Vector3 Scene::GetPickRay()
+void Scene::SetClickPosition()
 {
     float x, y;
     App::GetMousePos(x, y);
 
-    float theta = m_FOV * (PI / 180.0f);
-    float distance = 1.0f / tanf(theta * 0.5f);
-    float aspectRatio = m_SCREEN_WIDTH / m_SCREEN_HEIGHT;
-
     Vector3 viewPoint;
-    viewPoint.x = 2.0f * aspectRatio * x / m_SCREEN_WIDTH - aspectRatio;
+    viewPoint.x = 2.0f * m_ASPECT_RATIO * x / m_SCREEN_WIDTH - m_ASPECT_RATIO;
     viewPoint.y = -2.0f * y / m_SCREEN_HEIGHT + 1.0f;
-    viewPoint.z = -distance;
+    viewPoint.z = -m_DISTANCE;
 
     Vector3 worldPoint;
     worldPoint.x = m_viewInverse(0, 0) * viewPoint.x + m_viewInverse(0, 1) * viewPoint.y +
@@ -172,7 +209,11 @@ Vector3 Scene::GetPickRay()
     worldPoint.z = m_viewInverse(2, 0) * viewPoint.x + m_viewInverse(2, 1) * viewPoint.y +
                    m_viewInverse(2, 2) * viewPoint.z + m_viewInverse(2, 3);
 
-    return worldPoint - m_camera.from;
+    Vector3 ray = worldPoint - m_camera.from;
+
+    // Intersection with z=0 plane
+    float t = -m_camera.from.z / ray.z;
+    m_click = m_camera.from + ray * t;
 }
 
 void Scene::MoveCamera(float deltaTime)

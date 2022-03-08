@@ -31,10 +31,15 @@ class Scene
     void Render();
 
   private:
-    // Constants
-    const float m_FOV = 90.0f;
+    // Constants for viewing frustum
     const float m_SCREEN_WIDTH = 960.0f;
     const float m_SCREEN_HEIGHT = 540.0f;
+    const float m_FOV = 90.0f;
+    const float m_THETA = m_FOV * (PI / 180.0f);
+    const float m_DISTANCE = 1.0f / tanf(m_THETA * 0.5f);
+    const float m_ASPECT_RATIO = m_SCREEN_WIDTH / m_SCREEN_HEIGHT;
+    const float m_Z_NEAR = 0.1f;
+    const float m_Z_FAR = 25.0f;
 
     // Unique ID
     int m_id;
@@ -64,8 +69,7 @@ class Scene
     void SetWorldMatrix();
     void SetViewMatrix();
     void SetProjectionMatrix();
-
-    Vector3 GetPickRay();
+    void SetClickPosition();
 
     void MoveCamera(float deltaTime);
     void UpdateVisible();
