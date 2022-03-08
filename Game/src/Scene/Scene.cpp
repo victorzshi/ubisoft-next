@@ -24,10 +24,10 @@ void Scene::Shutdown()
 {
 }
 
-Mesh Scene::GetMesh(int id) const
+Model Scene::GetModel(int id) const
 {
-    Mesh mesh = m_mesh[id];
-    return mesh;
+    Model model = m_model[id];
+    return model;
 }
 
 Physics Scene::GetPhysics(int id) const
@@ -42,9 +42,9 @@ Transform Scene::GetTransform(int id) const
     return transform;
 }
 
-void Scene::SetMesh(int id, Mesh mesh)
+void Scene::SetModel(int id, Model model)
 {
-    m_mesh[id] = mesh;
+    m_model[id] = model;
 }
 
 void Scene::SetPhysics(int id, Physics physics)
@@ -59,7 +59,7 @@ void Scene::SetTransform(int id, Transform transform)
 
 int Scene::CreateId()
 {
-    m_mesh.push_back(Mesh());
+    m_model.push_back(Model());
     m_physics.push_back(Physics());
     m_transform.push_back(Transform());
 
@@ -266,10 +266,10 @@ void Scene::UpdateVisible()
 
     for (auto &id : ids)
     {
-        Mesh mesh = GetMesh(id);
+        std::vector<Face> faces = GetModel(id).GetFaces();
 
         // Early exit
-        if (mesh.faces.empty())
+        if (faces.empty())
         {
             return;
         }
@@ -281,7 +281,7 @@ void Scene::UpdateVisible()
         Matrix scale = Matrix::Scale(transform.scaling);
         Matrix local = scale * rotate * translate;
 
-        for (auto &face : mesh.faces)
+        for (auto &face : faces)
         {
             // Apply local transform
             for (int i = 0; i < face.vertices; i++)
@@ -334,6 +334,8 @@ void Scene::UpdateVisible()
                     face.vertex[i].z = 0.5f * face.vertex[i].z + 0.5f;
                 }
 
+                // TODO: Try adding shading.
+                face.color = GetModel(id).color;
                 m_visible.push_back(face);
             }
         }

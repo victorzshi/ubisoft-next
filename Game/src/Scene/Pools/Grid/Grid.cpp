@@ -6,15 +6,18 @@
 
 void Grid::Init(Scene &scene)
 {
-    Mesh mesh = Mesh::LoadFromObjectFile(FILE);
-
     int index = 0;
     std::vector<Vector3> positions = CreatePositions();
     for (auto &position : positions)
     {
         int id = scene.CreateId();
 
-        scene.SetMesh(id, mesh);
+        Model model;
+        model.mesh = Mesh::PLANE;
+        model.color.r = 0.5f;
+        model.color.g = 0.5f;
+        model.color.b = 0.5f;
+        scene.SetModel(id, model);
 
         Transform transform;
         transform.position = position;

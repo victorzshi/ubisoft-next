@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Components/Mesh/Mesh.h"
+#include "Components/Model/Model.h"
 #include "Components/Physics/Physics.h"
 #include "Components/Transform/Transform.h"
 #include "Graphics/Camera/Camera.h"
@@ -17,11 +17,11 @@ class Scene
     void Init();
     void Shutdown();
 
-    Mesh GetMesh(int id) const;
+    Model GetModel(int id) const;
     Physics GetPhysics(int id) const;
     Transform GetTransform(int id) const;
 
-    void SetMesh(int id, Mesh mesh);
+    void SetModel(int id, Model model);
     void SetPhysics(int id, Physics physics);
     void SetTransform(int id, Transform transform);
 
@@ -54,7 +54,7 @@ class Scene
     std::vector<Face> m_visible;
 
     // Component arrays
-    std::vector<Mesh> m_mesh;
+    std::vector<Model> m_model;
     std::vector<Physics> m_physics;
     std::vector<Transform> m_transform;
 

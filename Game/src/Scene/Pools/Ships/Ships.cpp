@@ -6,14 +6,17 @@
 
 void Ships::Init(Scene &scene)
 {
-    Mesh mesh = Mesh::LoadFromObjectFile(FILE);
-
     int index = 0;
     for (int i = 0; i < TOTAL; i++)
     {
         int id = scene.CreateId();
 
-        scene.SetMesh(id, mesh);
+        Model model;
+        model.mesh = Mesh::SPHERE; 
+        model.color.r = 0.0f;
+        model.color.g = 0.0f;
+        model.color.b = 1.0f;
+        scene.SetModel(id, model);
 
         index = id;
     }

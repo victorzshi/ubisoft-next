@@ -197,9 +197,9 @@
     <ClInclude Include="src\Graphics\Color\Color.h" />
     <ClInclude Include="src\Graphics\Face\Face.h" />
     <ClInclude Include="src\Math\Random\Random.h" />
-    <ClInclude Include="src\Scene\Components\Mesh\Mesh.h" />
     <ClInclude Include="src\Math\Matrix\Matrix.h" />
     <ClInclude Include="src\Math\Vector3\Vector3.h" />
+    <ClInclude Include="src\Scene\Components\Model\Model.h" />
     <ClInclude Include="src\Scene\Components\Physics\Physics.h" />
     <ClInclude Include="src\Scene\Components\Transform\Transform.h" />
     <ClInclude Include="src\Scene\Pools\Asteroids\Asteroids.h" />
@@ -227,10 +227,10 @@
     <ClCompile Include="src\Graphics\Color\Color.cpp" />
     <ClCompile Include="src\Graphics\Face\Face.cpp" />
     <ClCompile Include="src\Math\Random\Random.cpp" />
-    <ClCompile Include="src\Scene\Components\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Math\Matrix\Matrix.cpp" />
     <ClCompile Include="src\Math\Matrix\MatrixTest.cpp" />
     <ClCompile Include="src\Math\Vector3\Vector3.cpp" />
+    <ClCompile Include="src\Scene\Components\Model\Model.cpp" />
     <ClCompile Include="src\Scene\Components\Physics\Physics.cpp" />
     <ClCompile Include="src\Scene\Components\Transform\Transform.cpp" />
     <ClCompile Include="src\Scene\Pools\Asteroids\Asteroids.cpp" />
