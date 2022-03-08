@@ -4,7 +4,7 @@
 
 struct Camera
 {
-    Vector3 position, rotation, facing, up;
+    Vector3 from, to, up;
 
     Camera();
 };

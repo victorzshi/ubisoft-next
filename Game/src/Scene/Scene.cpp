@@ -78,8 +78,8 @@ void Scene::Update(float deltaTime)
         Vector3 ray = GetPickRay();
 
         // Intersection with z=0 plane
-        float t = -m_camera.position.z / ray.z;
-        m_click = m_camera.position + ray * t;
+        float t = -m_camera.from.z / ray.z;
+        m_click = m_camera.from + ray * t;
     }
 
     std::vector<int> ids = m_ships.GetIds();
@@ -98,7 +98,7 @@ void Scene::Update(float deltaTime)
 
     // Look at ship
     int id = m_ships.GetIds().front();
-    m_camera.facing = GetTransform(id).position;
+    m_camera.to = GetTransform(id).position;
 
     SetViewMatrix();
     UpdateVisible();
@@ -117,10 +117,9 @@ void Scene::Render()
 
 void Scene::SetCamera()
 {
-    m_camera.position = Vector3(0.0f, 0.0f, 20.0f);
-    m_camera.facing = Vector3(0.0f, 0.0f, 1.0f);
+    m_camera.from = Vector3(0.0f, 0.0f, 20.0f);
+    m_camera.to = Vector3(0.0f, 0.0f, 1.0f);
     m_camera.up = Vector3(0.0f, 1.0f, 0.0f);
-    m_camera.rotation = Vector3(0.0f, 0.0f, 0.0f);
 }
 
 void Scene::SetWorldMatrix()
@@ -133,8 +132,9 @@ void Scene::SetWorldMatrix()
 
 void Scene::SetViewMatrix()
 {
-    Vector3 from = m_camera.position;
-    Vector3 to = m_camera.facing;
+    // TODO: Set LookAt and PointAt here.
+    Vector3 from = m_camera.from;
+    Vector3 to = m_camera.to;
     Vector3 up = m_camera.up;
     m_view = Matrix::LookAt(from, to, up);
     m_viewInverse = Matrix::ViewToWorld(from, to, up);
@@ -142,6 +142,7 @@ void Scene::SetViewMatrix()
 
 void Scene::SetProjectionMatrix()
 {
+    // Calculate projection here.
     float fov = 90.0f;
     float aspectRatio = m_SCREEN_WIDTH / m_SCREEN_HEIGHT;
     float zNear = 0.1f;
@@ -163,15 +164,15 @@ Vector3 Scene::GetPickRay()
     viewPoint.y = -2.0f * y / m_SCREEN_HEIGHT + 1.0f;
     viewPoint.z = -distance;
 
-    Vector3 result;
-    result.x = m_viewInverse(0, 0) * viewPoint.x + m_viewInverse(0, 1) * viewPoint.y +
-               m_viewInverse(0, 2) * viewPoint.z + m_viewInverse(0, 3);
-    result.y = m_viewInverse(1, 0) * viewPoint.x + m_viewInverse(1, 1) * viewPoint.y +
-               m_viewInverse(1, 2) * viewPoint.z + m_viewInverse(1, 3);
-    result.z = m_viewInverse(2, 0) * viewPoint.x + m_viewInverse(2, 1) * viewPoint.y +
-               m_viewInverse(2, 2) * viewPoint.z + m_viewInverse(2, 3);
+    Vector3 worldPoint;
+    worldPoint.x = m_viewInverse(0, 0) * viewPoint.x + m_viewInverse(0, 1) * viewPoint.y +
+                   m_viewInverse(0, 2) * viewPoint.z + m_viewInverse(0, 3);
+    worldPoint.y = m_viewInverse(1, 0) * viewPoint.x + m_viewInverse(1, 1) * viewPoint.y +
+                   m_viewInverse(1, 2) * viewPoint.z + m_viewInverse(1, 3);
+    worldPoint.z = m_viewInverse(2, 0) * viewPoint.x + m_viewInverse(2, 1) * viewPoint.y +
+                   m_viewInverse(2, 2) * viewPoint.z + m_viewInverse(2, 3);
 
-    return result - m_camera.position;
+    return worldPoint - m_camera.from;
 }
 
 void Scene::MoveCamera(float deltaTime)
@@ -180,27 +181,27 @@ void Scene::MoveCamera(float deltaTime)
 
     if (App::IsKeyPressed(VK_NUMPAD6))
     {
-        m_camera.position.x += deltaVelocity;
+        m_camera.from.x += deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD4))
     {
-        m_camera.position.x -= deltaVelocity;
+        m_camera.from.x -= deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD8))
     {
-        m_camera.position.z -= deltaVelocity;
+        m_camera.from.z -= deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD2))
     {
-        m_camera.position.z += deltaVelocity;
+        m_camera.from.z += deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD7))
     {
-        m_camera.position.y += deltaVelocity;
+        m_camera.from.y += deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD9))
     {
-        m_camera.position.y -= deltaVelocity;
+        m_camera.from.y -= deltaVelocity;
     }
 }
 
@@ -259,7 +260,7 @@ void Scene::UpdateVisible()
             Vector3 b = triangle.point[2] - triangle.point[0];
             Vector3 normal = a.Cross(b).Normalize();
 
-            if (normal.Dot((triangle.point[0] - m_camera.position).Normalize()) < 0.0f)
+            if (normal.Dot((triangle.point[0] - m_camera.from).Normalize()) < 0.0f)
             {
                 // Convert world space to view space
                 for (int i = 0; i < 3; i++)
@@ -316,7 +317,7 @@ void Scene::UpdateVisible()
             Vector3 b = quad.point[2] - quad.point[0];
             Vector3 normal = a.Cross(b).Normalize();
 
-            if (normal.Dot((quad.point[0] - m_camera.position).Normalize()) < 0.0f)
+            if (normal.Dot((quad.point[0] - m_camera.from).Normalize()) < 0.0f)
             {
                 // Convert world space to view space
                 for (int i = 0; i < 4; i++)
