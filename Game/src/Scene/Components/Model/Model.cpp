@@ -5,13 +5,20 @@
 #include <fstream>
 #include <strstream>
 
+std::vector<Face> Model::m_plane;
 std::vector<Face> Model::m_cube;
 std::vector<Face> Model::m_sphere;
+std::vector<Face> Model::m_icosphere;
+std::vector<Face> Model::m_cone;
 std::vector<Face> Model::m_torus;
-std::vector<Face> Model::m_plane;
+std::vector<Face> Model::m_monkey;
 
 Model::Model() : mesh(Mesh::CUBE), color(Color::WHITE), light(Light::BRIGHT)
 {
+    if (m_plane.empty())
+    {
+        m_plane = LoadFromObjectFile("plane.obj");
+    }
     if (m_cube.empty())
     {
         m_cube = LoadFromObjectFile("cube.obj");
@@ -19,6 +26,14 @@ Model::Model() : mesh(Mesh::CUBE), color(Color::WHITE), light(Light::BRIGHT)
     if (m_sphere.empty())
     {
         m_sphere = LoadFromObjectFile("sphere.obj");
+    }
+    if (m_icosphere.empty())
+    {
+        m_icosphere = LoadFromObjectFile("icosphere.obj");
+    }
+    if (m_cone.empty())
+    {
+        m_cone = LoadFromObjectFile("cone.obj");
     }
     if (m_torus.empty())
     {
@@ -32,30 +47,32 @@ Model::Model() : mesh(Mesh::CUBE), color(Color::WHITE), light(Light::BRIGHT)
 
 std::vector<Face> Model::GetFaces()
 {
-    std::vector<Face> faces;
-
     switch (mesh)
     {
+    case Mesh::PLANE:
+        return m_plane;
+
     case Mesh::CUBE:
-        faces = m_cube;
-        break;
+        return m_cube;
 
     case Mesh::SPHERE:
-        faces = m_sphere;
-        break;
+        return m_sphere;
+
+    case Mesh::ICOSPHERE:
+        return m_icosphere;
+
+    case Mesh::CONE:
+        return m_cone;
 
     case Mesh::TORUS:
-        faces = m_torus;
-        break;
+        return m_torus;
 
-    case Mesh::PLANE:
-        faces = m_plane;
-        break;
+    case Mesh::MONKEY:
+        return m_monkey;
+
+    default:
+        return {};
     }
-
-    assert(!faces.empty());
-
-    return faces;
 }
 
 void Model::SetColor(float dot, Face &face)
