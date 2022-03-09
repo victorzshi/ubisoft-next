@@ -8,18 +8,19 @@ Pool::Pool() : m_scene(nullptr), m_begin(0), m_size(0), m_end(0)
 {
 }
 
-std::vector<int> Pool::GetIds()
+int Pool::GetBegin() const
 {
-    assert(m_end != 0);
+    return m_begin;
+}
 
-    std::vector<int> ids;
+int Pool::GetSize() const
+{
+    return m_size;
+}
 
-    for (int id = m_begin; id < m_size; id++)
-    {
-        ids.push_back(id);
-    }
-
-    return ids;
+int Pool::GetEnd() const
+{
+    return m_end;
 }
 
 bool Pool::Activate(int id)
@@ -48,6 +49,11 @@ bool Pool::Deactivate(int id)
     SwapMemory(id);
 
     return true;
+}
+
+Scene *Pool::GetScene() const
+{
+    return m_scene;
 }
 
 void Pool::SetScene(Scene *scene)
@@ -86,6 +92,10 @@ void Pool::SwapMemory(int id)
     Physics physics = m_scene->GetPhysics(m_size);
     m_scene->SetPhysics(m_size, m_scene->GetPhysics(id));
     m_scene->SetPhysics(id, physics);
+
+    Timer timer = m_scene->GetTimer(m_size);
+    m_scene->SetTimer(m_size, m_scene->GetTimer(id));
+    m_scene->SetTimer(id, timer);
 
     Transform transform = m_scene->GetTransform(m_size);
     m_scene->SetTransform(m_size, m_scene->GetTransform(id));

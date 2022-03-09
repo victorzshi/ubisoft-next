@@ -6,8 +6,11 @@
 
 #include "Systems/Systems.h"
 
-Scene::Scene() : m_id(0)
+Scene::Scene() : m_id(0), m_deltaTime(0.0f)
 {
+    m_start = std::chrono::steady_clock::now();
+    m_current = m_start;
+    m_time = m_current - m_start;
 }
 
 void Scene::Init()
@@ -18,6 +21,7 @@ void Scene::Init()
     SetProjectionMatrix();
 
     m_asteroids.Init(*this);
+    m_bullets.Init(*this);
     m_grid.Init(*this);
     m_ships.Init(*this);
 }
@@ -26,22 +30,59 @@ void Scene::Shutdown()
 {
 }
 
+Vector3 Scene::GetMousePosition() const
+{
+    return m_mouse;
+}
+
+float Scene::GetDeltaTime() const
+{
+    return m_deltaTime;
+}
+
+float Scene::GetTime() const
+{
+    return m_time.count();
+}
+
 Model Scene::GetModel(int id) const
 {
-    Model model = m_model[id];
-    return model;
+    return m_model[id];
 }
 
 Physics Scene::GetPhysics(int id) const
 {
-    Physics physics = m_physics[id];
-    return physics;
+    return m_physics[id];
+}
+
+Timer Scene::GetTimer(int id) const
+{
+    return m_timer[id];
 }
 
 Transform Scene::GetTransform(int id) const
 {
-    Transform transform = m_transform[id];
-    return transform;
+    return m_transform[id];
+}
+
+Asteroids &Scene::GetAsteroids()
+{
+    return m_asteroids;
+}
+
+Bullets &Scene::GetBullets()
+{
+    return m_bullets;
+}
+
+Grid &Scene::GetGrid()
+{
+    return m_grid;
+}
+
+Ships &Scene::GetShips()
+{
+    return m_ships;
 }
 
 void Scene::SetModel(int id, Model model)
@@ -54,6 +95,11 @@ void Scene::SetPhysics(int id, Physics physics)
     m_physics[id] = physics;
 }
 
+void Scene::SetTimer(int id, Timer timer)
+{
+    m_timer[id] = timer;
+}
+
 void Scene::SetTransform(int id, Transform transform)
 {
     m_transform[id] = transform;
@@ -63,6 +109,7 @@ int Scene::CreateId()
 {
     m_model.push_back(Model());
     m_physics.push_back(Physics());
+    m_timer.push_back(Timer());
     m_transform.push_back(Transform());
 
     m_id++;
@@ -74,35 +121,34 @@ void Scene::Update(float deltaTime)
 #ifdef _DEBUG
     MoveCamera(deltaTime);
 #endif
+    SetMousePosition();
+    SetTime(deltaTime);
 
-    if (App::IsKeyPressed(VK_LBUTTON))
-    {
-        SetClickPosition();
-
-        // Test ship position
-        int id = m_ships.GetIds().front();
-        Transform transform = GetTransform(id);
-        transform.position = m_click;
-        SetTransform(id, transform);
-    }
-
-    std::vector<int> ids = m_ships.GetIds();
-    for (auto id : ids)
+    for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
     {
         Systems::MoveShip(*this, id);
-        Systems::UpdatePosition(*this, id, deltaTime);
+        Systems::ShootBullet(*this, id);
+        Systems::UpdatePosition(*this, id);
     }
 
-    ids = m_asteroids.GetIds();
-    for (auto id : ids)
+    for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
     {
-        Systems::UpdatePosition(*this, id, deltaTime);
-        Systems::AddRotation(*this, id, deltaTime);
+        Systems::UpdatePosition(*this, id);
+        Systems::AddRotation(*this, id);
     }
 
-    // Look at ship
-    int id = m_ships.GetIds().front();
-    m_camera.to = GetTransform(id).position;
+    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
+    {
+        Systems::UpdatePosition(*this, id);
+        Systems::AddRotation(*this, id);
+        Systems::CheckBulletHit(*this, id);
+    }
+
+    // Follow ship with camera
+    int id = m_ships.GetBegin();
+    Transform transform = GetTransform(id);
+    //m_camera.from = transform.position + Vector3(0.0f, 5.0f, 10.0f);
+    m_camera.to = transform.position;
 
     SetViewMatrix();
     UpdateVisible();
@@ -114,6 +160,7 @@ void Scene::Render()
     RenderVisible();
 #ifdef _DEBUG
     RenderBorder();
+    App::Print(10.0f, 100.0f, std::to_string(m_time.count()).c_str(), 0.0f, 1.0f, 0.0f);
 #endif
 }
 
@@ -191,29 +238,57 @@ void Scene::SetProjectionMatrix()
     m_projection(3, 3) = 0.0f;
 }
 
-void Scene::SetClickPosition()
+void Scene::SetMousePosition()
 {
-    float x, y;
-    App::GetMousePos(x, y);
+    float mouseX, mouseY;
+    App::GetMousePos(mouseX, mouseY);
 
     Vector3 viewPoint;
-    viewPoint.x = 2.0f * m_ASPECT_RATIO * x / m_SCREEN_WIDTH - m_ASPECT_RATIO;
-    viewPoint.y = -2.0f * y / m_SCREEN_HEIGHT + 1.0f;
+    viewPoint.x = 2.0f * m_ASPECT_RATIO * mouseX / m_SCREEN_WIDTH - m_ASPECT_RATIO;
+    viewPoint.y = -2.0f * mouseY / m_SCREEN_HEIGHT + 1.0f;
     viewPoint.z = -m_DISTANCE;
 
-    Vector3 worldPoint;
-    worldPoint.x = m_viewInverse(0, 0) * viewPoint.x + m_viewInverse(0, 1) * viewPoint.y +
-                   m_viewInverse(0, 2) * viewPoint.z + m_viewInverse(0, 3);
-    worldPoint.y = m_viewInverse(1, 0) * viewPoint.x + m_viewInverse(1, 1) * viewPoint.y +
-                   m_viewInverse(1, 2) * viewPoint.z + m_viewInverse(1, 3);
-    worldPoint.z = m_viewInverse(2, 0) * viewPoint.x + m_viewInverse(2, 1) * viewPoint.y +
-                   m_viewInverse(2, 2) * viewPoint.z + m_viewInverse(2, 3);
+    Vector3 worldPoint = m_viewInverse * viewPoint;
+
+    if (worldPoint.w != 0.0f)
+    {
+        worldPoint /= worldPoint.w;
+    }
 
     Vector3 ray = worldPoint - m_camera.from;
 
     // Intersection with z=0 plane
     float t = -m_camera.from.z / ray.z;
-    m_click = m_camera.from + ray * t;
+    m_mouse = m_camera.from + ray * t;
+}
+
+void Scene::SetTime(float deltaTime)
+{
+    m_deltaTime = deltaTime;
+    m_current = std::chrono::steady_clock::now();
+    m_time = m_current - m_start;
+}
+
+std::vector<int> Scene::GetActiveIds() const
+{
+    std::vector<int> ids;
+    for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
+    {
+        ids.push_back(id);
+    }
+    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
+    {
+        ids.push_back(id);
+    }
+    for (int id = m_grid.GetBegin(); id < m_grid.GetSize(); id++)
+    {
+        ids.push_back(id);
+    }
+    for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
+    {
+        ids.push_back(id);
+    }
+    return ids;
 }
 
 void Scene::MoveCamera(float deltaTime)
@@ -250,21 +325,7 @@ void Scene::UpdateVisible()
 {
     m_visible.clear();
 
-    std::vector<int> ids;
-    for (auto &id : m_asteroids.GetIds())
-    {
-        ids.push_back(id);
-    }
-    for (auto &id : m_grid.GetIds())
-    {
-        ids.push_back(id);
-    }
-    for (auto &id : m_ships.GetIds())
-    {
-        ids.push_back(id);
-    }
-
-    for (auto &id : ids)
+    for (auto &id : GetActiveIds())
     {
         Model model = GetModel(id);
         std::vector<Face> faces = model.GetFaces();
