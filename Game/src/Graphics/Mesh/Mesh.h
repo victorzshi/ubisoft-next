@@ -13,7 +13,7 @@ enum class Meshes
     MONKEY,
 };
 
-class Mesh
+struct Mesh
 {
   public:
     Mesh();

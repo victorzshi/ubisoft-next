@@ -196,6 +196,7 @@
     <ClInclude Include="src\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\Graphics\Color\Color.h" />
     <ClInclude Include="src\Graphics\Face\Face.h" />
+    <ClInclude Include="src\Graphics\Light\Light.h" />
     <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\Renderer\Renderer.h" />
     <ClInclude Include="src\Math\Random\Random.h" />
@@ -230,6 +231,7 @@
     <ClCompile Include="src\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="src\Graphics\Color\Color.cpp" />
     <ClCompile Include="src\Graphics\Face\Face.cpp" />
+    <ClCompile Include="src\Graphics\Light\Light.cpp" />
     <ClCompile Include="src\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Math\Random\Random.cpp" />

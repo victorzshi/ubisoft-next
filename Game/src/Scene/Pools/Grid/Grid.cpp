@@ -15,7 +15,7 @@ void Grid::Init(Scene &scene)
         Model model;
         model.mesh.SetMesh(Meshes::PLANE);
         model.color.SetColor(Colors::GREY);
-        model.light = Light::BRIGHT;
+        model.light.SetLight(Lights::BRIGHT);
         scene.SetModel(id, model);
 
         Transform transform;

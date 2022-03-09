@@ -14,7 +14,7 @@ void Ships::Init(Scene &scene)
         Model model;
         model.mesh.SetMesh(Meshes::SPHERE); 
         model.color.SetColor(Colors::ORANGE);
-        model.light = Light::OUTLINE;
+        model.light.SetLight(Lights::OUTLINE);
         scene.SetModel(id, model);
 
         index = id;

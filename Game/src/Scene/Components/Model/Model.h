@@ -5,13 +5,7 @@
 
 #include "Graphics/Color/Color.h"
 #include "Graphics/Mesh/Mesh.h"
-
-enum class Light
-{
-    BRIGHT,
-    SHADOW,
-    OUTLINE,
-};
+#include "Graphics/Light/Light.h"
 
 struct Model
 {
@@ -20,6 +14,4 @@ struct Model
     Light light;
 
     Model();
-
-    void SetFaceColor(float dot, Face &face);
 };

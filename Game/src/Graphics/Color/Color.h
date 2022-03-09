@@ -14,9 +14,8 @@ enum class Colors
     RANDOM,
 };
 
-class Color
+struct Color
 {
-  public:
     int r, g, b;
 
     Color();
