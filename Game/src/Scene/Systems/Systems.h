@@ -7,6 +7,7 @@ class Systems
   public:
     static void MoveShip(Scene &scene, int id);
     static void ShootBullet(Scene &scene, int id);
-    static void UpdatePosition(Scene &scene, int id, float deltaTime);
-    static void AddRotation(Scene &scene, int id, float deltaTime);
+    static void UpdatePosition(Scene &scene, int id);
+    static void AddRotation(Scene &scene, int id);
+    static void CheckBulletHit(Scene &scene, int id);
 };

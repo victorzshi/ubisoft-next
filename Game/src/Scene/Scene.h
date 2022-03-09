@@ -1,7 +1,10 @@
 #pragma once
 
+#include <chrono>
+
 #include "Components/Model/Model.h"
 #include "Components/Physics/Physics.h"
+#include "Components/Timer/Timer.h"
 #include "Components/Transform/Transform.h"
 #include "Graphics/Camera/Camera.h"
 #include "Math/Matrix/Matrix.h"
@@ -18,9 +21,12 @@ class Scene
     void Init();
     void Shutdown();
 
-    Vector3 GetClickPosition() const;
+    Vector3 GetMousePosition() const;
+    float GetDeltaTime() const;
+    float GetTime() const;
     Model GetModel(int id) const;
     Physics GetPhysics(int id) const;
+    Timer GetTimer(int id) const;
     Transform GetTransform(int id) const;
     Asteroids &GetAsteroids();
     Bullets &GetBullets();
@@ -29,6 +35,7 @@ class Scene
 
     void SetModel(int id, Model model);
     void SetPhysics(int id, Physics physics);
+    void SetTimer(int id, Timer timer);
     void SetTransform(int id, Transform transform);
 
     int CreateId();
@@ -50,18 +57,25 @@ class Scene
     // Unique ID
     int m_id;
 
+    // Track time
+    float m_deltaTime;
+    std::chrono::time_point<std::chrono::steady_clock> m_start;
+    std::chrono::time_point<std::chrono::steady_clock> m_current;
+    std::chrono::duration<float> m_time;
+
     // 3D graphics
     Camera m_camera;
     Matrix m_world;
     Matrix m_view;
     Matrix m_viewInverse;
     Matrix m_projection;
-    Vector3 m_click;
+    Vector3 m_mouse;
     std::vector<Face> m_visible;
 
     // Component arrays
     std::vector<Model> m_model;
     std::vector<Physics> m_physics;
+    std::vector<Timer> m_timer;
     std::vector<Transform> m_transform;
 
     // Object pools
@@ -69,13 +83,15 @@ class Scene
     Bullets m_bullets;
     Grid m_grid;
     Ships m_ships;
+    std::vector<int> m_inactive;
 
     // Helper functions
     void SetCamera();
     void SetWorldMatrix();
     void SetViewMatrix();
     void SetProjectionMatrix();
-    void SetClickPosition();
+    void SetMousePosition();
+    void SetTime(float deltaTime);
 
     std::vector<int> GetAllActiveIds() const;
 

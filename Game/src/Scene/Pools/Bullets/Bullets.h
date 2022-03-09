@@ -8,8 +8,10 @@ class Bullets : public Pool
 {
   public:
     const int TOTAL = 100;
+    const float DELTA_VELOCITY = 3.0f;
+    const float DURATION = 3.0f;
 
     virtual void Init(Scene &scene) override;
 
-    void CreateBullet(Vector3 position);
+    void CreateBullet(Vector3 position, Vector3 direction);
 };

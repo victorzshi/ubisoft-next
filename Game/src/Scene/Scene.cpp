@@ -6,8 +6,11 @@
 
 #include "Systems/Systems.h"
 
-Scene::Scene() : m_id(0)
+Scene::Scene() : m_id(0), m_deltaTime(0.0f)
 {
+    m_start = std::chrono::steady_clock::now();
+    m_current = m_start;
+    m_time = m_current - m_start;
 }
 
 void Scene::Init()
@@ -27,9 +30,19 @@ void Scene::Shutdown()
 {
 }
 
-Vector3 Scene::GetClickPosition() const
+Vector3 Scene::GetMousePosition() const
 {
-    return m_click;
+    return m_mouse;
+}
+
+float Scene::GetDeltaTime() const
+{
+    return m_deltaTime;
+}
+
+float Scene::GetTime() const
+{
+    return m_time.count();
 }
 
 Model Scene::GetModel(int id) const
@@ -40,6 +53,11 @@ Model Scene::GetModel(int id) const
 Physics Scene::GetPhysics(int id) const
 {
     return m_physics[id];
+}
+
+Timer Scene::GetTimer(int id) const
+{
+    return m_timer[id];
 }
 
 Transform Scene::GetTransform(int id) const
@@ -77,6 +95,11 @@ void Scene::SetPhysics(int id, Physics physics)
     m_physics[id] = physics;
 }
 
+void Scene::SetTimer(int id, Timer timer)
+{
+    m_timer[id] = timer;
+}
+
 void Scene::SetTransform(int id, Transform transform)
 {
     m_transform[id] = transform;
@@ -86,6 +109,7 @@ int Scene::CreateId()
 {
     m_model.push_back(Model());
     m_physics.push_back(Physics());
+    m_timer.push_back(Timer());
     m_transform.push_back(Transform());
 
     m_id++;
@@ -97,27 +121,37 @@ void Scene::Update(float deltaTime)
 #ifdef _DEBUG
     MoveCamera(deltaTime);
 #endif
+    SetMousePosition();
+    SetTime(deltaTime);
 
-    SetClickPosition();
-
-    std::vector<int> ids = m_ships.GetActiveIds();
-    for (auto id : ids)
+    for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
     {
         Systems::MoveShip(*this, id);
         Systems::ShootBullet(*this, id);
-        Systems::UpdatePosition(*this, id, deltaTime);
+        Systems::UpdatePosition(*this, id);
     }
 
-    ids = m_asteroids.GetActiveIds();
-    for (auto id : ids)
+    for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
     {
-        Systems::UpdatePosition(*this, id, deltaTime);
-        Systems::AddRotation(*this, id, deltaTime);
+        Systems::UpdatePosition(*this, id);
+        Systems::AddRotation(*this, id);
+    }
+
+    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
+    {
+        Systems::UpdatePosition(*this, id);
+        Systems::AddRotation(*this, id);
+    }
+
+    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
+    {
+        Systems::CheckBulletHit(*this, id);
     }
 
     // Follow ship with camera
-    int id = m_ships.GetActiveIds().front();
+    int id = m_ships.GetBegin();
     Transform transform = GetTransform(id);
+    m_camera.from = transform.position + Vector3(0.0f, 5.0f, 10.0f);
     m_camera.to = transform.position;
 
     SetViewMatrix();
@@ -128,10 +162,9 @@ void Scene::Update(float deltaTime)
 void Scene::Render()
 {
     RenderVisible();
-
-    App::Print(10.0f, 100.0f, m_click.ToString().c_str());
 #ifdef _DEBUG
     RenderBorder();
+    App::Print(10.0f, 100.0f, std::to_string(m_time.count()).c_str(), 0.0f, 1.0f, 0.0f);
 #endif
 }
 
@@ -209,7 +242,7 @@ void Scene::SetProjectionMatrix()
     m_projection(3, 3) = 0.0f;
 }
 
-void Scene::SetClickPosition()
+void Scene::SetMousePosition()
 {
     float mouseX, mouseY;
     App::GetMousePos(mouseX, mouseY);
@@ -230,25 +263,32 @@ void Scene::SetClickPosition()
 
     // Intersection with z=0 plane
     float t = -m_camera.from.z / ray.z;
-    m_click = m_camera.from + ray * t;
+    m_mouse = m_camera.from + ray * t;
+}
+
+void Scene::SetTime(float deltaTime)
+{
+    m_deltaTime = deltaTime;
+    m_current = std::chrono::steady_clock::now();
+    m_time = m_current - m_start;
 }
 
 std::vector<int> Scene::GetAllActiveIds() const
 {
     std::vector<int> ids;
-    for (auto &id : m_asteroids.GetActiveIds())
+    for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
     {
         ids.push_back(id);
     }
-    for (auto &id : m_bullets.GetActiveIds())
+    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
     {
         ids.push_back(id);
     }
-    for (auto &id : m_grid.GetActiveIds())
+    for (int id = m_grid.GetBegin(); id < m_grid.GetSize(); id++)
     {
         ids.push_back(id);
     }
-    for (auto &id : m_ships.GetActiveIds())
+    for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
     {
         ids.push_back(id);
     }

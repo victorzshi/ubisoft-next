@@ -17,28 +17,32 @@ void Bullets::Init(Scene &scene)
         model.light = Light::BRIGHT;
         scene.SetModel(id, model);
 
-        Transform transform;
-        transform.scaling = Vector3(0.1f, 0.1f, 0.1f);
-        scene.SetTransform(id, transform);
-
         index = id;
     }
 
     SetScene(&scene);
     SetBegin(index - (TOTAL - 1));
-    // SetSize(index - (TOTAL - 1));
-    SetSize(index - (TOTAL - 2)); // XXX: Use one bullet as cursor
+    SetSize(index - (TOTAL - 1));
     SetEnd(index);
 }
 
-void Bullets::CreateBullet(Vector3 position)
+void Bullets::CreateBullet(Vector3 position, Vector3 direction)
 {
-    int id = GetNextId();
+    int id = GetSize();
 
     if (Activate(id))
     {
-        Transform transform = GetScene()->GetTransform(id);
+        Transform transform;
         transform.position = position;
+        transform.scaling = Vector3(0.1f, 0.1f, 0.1f);
         GetScene()->SetTransform(id, transform);
+
+        Physics physics;
+        physics.velocity = direction * DELTA_VELOCITY;
+        GetScene()->SetPhysics(id, physics);
+
+        Timer timer;
+        timer.previous = GetScene()->GetTime();
+        GetScene()->SetTimer(id, timer);
     }
 }

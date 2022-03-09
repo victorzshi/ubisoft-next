@@ -6,10 +6,9 @@
 
 void Systems::MoveShip(Scene &scene, int id)
 {
+    float deltaVelocity = scene.GetShips().DELTA_VELOCITY;
+
     Physics physics;
-
-    float deltaVelocity = 2.0f;
-
     if (App::GetController().GetLeftThumbStickX() > 0.5f)
     {
         physics.velocity.x = +deltaVelocity;
@@ -42,27 +41,32 @@ void Systems::ShootBullet(Scene &scene, int id)
 {
     if (App::IsKeyPressed(VK_LBUTTON))
     {
-        Vector3 direction = scene.GetTransform(id).position + scene.GetClickPosition().Normalize();
+        Vector3 mouse = scene.GetMousePosition();
+        Vector3 ship = scene.GetTransform(id).position;
 
-        scene.GetBullets().CreateBullet(direction);
+        Vector3 direction = (mouse - ship).Normalize();
+
+        Vector3 position = scene.GetTransform(id).position + direction;
+
+        scene.GetBullets().CreateBullet(position, direction);
     }
 
     // TODO: Show cursor properly
-    int bullet = scene.GetBullets().GetActiveIds().front();
+    // int bullet = scene.GetBullets().GetActiveIds().front();
 
-    Vector3 direction = scene.GetClickPosition() - scene.GetTransform(id).position;
+    // Vector3 direction = scene.GetClickPosition() - scene.GetTransform(id).position;
 
-    Transform transform = scene.GetTransform(bullet);
-    transform.position = scene.GetTransform(id).position + direction.Normalize();
-    scene.SetTransform(bullet, transform);
+    // Transform transform = scene.GetTransform(bullet);
+    // transform.position = scene.GetTransform(id).position + direction.Normalize();
+    // scene.SetTransform(bullet, transform);
 }
 
-void Systems::UpdatePosition(Scene &scene, int id, float deltaTime)
+void Systems::UpdatePosition(Scene &scene, int id)
 {
     Physics physics = scene.GetPhysics(id);
     Transform transform = scene.GetTransform(id);
 
-    transform.position += physics.velocity * deltaTime / 1000.0f;
+    transform.position += physics.velocity * scene.GetDeltaTime() / 1000.0f;
 
     float width = 7.0f;
     if (transform.position.x > width)
@@ -87,7 +91,7 @@ void Systems::UpdatePosition(Scene &scene, int id, float deltaTime)
     scene.SetTransform(id, transform);
 }
 
-void Systems::AddRotation(Scene &scene, int id, float deltaTime)
+void Systems::AddRotation(Scene &scene, int id)
 {
     Physics physics = scene.GetPhysics(id);
     Transform transform = scene.GetTransform(id);
@@ -101,4 +105,21 @@ void Systems::AddRotation(Scene &scene, int id, float deltaTime)
     transform.rotation.z = fmod(transform.rotation.z, 360.0f);
 
     scene.SetTransform(id, transform);
+}
+
+void Systems::CheckBulletHit(Scene &scene, int id)
+{
+    float current = scene.GetTime();
+    float duration = scene.GetBullets().DURATION;
+
+    Timer timer = scene.GetTimer(id);
+
+    if (timer.Elapsed(current) >= duration)
+    {
+        scene.GetBullets().Deactivate(id);
+        // Mark for deletion.
+        // Model model = scene.GetModel(id);
+        // model.color = Color::RED;
+        // scene.SetModel(id, model);
+    }
 }
