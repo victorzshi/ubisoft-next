@@ -12,7 +12,7 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     m_time = m_current - m_start;
 
     // Initialize camera position
-    m_position = Vector3(0.0f, 0.0f, 20.0f);
+    m_position = Vector3(0.0f, 5.0f, 15.0f);
 }
 
 void Scene::Init()
@@ -209,7 +209,14 @@ void Scene::MoveCamera(float deltaTime)
 
     // Follow ship with camera
     int id = m_ships.GetBegin();
-    Transform transform = GetTransform(id);
-    m_renderer.SetCameraPosition(transform.position + m_position);
-    m_renderer.SetCameraTarget(transform.position);
+    Vector3 ship = GetTransform(id).position;
+    Vector3 mouse = GetMousePosition();
+    Vector3 direction = mouse - ship;
+    if (direction != Vector3())
+    {
+        direction = direction.Normalize() * 2.0f;
+    }
+
+    m_renderer.SetCameraPosition(ship + m_position);
+    m_renderer.SetCameraTarget(ship + direction);
 }

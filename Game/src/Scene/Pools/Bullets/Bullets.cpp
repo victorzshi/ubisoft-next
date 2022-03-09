@@ -12,10 +12,14 @@ void Bullets::Init(Scene &scene)
         int id = scene.CreateId();
 
         Model model;
-        model.mesh = Mesh::CUBE;
-        model.color = Color::PURPLE;
-        model.light = Light::BRIGHT;
+        model.mesh.SetMesh(Meshes::CUBE);
+        model.color.SetColor(Colors::GREEN);
+        model.light.SetLight(Lights::BRIGHT);
         scene.SetModel(id, model);
+
+        Transform transform;
+        transform.scaling = Vector3(0.1f, 0.1f, 0.1f);
+        scene.SetTransform(id, transform);
 
         index = id;
     }
@@ -26,23 +30,23 @@ void Bullets::Init(Scene &scene)
     SetEnd(index);
 }
 
-void Bullets::CreateBullet(Vector3 position, Vector3 direction)
+void Bullets::CreateBullet(Scene &scene, Vector3 &position, Vector3 &direction)
 {
     int id = GetSize();
 
     if (Activate(id))
     {
-        Transform transform;
+        Transform transform = scene.GetTransform(id);
         transform.position = position;
         transform.scaling = Vector3(0.1f, 0.1f, 0.1f);
-        GetScene()->SetTransform(id, transform);
+        scene.SetTransform(id, transform);
 
-        Physics physics;
+        Physics physics = scene.GetPhysics(id);
         physics.velocity = direction * DELTA_VELOCITY;
-        GetScene()->SetPhysics(id, physics);
+        scene.SetPhysics(id, physics);
 
-        Timer timer;
-        timer.start = GetScene()->GetTime();
-        GetScene()->SetTimer(id, timer);
+        Timer timer = scene.GetTimer(id);
+        timer.start = scene.GetTime();
+        scene.SetTimer(id, timer);
     }
 }

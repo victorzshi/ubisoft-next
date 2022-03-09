@@ -13,9 +13,9 @@ void Grid::Init(Scene &scene)
         int id = scene.CreateId();
 
         Model model;
-        model.mesh = Mesh::PLANE;
-        model.color = Color::GREY;
-        model.light = Light::BRIGHT;
+        model.mesh.SetMesh(Meshes::PLANE);
+        model.color.SetColor(Colors::RANDOM);
+        model.light.SetLight(Lights::BRIGHT);
         scene.SetModel(id, model);
 
         Transform transform;
