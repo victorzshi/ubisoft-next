@@ -13,7 +13,7 @@ void Bullets::Init(Scene &scene)
 
         Model model;
         model.mesh = Mesh::CUBE;
-        model.color = Color::WHITE;
+        model.color = Color::PURPLE;
         model.light = Light::BRIGHT;
         scene.SetModel(id, model);
 

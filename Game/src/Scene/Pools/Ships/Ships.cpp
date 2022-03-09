@@ -13,7 +13,7 @@ void Ships::Init(Scene &scene)
 
         Model model;
         model.mesh = Mesh::SPHERE; 
-        model.color = Color::BLUE;
+        model.color = Color::ORANGE;
         model.light = Light::OUTLINE;
         scene.SetModel(id, model);
 

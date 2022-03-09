@@ -80,6 +80,7 @@ void Model::SetColor(float dot, Face &face)
     int r = 0;
     int g = 0;
     int b = 0;
+
     switch (color)
     {
     case Color::WHITE:
@@ -94,9 +95,33 @@ void Model::SetColor(float dot, Face &face)
         b = 128;
         break;
 
+    case Color::BLACK:
+        r = 0;
+        g = 0;
+        b = 0;
+        break;
+
     case Color::RED:
         r = 255;
         g = 0;
+        b = 0;
+        break;
+
+    case Color::YELLOW:
+        r = 255;
+        g = 255;
+        b = 0;
+        break;
+
+    case Color::BLUE:
+        r = 0;
+        g = 0;
+        b = 255;
+        break;
+
+    case Color::ORANGE:
+        r = 255;
+        g = 128;
         b = 0;
         break;
 
@@ -106,8 +131,8 @@ void Model::SetColor(float dot, Face &face)
         b = 0;
         break;
 
-    case Color::BLUE:
-        r = 0;
+    case Color::PURPLE:
+        r = 128;
         g = 0;
         b = 255;
         break;

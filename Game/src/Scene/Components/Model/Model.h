@@ -20,9 +20,13 @@ enum class Color
 {
     WHITE,
     GREY,
+    BLACK,
     RED,
-    GREEN,
+    YELLOW,
     BLUE,
+    ORANGE,
+    GREEN,
+    PURPLE,
 };
 
 enum class Light
