@@ -141,17 +141,13 @@ void Scene::Update(float deltaTime)
     {
         Systems::UpdatePosition(*this, id);
         Systems::AddRotation(*this, id);
-    }
-
-    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
-    {
         Systems::CheckBulletHit(*this, id);
     }
 
     // Follow ship with camera
     int id = m_ships.GetBegin();
     Transform transform = GetTransform(id);
-    m_camera.from = transform.position + Vector3(0.0f, 5.0f, 10.0f);
+    //m_camera.from = transform.position + Vector3(0.0f, 5.0f, 10.0f);
     m_camera.to = transform.position;
 
     SetViewMatrix();
@@ -273,7 +269,7 @@ void Scene::SetTime(float deltaTime)
     m_time = m_current - m_start;
 }
 
-std::vector<int> Scene::GetAllActiveIds() const
+std::vector<int> Scene::GetActiveIds() const
 {
     std::vector<int> ids;
     for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
@@ -329,9 +325,7 @@ void Scene::UpdateVisible()
 {
     m_visible.clear();
 
-    std::vector<int> ids = GetAllActiveIds();
-
-    for (auto &id : ids)
+    for (auto &id : GetActiveIds())
     {
         Model model = GetModel(id);
         std::vector<Face> faces = model.GetFaces();

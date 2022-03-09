@@ -93,7 +93,7 @@ class Scene
     void SetMousePosition();
     void SetTime(float deltaTime);
 
-    std::vector<int> GetAllActiveIds() const;
+    std::vector<int> GetActiveIds() const;
 
     void MoveCamera(float deltaTime);
     void UpdateVisible();
