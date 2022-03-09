@@ -194,6 +194,7 @@
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="src\Graphics\Camera\Camera.h" />
+    <ClInclude Include="src\Graphics\Color\Color.h" />
     <ClInclude Include="src\Graphics\Face\Face.h" />
     <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\Renderer\Renderer.h" />
@@ -227,6 +228,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Graphics\Camera\Camera.cpp" />
+    <ClCompile Include="src\Graphics\Color\Color.cpp" />
     <ClCompile Include="src\Graphics\Face\Face.cpp" />
     <ClCompile Include="src\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Renderer\Renderer.cpp" />

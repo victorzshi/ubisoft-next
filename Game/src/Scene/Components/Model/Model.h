@@ -3,21 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "Graphics/Face/Face.h"
+#include "Graphics/Color/Color.h"
 #include "Graphics/Mesh/Mesh.h"
-
-enum class Color
-{
-    WHITE,
-    GREY,
-    BLACK,
-    RED,
-    YELLOW,
-    BLUE,
-    ORANGE,
-    GREEN,
-    PURPLE,
-};
 
 enum class Light
 {
@@ -34,5 +21,5 @@ struct Model
 
     Model();
 
-    void SetColor(float dot, Face &face);
+    void SetFaceColor(float dot, Face &face);
 };

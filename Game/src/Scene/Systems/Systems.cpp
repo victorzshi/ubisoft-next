@@ -48,7 +48,7 @@ void Systems::ShootBullet(Scene &scene, int id)
 
         Vector3 position = scene.GetTransform(id).position + direction;
 
-        scene.GetBullets().CreateBullet(position, direction);
+        scene.GetBullets().CreateBullet(scene, position, direction);
     }
 
     // TODO: Show cursor properly

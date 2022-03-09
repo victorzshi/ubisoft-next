@@ -225,7 +225,7 @@ void Renderer::UpdateVisible()
                 {
                     light = Vector3(0.0f, 0.0f, 1.0f).Normalize();
                 }
-                model.SetColor(normal.Dot(light), face);
+                model.SetFaceColor(normal.Dot(light), face);
 
                 m_visible.push_back(face);
             }
