@@ -75,8 +75,10 @@ class Scene
     Ships m_ships;
 
     // Handle graphics
+    Vector3 m_position;
     Renderer m_renderer;
 
     // Helper functions
     void SetTime(float deltaTime);
+    void MoveCamera(float deltaTime);
 };

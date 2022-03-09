@@ -6,9 +6,13 @@
 
 Scene::Scene() : m_id(0), m_deltaTime(0.0f)
 {
+    // Initialize time variables
     m_start = std::chrono::steady_clock::now();
     m_current = m_start;
     m_time = m_current - m_start;
+
+    // Initialize camera position
+    m_position = Vector3(0.0f, 0.0f, 20.0f);
 }
 
 void Scene::Init()
@@ -79,6 +83,28 @@ Ships &Scene::GetShips()
     return m_ships;
 }
 
+std::vector<int> Scene::GetActiveIds() const
+{
+    std::vector<int> ids;
+    for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
+    {
+        ids.push_back(id);
+    }
+    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
+    {
+        ids.push_back(id);
+    }
+    for (int id = m_grid.GetBegin(); id < m_grid.GetSize(); id++)
+    {
+        ids.push_back(id);
+    }
+    for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
+    {
+        ids.push_back(id);
+    }
+    return ids;
+}
+
 void Scene::SetModel(int id, Model model)
 {
     m_model[id] = model;
@@ -113,6 +139,7 @@ int Scene::CreateId()
 void Scene::Update(float deltaTime)
 {
     SetTime(deltaTime);
+    MoveCamera(deltaTime);
 
     for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
     {
@@ -134,21 +161,14 @@ void Scene::Update(float deltaTime)
         Systems::CheckBulletHit(*this, id);
     }
 
-    // Follow ship with camera
-    int id = m_ships.GetBegin();
-    Transform transform = GetTransform(id);
-    //m_renderer.m_camera.from = transform.position + Vector3(0.0f, 5.0f, 10.0f);
-    m_renderer.m_camera.to = transform.position;
-
+    // TODO: Move this into Game.cpp
     m_renderer.Update(deltaTime);
 }
 
 void Scene::Render()
 {
+    // TODO: Move this into Game.cpp
     m_renderer.Render();
-#ifdef _DEBUG
-    App::Print(10.0f, 100.0f, std::to_string(m_time.count()).c_str(), 0.0f, 1.0f, 0.0f);
-#endif
 }
 
 void Scene::SetTime(float deltaTime)
@@ -158,24 +178,38 @@ void Scene::SetTime(float deltaTime)
     m_time = m_current - m_start;
 }
 
-std::vector<int> Scene::GetActiveIds() const
+void Scene::MoveCamera(float deltaTime)
 {
-    std::vector<int> ids;
-    for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
+    float deltaVelocity = deltaTime / 100.0f;
+
+    if (App::IsKeyPressed(VK_NUMPAD6))
     {
-        ids.push_back(id);
+        m_position.x += deltaVelocity;
     }
-    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
+    if (App::IsKeyPressed(VK_NUMPAD4))
     {
-        ids.push_back(id);
+        m_position.x -= deltaVelocity;
     }
-    for (int id = m_grid.GetBegin(); id < m_grid.GetSize(); id++)
+    if (App::IsKeyPressed(VK_NUMPAD8))
     {
-        ids.push_back(id);
+        m_position.z -= deltaVelocity;
     }
-    for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
+    if (App::IsKeyPressed(VK_NUMPAD2))
     {
-        ids.push_back(id);
+        m_position.z += deltaVelocity;
     }
-    return ids;
+    if (App::IsKeyPressed(VK_NUMPAD7))
+    {
+        m_position.y += deltaVelocity;
+    }
+    if (App::IsKeyPressed(VK_NUMPAD9))
+    {
+        m_position.y -= deltaVelocity;
+    }
+
+    // Follow ship with camera
+    int id = m_ships.GetBegin();
+    Transform transform = GetTransform(id);
+    m_renderer.SetCameraPosition(transform.position + m_position);
+    m_renderer.SetCameraTarget(transform.position);
 }

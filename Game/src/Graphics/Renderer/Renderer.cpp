@@ -8,26 +8,35 @@
 
 Renderer::Renderer() : m_scene(nullptr)
 {
-    //
 }
 
 void Renderer::Init(Scene &scene)
 {
     m_scene = &scene;
-
-    SetCamera();
     SetWorldMatrix();
     SetViewMatrix();
     SetProjectionMatrix();
 }
 
+Vector3 Renderer::GetMousePosition() const
+{
+    return m_mouse;
+}
+
+void Renderer::SetCameraPosition(Vector3 position)
+{
+    m_camera.from = position;
+}
+
+void Renderer::SetCameraTarget(Vector3 target)
+{
+    m_camera.to = target;
+}
+
 void Renderer::Update(float deltaTime)
 {
-#ifdef _DEBUG
-    MoveCamera(deltaTime);
-#endif
-    SetMousePosition();
     SetViewMatrix();
+    SetMousePosition();
     UpdateVisible();
     SortVisible();
 }
@@ -38,18 +47,6 @@ void Renderer::Render()
 #ifdef _DEBUG
     RenderBorder();
 #endif
-}
-
-Vector3 Renderer::GetMousePosition() const
-{
-    return m_mouse;
-}
-
-void Renderer::SetCamera()
-{
-    m_camera.from = Vector3(0.0f, 0.0f, 20.0f);
-    m_camera.to = Vector3(0.0f, 0.0f, 1.0f);
-    m_camera.up = Vector3(0.0f, 1.0f, 0.0f);
 }
 
 void Renderer::SetWorldMatrix()
@@ -141,36 +138,6 @@ void Renderer::SetMousePosition()
     // Intersection with z=0 plane
     float t = -m_camera.from.z / ray.z;
     m_mouse = m_camera.from + ray * t;
-}
-
-void Renderer::MoveCamera(float deltaTime)
-{
-    float deltaVelocity = deltaTime / 100.0f;
-
-    if (App::IsKeyPressed(VK_NUMPAD6))
-    {
-        m_camera.from.x += deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD4))
-    {
-        m_camera.from.x -= deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD8))
-    {
-        m_camera.from.z -= deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD2))
-    {
-        m_camera.from.z += deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD7))
-    {
-        m_camera.from.y += deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD9))
-    {
-        m_camera.from.y -= deltaVelocity;
-    }
 }
 
 void Renderer::UpdateVisible()

@@ -9,18 +9,21 @@ class Scene;
 class Renderer
 {
   public:
-    Camera m_camera;
-
     Renderer();
 
     void Init(Scene &scene);
 
     Vector3 GetMousePosition() const;
 
+    void SetCameraPosition(Vector3 position);
+    void SetCameraTarget(Vector3 target);
+
     void Update(float deltaTime);
     void Render();
 
   private:
+    Scene *m_scene;
+
     // Constants for viewing frustum
     const float m_SCREEN_WIDTH = 960.0f;
     const float m_SCREEN_HEIGHT = 540.0f;
@@ -31,9 +34,8 @@ class Renderer
     const float m_Z_NEAR = 0.1f;
     const float m_Z_FAR = 25.0f;
 
-    Scene *m_scene;
-
     // 3D graphics
+    Camera m_camera;
     Matrix m_world;
     Matrix m_view;
     Matrix m_viewInverse;
@@ -42,13 +44,10 @@ class Renderer
     std::vector<Face> m_visible;
 
     // Helper functions
-    void SetCamera();
     void SetWorldMatrix();
     void SetViewMatrix();
     void SetProjectionMatrix();
     void SetMousePosition();
-
-    void MoveCamera(float deltaTime);
     void UpdateVisible();
     void SortVisible();
     void RenderVisible();
