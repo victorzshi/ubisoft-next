@@ -13,7 +13,7 @@ void Grid::Init(Scene &scene)
         int id = scene.CreateId();
 
         Model model;
-        model.mesh = Mesh::PLANE;
+        model.mesh.SetMesh(Meshes::PLANE);
         model.color = Color::GREY;
         model.light = Light::BRIGHT;
         scene.SetModel(id, model);
