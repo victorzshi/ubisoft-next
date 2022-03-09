@@ -46,6 +46,15 @@ void Systems::ShootBullet(Scene &scene, int id)
 
         scene.GetBullets().CreateBullet(direction);
     }
+
+    // TODO: Show cursor properly
+    int bullet = scene.GetBullets().GetActiveIds().front();
+
+    Vector3 direction = scene.GetClickPosition() - scene.GetTransform(id).position;
+
+    Transform transform = scene.GetTransform(bullet);
+    transform.position = scene.GetTransform(id).position + direction.Normalize();
+    scene.SetTransform(bullet, transform);
 }
 
 void Systems::UpdatePosition(Scene &scene, int id, float deltaTime)

@@ -211,21 +211,20 @@ void Scene::SetProjectionMatrix()
 
 void Scene::SetClickPosition()
 {
-    float x, y;
-    App::GetMousePos(x, y);
+    float mouseX, mouseY;
+    App::GetMousePos(mouseX, mouseY);
 
     Vector3 viewPoint;
-    viewPoint.x = 2.0f * m_ASPECT_RATIO * x / m_SCREEN_WIDTH - m_ASPECT_RATIO;
-    viewPoint.y = -2.0f * y / m_SCREEN_HEIGHT + 1.0f;
+    viewPoint.x = 2.0f * m_ASPECT_RATIO * mouseX / m_SCREEN_WIDTH - m_ASPECT_RATIO;
+    viewPoint.y = -2.0f * mouseY / m_SCREEN_HEIGHT + 1.0f;
     viewPoint.z = -m_DISTANCE;
 
-    Vector3 worldPoint;
-    worldPoint.x = m_viewInverse(0, 0) * viewPoint.x + m_viewInverse(0, 1) * viewPoint.y +
-                   m_viewInverse(0, 2) * viewPoint.z + m_viewInverse(0, 3);
-    worldPoint.y = m_viewInverse(1, 0) * viewPoint.x + m_viewInverse(1, 1) * viewPoint.y +
-                   m_viewInverse(1, 2) * viewPoint.z + m_viewInverse(1, 3);
-    worldPoint.z = m_viewInverse(2, 0) * viewPoint.x + m_viewInverse(2, 1) * viewPoint.y +
-                   m_viewInverse(2, 2) * viewPoint.z + m_viewInverse(2, 3);
+    Vector3 worldPoint = m_viewInverse * viewPoint;
+
+    if (worldPoint.w != 0.0f)
+    {
+        worldPoint /= worldPoint.w;
+    }
 
     Vector3 ray = worldPoint - m_camera.from;
 

@@ -18,7 +18,7 @@ void Bullets::Init(Scene &scene)
         scene.SetModel(id, model);
 
         Transform transform;
-        transform.scaling = Vector3(0.2f, 0.2f, 0.2f);
+        transform.scaling = Vector3(0.1f, 0.1f, 0.1f);
         scene.SetTransform(id, transform);
 
         index = id;
@@ -26,7 +26,8 @@ void Bullets::Init(Scene &scene)
 
     SetScene(&scene);
     SetBegin(index - (TOTAL - 1));
-    SetSize(index - (TOTAL - 1));
+    // SetSize(index - (TOTAL - 1));
+    SetSize(index - (TOTAL - 2)); // XXX: Use one bullet as cursor
     SetEnd(index);
 }
 
