@@ -7,19 +7,26 @@
 
 enum class Mesh
 {
+    PLANE,
     CUBE,
     SPHERE,
+    ICOSPHERE,
+    CONE,
     TORUS,
-    PLANE,
+    MONKEY,
 };
 
 enum class Color
 {
     WHITE,
     GREY,
+    BLACK,
     RED,
-    GREEN,
+    YELLOW,
     BLUE,
+    ORANGE,
+    GREEN,
+    PURPLE,
 };
 
 enum class Light
@@ -42,10 +49,13 @@ struct Model
     void SetColor(float dot, Face &face);
 
   private:
+    static std::vector<Face> m_plane;
     static std::vector<Face> m_cube;
     static std::vector<Face> m_sphere;
+    static std::vector<Face> m_icosphere;
+    static std::vector<Face> m_cone;
     static std::vector<Face> m_torus;
-    static std::vector<Face> m_plane;
+    static std::vector<Face> m_monkey;
 
     static std::vector<Face> LoadFromObjectFile(std::string file);
 };

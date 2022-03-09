@@ -2,11 +2,11 @@
 
 #include "Timer.h"
 
-Timer::Timer() : previous(0.0f)
+Timer::Timer() : start(0.0f)
 {
 }
 
 float Timer::Elapsed(float current)
 {
-    return current - previous;
+    return current - start;
 }
