@@ -42,7 +42,7 @@ void Bullets::CreateBullet(Vector3 position, Vector3 direction)
         GetScene()->SetPhysics(id, physics);
 
         Timer timer;
-        timer.previous = GetScene()->GetTime();
+        timer.start = GetScene()->GetTime();
         GetScene()->SetTimer(id, timer);
     }
 }

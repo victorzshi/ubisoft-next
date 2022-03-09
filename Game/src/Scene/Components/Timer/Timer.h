@@ -2,7 +2,7 @@
 
 struct Timer
 {
-    float previous;
+    float start;
 
     Timer();
 
