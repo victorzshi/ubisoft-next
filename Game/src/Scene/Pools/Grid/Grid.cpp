@@ -14,7 +14,7 @@ void Grid::Init(Scene &scene)
 
         Model model;
         model.mesh.SetMesh(Meshes::PLANE);
-        model.color.SetColor(Colors::GREY);
+        model.color.SetColor(Colors::RANDOM);
         model.light.SetLight(Lights::BRIGHT);
         scene.SetModel(id, model);
 

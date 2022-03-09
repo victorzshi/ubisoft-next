@@ -216,16 +216,16 @@ void Renderer::UpdateVisible()
                 }
 
                 // Add lighting effect
-                Vector3 lightSource;
+                Vector3 sun;
                 if (model.light.GetLight() == Lights::OUTLINE)
                 {
-                    lightSource = m_camera.from.Normalize();
+                    sun = m_camera.from.Normalize();
                 }
                 else
                 {
-                    lightSource = Vector3(0.0f, 0.0f, 1.0f).Normalize();
+                    sun = Vector3(0.0f, 0.0f, 1.0f).Normalize();
                 }
-                model.light.AddLighting(normal.Dot(lightSource), model.color, face);
+                model.light.ApplyLighting(normal.Dot(sun), model.color, face);
 
                 m_visible.push_back(face);
             }

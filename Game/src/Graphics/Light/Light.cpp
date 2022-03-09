@@ -19,30 +19,34 @@ void Light::SetLight(Lights light)
     m_light = light;
 }
 
-void Light::AddLighting(float dot, Color &color, Face &face)
+void Light::ApplyLighting(float dot, Color &color, Face &face)
 {
+    float r = 0.0f;
+    float g = 0.0f;
+    float b = 0.0f;
+
     switch (m_light)
     {
     case Lights::BRIGHT:
-        face.r = (float)color.r;
-        face.g = (float)color.g;
-        face.b = (float)color.b;
+        r = (float)color.r;
+        g = (float)color.g;
+        b = (float)color.b;
         break;
 
     case Lights::SHADOW:
-        face.r = color.r * max(dot, 0.3f);
-        face.g = color.g * max(dot, 0.3f);
-        face.b = color.b * max(dot, 0.3f);
+        r = color.r * max(dot, 0.3f);
+        g = color.g * max(dot, 0.3f);
+        b = color.b * max(dot, 0.3f);
         break;
 
     case Lights::OUTLINE:
-        face.r = color.r * max((1.0f - dot), 0.3f);
-        face.g = color.g * max((1.0f - dot), 0.3f);
-        face.b = color.b * max((1.0f - dot), 0.3f);
+        r = color.r * max((1.0f - dot), 0.3f);
+        g = color.g * max((1.0f - dot), 0.3f);
+        b = color.b * max((1.0f - dot), 0.3f);
         break;
     }
 
-    face.r /= 255.0f;
-    face.g /= 255.0f;
-    face.b /= 255.0f;
+    face.r = r / 255.0f;
+    face.g = g / 255.0f;
+    face.b = b / 255.0f;
 }

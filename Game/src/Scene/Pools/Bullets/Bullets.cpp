@@ -13,7 +13,7 @@ void Bullets::Init(Scene &scene)
 
         Model model;
         model.mesh.SetMesh(Meshes::CUBE);
-        model.color.SetColor(Colors::RANDOM);
+        model.color.SetColor(Colors::GREEN);
         model.light.SetLight(Lights::BRIGHT);
         scene.SetModel(id, model);
 
@@ -36,10 +36,6 @@ void Bullets::CreateBullet(Scene &scene, Vector3 &position, Vector3 &direction)
 
     if (Activate(id))
     {
-        Model model = scene.GetModel(id);
-        model.color.SetColor(Colors::RANDOM);
-        scene.SetModel(id, model);
-
         Transform transform = scene.GetTransform(id);
         transform.position = position;
         transform.scaling = Vector3(0.1f, 0.1f, 0.1f);

@@ -19,7 +19,7 @@ class Light
 
     void SetLight(Lights light);
 
-    void AddLighting(float dot, Color &color, Face &face);
+    void ApplyLighting(float dot, Color &color, Face &face);
 
   private:
     Lights m_light;
