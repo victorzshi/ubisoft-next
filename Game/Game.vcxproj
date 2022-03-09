@@ -195,6 +195,7 @@
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="src\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\Graphics\Face\Face.h" />
+    <ClInclude Include="src\Graphics\Renderer\Renderer.h" />
     <ClInclude Include="src\Math\Random\Random.h" />
     <ClInclude Include="src\Math\Matrix\Matrix.h" />
     <ClInclude Include="src\Math\Vector3\Vector3.h" />
@@ -226,6 +227,7 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="src\Graphics\Face\Face.cpp" />
+    <ClCompile Include="src\Graphics\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Math\Random\Random.cpp" />
     <ClCompile Include="src\Math\Matrix\Matrix.cpp" />
     <ClCompile Include="src\Math\Matrix\MatrixTest.cpp" />
