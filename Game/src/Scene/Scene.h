@@ -2,6 +2,7 @@
 
 #include <chrono>
 
+#include "Components/Health/Health.h"
 #include "Components/Model/Model.h"
 #include "Components/Physics/Physics.h"
 #include "Components/Timer/Timer.h"
@@ -26,6 +27,7 @@ class Scene
     float GetTime() const;
 
     // Get component arrays
+    Health GetHealth(int id) const;
     Model GetModel(int id) const;
     Physics GetPhysics(int id) const;
     Timer GetTimer(int id) const;
@@ -41,6 +43,7 @@ class Scene
     std::vector<int> GetAllIds() const;
 
     // Set component arrays
+    void SetHealth(int id, Health health);
     void SetModel(int id, Model model);
     void SetPhysics(int id, Physics physics);
     void SetTimer(int id, Timer timer);
@@ -63,6 +66,7 @@ class Scene
     std::chrono::duration<float> m_time;
 
     // Component arrays
+    std::vector<Health> m_health;
     std::vector<Model> m_model;
     std::vector<Physics> m_physics;
     std::vector<Timer> m_timer;

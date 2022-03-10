@@ -45,6 +45,11 @@ float Scene::GetTime() const
     return m_time.count();
 }
 
+Health Scene::GetHealth(int id) const
+{
+    return m_health[id];
+}
+
 Model Scene::GetModel(int id) const
 {
     return m_model[id];
@@ -107,6 +112,11 @@ std::vector<int> Scene::GetAllIds() const
     return ids;
 }
 
+void Scene::SetHealth(int id, Health health)
+{
+    m_health[id] = health;
+}
+
 void Scene::SetModel(int id, Model model)
 {
     m_model[id] = model;
@@ -129,6 +139,7 @@ void Scene::SetTransform(int id, Transform transform)
 
 int Scene::CreateId()
 {
+    m_health.push_back(Health());
     m_model.push_back(Model());
     m_physics.push_back(Physics());
     m_timer.push_back(Timer());

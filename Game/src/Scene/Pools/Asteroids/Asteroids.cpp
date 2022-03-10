@@ -12,6 +12,10 @@ void Asteroids::Init(Scene &scene)
     {
         int id = scene.CreateId();
 
+        Health health;
+        health.points = 1;
+        scene.SetHealth(id, health);
+
         Model model;
         model.mesh.SetMesh(Meshes::TORUS);
         model.color.SetColor(Colors::RED);
@@ -40,7 +44,13 @@ void Asteroids::Init(Scene &scene)
 
 void Asteroids::Update(Scene &scene)
 {
-    // TODO: Check asteroid health.
+    for (int id = GetBegin(); id < GetSize(); id++)
+    {
+        if (scene.GetHealth(id).points <= 0)
+        {
+            Deactivate(id);
+        }
+    }
 
     UpdateIds();
 }

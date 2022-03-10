@@ -102,6 +102,10 @@ void Pool::SwapMemory(int id)
         return;
     }
 
+    Health health = m_scene->GetHealth(m_size);
+    m_scene->SetHealth(m_size, m_scene->GetHealth(id));
+    m_scene->SetHealth(id, health);
+
     Model model = m_scene->GetModel(m_size);
     m_scene->SetModel(m_size, m_scene->GetModel(id));
     m_scene->SetModel(id, model);
