@@ -8,7 +8,8 @@ class Bullets : public Pool
 {
   public:
     const int TOTAL = 100;
-    const float DELTA_VELOCITY = 3.0f;
+    const float WIDTH = 0.1f;
+    const float DELTA_VELOCITY = 5.0f;
     const float DURATION = 1.0f;
 
     virtual void Init(Scene &scene) override;

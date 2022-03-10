@@ -12,7 +12,7 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     m_time = m_current - m_start;
 
     // Initialize camera position
-    m_position = Vector3(0.0f, 5.0f, 15.0f);
+    m_position = Vector3(0.0f, 0.0f, 15.0f);
 }
 
 void Scene::Init()
@@ -43,6 +43,11 @@ float Scene::GetDeltaTime() const
 float Scene::GetTime() const
 {
     return m_time.count();
+}
+
+Collider Scene::GetCollider(int id) const
+{
+    return m_collider[id];
 }
 
 Health Scene::GetHealth(int id) const
@@ -112,6 +117,11 @@ std::vector<int> Scene::GetAllIds() const
     return ids;
 }
 
+void Scene::SetCollider(int id, Collider collider)
+{
+    m_collider[id] = collider;
+}
+
 void Scene::SetHealth(int id, Health health)
 {
     m_health[id] = health;
@@ -139,6 +149,7 @@ void Scene::SetTransform(int id, Transform transform)
 
 int Scene::CreateId()
 {
+    m_collider.push_back(Collider());
     m_health.push_back(Health());
     m_model.push_back(Model());
     m_physics.push_back(Physics());
@@ -172,6 +183,7 @@ void Scene::Update(float deltaTime)
     {
         Systems::UpdatePosition(*this, id);
         Systems::AddRotation(*this, id);
+        Systems::CheckAsteroidCollision(*this, id);
     }
 
     UpdatePools();

@@ -17,6 +17,10 @@ void Ships::Init(Scene &scene)
         model.lighting = Lighting::SHADOW;
         scene.SetModel(id, model);
 
+        Timer timer;
+        timer.start = scene.GetTime();
+        scene.SetTimer(id, timer);
+
         index = id;
     }
 
@@ -31,4 +35,11 @@ void Ships::Update(Scene &scene)
     // TODO: Check ship health.
 
     UpdateIds();
+}
+
+void Ships::ResetBulletCooldown(Scene& scene, int id)
+{
+    Timer timer = scene.GetTimer(id);
+    timer.start = scene.GetTime();
+    scene.SetTimer(id, timer);
 }

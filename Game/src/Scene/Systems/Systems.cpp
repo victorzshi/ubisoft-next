@@ -39,7 +39,16 @@ void Systems::MoveShip(Scene &scene, int id)
 
 void Systems::ShootBullet(Scene &scene, int id)
 {
-    if (App::IsKeyPressed(VK_LBUTTON))
+    if (!App::IsKeyPressed(VK_LBUTTON))
+    {
+        return;
+    }
+
+    float current = scene.GetTime();
+    float elapsed = scene.GetTimer(id).Elapsed(current);
+    float cooldown = scene.GetShips().BULLET_COOLDOWN;
+
+    if (elapsed > cooldown)
     {
         Vector3 mouse = scene.GetMousePosition();
         Vector3 ship = scene.GetTransform(id).position;
@@ -49,6 +58,8 @@ void Systems::ShootBullet(Scene &scene, int id)
         Vector3 position = scene.GetTransform(id).position + direction;
 
         scene.GetBullets().CreateBullet(scene, position, direction);
+
+        scene.GetShips().ResetBulletCooldown(scene, id);
     }
 }
 
@@ -96,4 +107,23 @@ void Systems::AddRotation(Scene &scene, int id)
     transform.rotation.z = fmod(transform.rotation.z, 360.0f);
 
     scene.SetTransform(id, transform);
+}
+
+void Systems::CheckAsteroidCollision(Scene &scene, int id)
+{
+    for (auto &asteroid : scene.GetAsteroids().GetIds())
+    {
+        if (Collider::IsHit(scene, id, asteroid))
+        {
+            Health health;
+
+            health = scene.GetHealth(id);
+            health.points--;
+            scene.SetHealth(id, health);
+
+            health = scene.GetHealth(asteroid);
+            health.points--;
+            scene.SetHealth(asteroid, health);
+        }
+    }
 }

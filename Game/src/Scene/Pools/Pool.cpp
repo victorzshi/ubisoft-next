@@ -102,6 +102,10 @@ void Pool::SwapMemory(int id)
         return;
     }
 
+    Collider collider = m_scene->GetCollider(m_size);
+    m_scene->SetCollider(m_size, m_scene->GetCollider(id));
+    m_scene->SetCollider(id, collider);
+
     Health health = m_scene->GetHealth(m_size);
     m_scene->SetHealth(m_size, m_scene->GetHealth(id));
     m_scene->SetHealth(id, health);

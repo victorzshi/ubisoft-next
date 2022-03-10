@@ -12,8 +12,12 @@ void Asteroids::Init(Scene &scene)
     {
         int id = scene.CreateId();
 
+        Collider collider;
+        collider.radius = WIDTH / 2.0f;
+        scene.SetCollider(id, collider);
+
         Health health;
-        health.points = 1;
+        health.points = HEALTH_POINTS;
         scene.SetHealth(id, health);
 
         Model model;
