@@ -12,7 +12,7 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     m_time = m_current - m_start;
 
     // Initialize camera position
-    m_position = Vector3(0.0f, 5.0f, 15.0f);
+    m_position = Vector3(0.0f, 0.0f, 15.0f);
 }
 
 void Scene::Init()
@@ -22,6 +22,8 @@ void Scene::Init()
     m_bullets.Init(*this);
     m_grid.Init(*this);
     m_ships.Init(*this);
+
+    // TODO: Initialize space but leave all objects inactive. Use level data to generate objects.
 }
 
 void Scene::Shutdown()
@@ -41,6 +43,16 @@ float Scene::GetDeltaTime() const
 float Scene::GetTime() const
 {
     return m_time.count();
+}
+
+Collider Scene::GetCollider(int id) const
+{
+    return m_collider[id];
+}
+
+Health Scene::GetHealth(int id) const
+{
+    return m_health[id];
 }
 
 Model Scene::GetModel(int id) const
@@ -83,26 +95,36 @@ Ships &Scene::GetShips()
     return m_ships;
 }
 
-std::vector<int> Scene::GetActiveIds() const
+std::vector<int> Scene::GetAllIds() const
 {
     std::vector<int> ids;
-    for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
+    for (auto id : m_asteroids.GetIds())
     {
         ids.push_back(id);
     }
-    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
+    for (auto &id : m_bullets.GetIds())
     {
         ids.push_back(id);
     }
-    for (int id = m_grid.GetBegin(); id < m_grid.GetSize(); id++)
+    for (auto &id : m_grid.GetIds())
     {
         ids.push_back(id);
     }
-    for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
+    for (auto &id : m_ships.GetIds())
     {
         ids.push_back(id);
     }
     return ids;
+}
+
+void Scene::SetCollider(int id, Collider collider)
+{
+    m_collider[id] = collider;
+}
+
+void Scene::SetHealth(int id, Health health)
+{
+    m_health[id] = health;
 }
 
 void Scene::SetModel(int id, Model model)
@@ -127,6 +149,8 @@ void Scene::SetTransform(int id, Transform transform)
 
 int Scene::CreateId()
 {
+    m_collider.push_back(Collider());
+    m_health.push_back(Health());
     m_model.push_back(Model());
     m_physics.push_back(Physics());
     m_timer.push_back(Timer());
@@ -141,33 +165,34 @@ void Scene::Update(float deltaTime)
     SetTime(deltaTime);
     MoveCamera(deltaTime);
 
-    for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
+    for (auto id : m_ships.GetIds())
     {
         Systems::MoveShip(*this, id);
         Systems::ShootBullet(*this, id);
         Systems::UpdatePosition(*this, id);
+        Systems::AddRotation(*this, id);
     }
 
-    for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
+    for (auto id : m_asteroids.GetIds())
     {
         Systems::UpdatePosition(*this, id);
         Systems::AddRotation(*this, id);
     }
 
-    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
+    for (auto id : m_bullets.GetIds())
     {
         Systems::UpdatePosition(*this, id);
         Systems::AddRotation(*this, id);
-        Systems::CheckBulletHit(*this, id);
+        Systems::CheckAsteroidCollision(*this, id);
     }
 
-    // TODO: Move this into Game.cpp
+    UpdatePools();
+
     m_renderer.Update(deltaTime);
 }
 
 void Scene::Render()
 {
-    // TODO: Move this into Game.cpp
     m_renderer.Render();
 }
 
@@ -208,15 +233,26 @@ void Scene::MoveCamera(float deltaTime)
     }
 
     // Follow ship with camera
-    int id = m_ships.GetBegin();
-    Vector3 ship = GetTransform(id).position;
-    Vector3 mouse = GetMousePosition();
-    Vector3 direction = mouse - ship;
-    if (direction != Vector3())
+    if (!m_ships.GetIds().empty())
     {
-        direction = direction.Normalize() * 2.0f;
-    }
+        int id = m_ships.GetIds().front();
+        Vector3 ship = GetTransform(id).position;
+        Vector3 mouse = GetMousePosition();
+        Vector3 direction = mouse - ship;
+        if (direction != Vector3())
+        {
+            direction = direction.Normalize() * 2.0f;
+        }
 
-    m_renderer.SetCameraPosition(ship + m_position);
-    m_renderer.SetCameraTarget(ship + direction);
+        m_renderer.SetCameraPosition(ship + m_position);
+        m_renderer.SetCameraTarget(ship + direction);
+    }
+}
+
+void Scene::UpdatePools()
+{
+    m_asteroids.Update(*this);
+    m_bullets.Update(*this);
+    m_grid.Update(*this);
+    m_ships.Update(*this);
 }

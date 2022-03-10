@@ -12,10 +12,14 @@ void Ships::Init(Scene &scene)
         int id = scene.CreateId();
 
         Model model;
-        model.mesh.SetMesh(Meshes::SPHERE); 
-        model.color.SetColor(Colors::PURPLE);
-        model.light.SetLight(Lights::SHADOW);
+        model.mesh.SetMesh(Meshes::ICOSPHERE);
+        model.color.SetColor(Colors::BLUE);
+        model.lighting = Lighting::SHADOW;
         scene.SetModel(id, model);
+
+        Timer timer;
+        timer.start = scene.GetTime();
+        scene.SetTimer(id, timer);
 
         index = id;
     }
@@ -24,4 +28,18 @@ void Ships::Init(Scene &scene)
     SetBegin(index - (TOTAL - 1));
     SetSize(index + 1);
     SetEnd(index);
+}
+
+void Ships::Update(Scene &scene)
+{
+    // TODO: Check ship health.
+
+    UpdateIds();
+}
+
+void Ships::ResetBulletCooldown(Scene& scene, int id)
+{
+    Timer timer = scene.GetTimer(id);
+    timer.start = scene.GetTime();
+    scene.SetTimer(id, timer);
 }

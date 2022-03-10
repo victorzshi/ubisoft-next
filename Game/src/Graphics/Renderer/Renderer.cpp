@@ -144,7 +144,7 @@ void Renderer::UpdateVisible()
 {
     m_visible.clear();
 
-    for (auto &id : m_scene->GetActiveIds())
+    for (auto &id : m_scene->GetAllIds())
     {
         Model model = m_scene->GetModel(id);
         std::vector<Face> faces = model.mesh.GetFaces();
@@ -217,7 +217,7 @@ void Renderer::UpdateVisible()
 
                 // Add lighting effect
                 Vector3 sun;
-                if (model.light.GetLight() == Lights::OUTLINE)
+                if (model.lighting == Lighting::OUTLINE)
                 {
                     sun = m_camera.from.Normalize();
                 }
@@ -225,7 +225,7 @@ void Renderer::UpdateVisible()
                 {
                     sun = Vector3(0.0f, 0.0f, 1.0f).Normalize();
                 }
-                model.light.ApplyLighting(normal.Dot(sun), model.color, face);
+                model.ApplyLighting(normal.Dot(sun), face);
 
                 m_visible.push_back(face);
             }

@@ -11,14 +11,21 @@ void Bullets::Init(Scene &scene)
     {
         int id = scene.CreateId();
 
+        Collider collider;
+        collider.radius = WIDTH / 2.0f;
+        scene.SetCollider(id, collider);
+
+        Health health;
+        health.points = 1;
+        scene.SetHealth(id, health);
+
         Model model;
         model.mesh.SetMesh(Meshes::CUBE);
         model.color.SetColor(Colors::GREEN);
-        model.light.SetLight(Lights::BRIGHT);
         scene.SetModel(id, model);
 
         Transform transform;
-        transform.scaling = Vector3(0.1f, 0.1f, 0.1f);
+        transform.scaling = Vector3(WIDTH, WIDTH, WIDTH);
         scene.SetTransform(id, transform);
 
         index = id;
@@ -30,12 +37,36 @@ void Bullets::Init(Scene &scene)
     SetEnd(index);
 }
 
+void Bullets::Update(Scene &scene)
+{
+    float current = scene.GetTime();
+
+    for (int id = GetBegin(); id < GetSize(); id++)
+    {
+        if (scene.GetTimer(id).Elapsed(current) >= DURATION)
+        {
+            Deactivate(id);
+        }
+
+        if (scene.GetHealth(id).points <= 0)
+        {
+            Deactivate(id);
+        }
+    }
+
+    UpdateIds();
+}
+
 void Bullets::CreateBullet(Scene &scene, Vector3 &position, Vector3 &direction)
 {
     int id = GetSize();
 
     if (Activate(id))
     {
+        Health health = scene.GetHealth(id);
+        health.points = 1;
+        scene.SetHealth(id, health);
+
         Transform transform = scene.GetTransform(id);
         transform.position = position;
         transform.scaling = Vector3(0.1f, 0.1f, 0.1f);

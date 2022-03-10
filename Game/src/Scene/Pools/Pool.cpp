@@ -8,6 +8,11 @@ Pool::Pool() : m_scene(nullptr), m_begin(0), m_size(0), m_end(0)
 {
 }
 
+std::vector<int> Pool::GetIds() const
+{
+    return m_ids;
+}
+
 int Pool::GetBegin() const
 {
     return m_begin;
@@ -51,6 +56,18 @@ bool Pool::Deactivate(int id)
     return true;
 }
 
+void Pool::UpdateIds()
+{
+    assert(m_end != 0);
+
+    m_ids.clear();
+
+    for (int id = m_begin; id < m_size; id++)
+    {
+        m_ids.push_back(id);
+    }
+}
+
 Scene *Pool::GetScene() const
 {
     return m_scene;
@@ -84,6 +101,14 @@ void Pool::SwapMemory(int id)
     {
         return;
     }
+
+    Collider collider = m_scene->GetCollider(m_size);
+    m_scene->SetCollider(m_size, m_scene->GetCollider(id));
+    m_scene->SetCollider(id, collider);
+
+    Health health = m_scene->GetHealth(m_size);
+    m_scene->SetHealth(m_size, m_scene->GetHealth(id));
+    m_scene->SetHealth(id, health);
 
     Model model = m_scene->GetModel(m_size);
     m_scene->SetModel(m_size, m_scene->GetModel(id));

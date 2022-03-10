@@ -39,7 +39,16 @@ void Systems::MoveShip(Scene &scene, int id)
 
 void Systems::ShootBullet(Scene &scene, int id)
 {
-    if (App::IsKeyPressed(VK_LBUTTON))
+    if (!App::IsKeyPressed(VK_LBUTTON))
+    {
+        return;
+    }
+
+    float current = scene.GetTime();
+    float elapsed = scene.GetTimer(id).Elapsed(current);
+    float cooldown = scene.GetShips().BULLET_COOLDOWN;
+
+    if (elapsed > cooldown)
     {
         Vector3 mouse = scene.GetMousePosition();
         Vector3 ship = scene.GetTransform(id).position;
@@ -49,16 +58,9 @@ void Systems::ShootBullet(Scene &scene, int id)
         Vector3 position = scene.GetTransform(id).position + direction;
 
         scene.GetBullets().CreateBullet(scene, position, direction);
+
+        scene.GetShips().ResetBulletCooldown(scene, id);
     }
-
-    // TODO: Show cursor properly
-    // int bullet = scene.GetBullets().GetActiveIds().front();
-
-    // Vector3 direction = scene.GetClickPosition() - scene.GetTransform(id).position;
-
-    // Transform transform = scene.GetTransform(bullet);
-    // transform.position = scene.GetTransform(id).position + direction.Normalize();
-    // scene.SetTransform(bullet, transform);
 }
 
 void Systems::UpdatePosition(Scene &scene, int id)
@@ -96,8 +98,8 @@ void Systems::AddRotation(Scene &scene, int id)
     Physics physics = scene.GetPhysics(id);
     Transform transform = scene.GetTransform(id);
 
-    transform.rotation.x += physics.velocity.x;
-    transform.rotation.y += physics.velocity.y;
+    transform.rotation.x += physics.velocity.y;
+    transform.rotation.y += -physics.velocity.x;
     transform.rotation.z += physics.velocity.z;
 
     transform.rotation.x = fmod(transform.rotation.x, 360.0f);
@@ -107,19 +109,21 @@ void Systems::AddRotation(Scene &scene, int id)
     scene.SetTransform(id, transform);
 }
 
-void Systems::CheckBulletHit(Scene &scene, int id)
+void Systems::CheckAsteroidCollision(Scene &scene, int id)
 {
-    float current = scene.GetTime();
-    float duration = scene.GetBullets().DURATION;
-
-    Timer timer = scene.GetTimer(id);
-
-    if (timer.Elapsed(current) >= duration)
+    for (auto &asteroid : scene.GetAsteroids().GetIds())
     {
-        scene.GetBullets().Deactivate(id);
-        // Mark for deletion.
-        // Model model = scene.GetModel(id);
-        // model.color = Color::RED;
-        // scene.SetModel(id, model);
+        if (Collider::IsHit(scene, id, asteroid))
+        {
+            Health health;
+
+            health = scene.GetHealth(id);
+            health.points--;
+            scene.SetHealth(id, health);
+
+            health = scene.GetHealth(asteroid);
+            health.points--;
+            scene.SetHealth(asteroid, health);
+        }
     }
 }

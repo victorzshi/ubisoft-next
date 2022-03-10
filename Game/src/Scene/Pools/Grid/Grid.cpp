@@ -15,7 +15,6 @@ void Grid::Init(Scene &scene)
         Model model;
         model.mesh.SetMesh(Meshes::PLANE);
         model.color.SetColor(Colors::RANDOM);
-        model.light.SetLight(Lights::BRIGHT);
         scene.SetModel(id, model);
 
         Transform transform;
@@ -32,6 +31,11 @@ void Grid::Init(Scene &scene)
     SetBegin(index - (ROWS * COLUMNS - 1));
     SetSize(index + 1);
     SetEnd(index);
+}
+
+void Grid::Update(Scene &scene)
+{
+    UpdateIds();
 }
 
 std::vector<Vector3> Grid::CreatePositions()

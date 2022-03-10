@@ -12,10 +12,18 @@ void Asteroids::Init(Scene &scene)
     {
         int id = scene.CreateId();
 
+        Collider collider;
+        collider.radius = WIDTH / 2.0f;
+        scene.SetCollider(id, collider);
+
+        Health health;
+        health.points = HEALTH_POINTS;
+        scene.SetHealth(id, health);
+
         Model model;
         model.mesh.SetMesh(Meshes::TORUS);
         model.color.SetColor(Colors::RED);
-        model.light.SetLight(Lights::OUTLINE);
+        model.lighting = Lighting::OUTLINE;
         scene.SetModel(id, model);
 
         Physics physics;
@@ -36,4 +44,17 @@ void Asteroids::Init(Scene &scene)
     SetBegin(index - (TOTAL - 1));
     SetSize(index + 1);
     SetEnd(index);
+}
+
+void Asteroids::Update(Scene &scene)
+{
+    for (int id = GetBegin(); id < GetSize(); id++)
+    {
+        if (scene.GetHealth(id).points <= 0)
+        {
+            Deactivate(id);
+        }
+    }
+
+    UpdateIds();
 }
