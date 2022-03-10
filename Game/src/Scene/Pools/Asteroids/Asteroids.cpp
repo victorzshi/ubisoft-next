@@ -52,6 +52,8 @@ void Asteroids::Update(Scene &scene)
     {
         if (scene.GetHealth(id).points <= 0)
         {
+            scene.GetParticles().CreateBigExplosion(scene, scene.GetTransform(id).position);
+
             Deactivate(id);
         }
     }
