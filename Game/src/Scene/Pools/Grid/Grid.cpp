@@ -34,10 +34,9 @@ void Grid::Init(Scene &scene)
     SetEnd(index);
 }
 
-void Grid::UpdateIds(Scene &scene)
+void Grid::Update(Scene &scene)
 {
-    // Grid will not change.
-    return;
+    UpdateIds();
 }
 
 std::vector<Vector3> Grid::CreatePositions()

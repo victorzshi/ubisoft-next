@@ -81,4 +81,5 @@ class Scene
     // Helper functions
     void SetTime(float deltaTime);
     void MoveCamera(float deltaTime);
+    void UpdatePools();
 };

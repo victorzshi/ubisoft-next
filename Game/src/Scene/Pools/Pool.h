@@ -4,6 +4,7 @@
 
 class Scene;
 
+// Manage memory and keep data packed.
 class Pool
 {
   public:
@@ -12,11 +13,13 @@ class Pool
 
     virtual void Init(Scene &scene) = 0;
 
-    virtual void UpdateIds(Scene &scene) = 0;
+    virtual void Update(Scene &scene) = 0;
 
     std::vector<int> GetIds() const;
 
   protected:
+    std::vector<int> m_ids;
+
     Scene *GetScene() const;
 
     /*
@@ -55,9 +58,10 @@ class Pool
     void SetSize(int id);
     void SetEnd(int id);
 
-    // Manage memory and keep data packed
     bool Activate(int id);
     bool Deactivate(int id);
+
+    void UpdateIds();
 
   private:
     Scene *m_scene;

@@ -9,5 +9,5 @@ class Asteroids : public Pool
 
     virtual void Init(Scene &scene) override;
 
-    virtual void UpdateIds(Scene &scene) override;
+    virtual void Update(Scene &scene) override;
 };

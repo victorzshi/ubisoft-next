@@ -30,7 +30,7 @@ void Bullets::Init(Scene &scene)
     SetEnd(index);
 }
 
-void Bullets::UpdateIds(Scene &scene) 
+void Bullets::Update(Scene &scene)
 {
     float current = scene.GetTime();
 
@@ -41,6 +41,8 @@ void Bullets::UpdateIds(Scene &scene)
             Deactivate(id);
         }
     }
+
+    UpdateIds();
 }
 
 void Bullets::CreateBullet(Scene &scene, Vector3 &position, Vector3 &direction)

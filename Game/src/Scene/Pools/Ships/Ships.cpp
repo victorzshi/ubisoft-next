@@ -26,7 +26,9 @@ void Ships::Init(Scene &scene)
     SetEnd(index);
 }
 
-void Ships::UpdateIds(Scene &scene)
+void Ships::Update(Scene &scene)
 {
     // TODO: Check ship health.
+
+    UpdateIds();
 }

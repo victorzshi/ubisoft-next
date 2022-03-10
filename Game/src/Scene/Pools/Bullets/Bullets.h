@@ -13,7 +13,7 @@ class Bullets : public Pool
 
     virtual void Init(Scene &scene) override;
 
-    virtual void UpdateIds(Scene &scene) override;
+    virtual void Update(Scene &scene) override;
 
     void CreateBullet(Scene &scene, Vector3 &position, Vector3 &direction);
 };

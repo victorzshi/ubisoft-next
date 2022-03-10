@@ -22,6 +22,8 @@ void Scene::Init()
     m_bullets.Init(*this);
     m_grid.Init(*this);
     m_ships.Init(*this);
+
+    // TODO: Initialize space but leave all objects inactive. Use level data to generate objects.
 }
 
 void Scene::Shutdown()
@@ -161,17 +163,13 @@ void Scene::Update(float deltaTime)
         Systems::AddRotation(*this, id);
     }
 
-    // TODO: Move this into Game.cpp
+    UpdatePools();
+
     m_renderer.Update(deltaTime);
-    m_asteroids.UpdateIds(*this);
-    m_bullets.UpdateIds(*this);
-    m_grid.UpdateIds(*this);
-    m_ships.UpdateIds(*this);
 }
 
 void Scene::Render()
 {
-    // TODO: Move this into Game.cpp
     m_renderer.Render();
 }
 
@@ -212,15 +210,26 @@ void Scene::MoveCamera(float deltaTime)
     }
 
     // Follow ship with camera
-    int id = m_ships.GetIds().front();
-    Vector3 ship = GetTransform(id).position;
-    Vector3 mouse = GetMousePosition();
-    Vector3 direction = mouse - ship;
-    if (direction != Vector3())
+    if (!m_ships.GetIds().empty())
     {
-        direction = direction.Normalize() * 2.0f;
-    }
+        int id = m_ships.GetIds().front();
+        Vector3 ship = GetTransform(id).position;
+        Vector3 mouse = GetMousePosition();
+        Vector3 direction = mouse - ship;
+        if (direction != Vector3())
+        {
+            direction = direction.Normalize() * 2.0f;
+        }
 
-    m_renderer.SetCameraPosition(ship + m_position);
-    m_renderer.SetCameraTarget(ship + direction);
+        m_renderer.SetCameraPosition(ship + m_position);
+        m_renderer.SetCameraTarget(ship + direction);
+    }
+}
+
+void Scene::UpdatePools()
+{
+    m_asteroids.Update(*this);
+    m_bullets.Update(*this);
+    m_grid.Update(*this);
+    m_ships.Update(*this);
 }
