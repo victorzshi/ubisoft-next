@@ -30,6 +30,19 @@ void Bullets::Init(Scene &scene)
     SetEnd(index);
 }
 
+void Bullets::UpdateIds(Scene &scene) 
+{
+    float current = scene.GetTime();
+
+    for (int id = GetBegin(); id < GetSize(); id++)
+    {
+        if (scene.GetTimer(id).Elapsed(current) >= DURATION)
+        {
+            Deactivate(id);
+        }
+    }
+}
+
 void Bullets::CreateBullet(Scene &scene, Vector3 &position, Vector3 &direction)
 {
     int id = GetSize();

@@ -50,15 +50,6 @@ void Systems::ShootBullet(Scene &scene, int id)
 
         scene.GetBullets().CreateBullet(scene, position, direction);
     }
-
-    // TODO: Show cursor properly
-    // int bullet = scene.GetBullets().GetActiveIds().front();
-
-    // Vector3 direction = scene.GetClickPosition() - scene.GetTransform(id).position;
-
-    // Transform transform = scene.GetTransform(bullet);
-    // transform.position = scene.GetTransform(id).position + direction.Normalize();
-    // scene.SetTransform(bullet, transform);
 }
 
 void Systems::UpdatePosition(Scene &scene, int id)
@@ -105,21 +96,4 @@ void Systems::AddRotation(Scene &scene, int id)
     transform.rotation.z = fmod(transform.rotation.z, 360.0f);
 
     scene.SetTransform(id, transform);
-}
-
-void Systems::CheckBulletHit(Scene &scene, int id)
-{
-    float current = scene.GetTime();
-    float duration = scene.GetBullets().DURATION;
-
-    Timer timer = scene.GetTimer(id);
-
-    if (timer.Elapsed(current) >= duration)
-    {
-        scene.GetBullets().Deactivate(id);
-        // Mark for deletion.
-        // Model model = scene.GetModel(id);
-        // model.color = Color::RED;
-        // scene.SetModel(id, model);
-    }
 }

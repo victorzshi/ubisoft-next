@@ -8,6 +8,20 @@ Pool::Pool() : m_scene(nullptr), m_begin(0), m_size(0), m_end(0)
 {
 }
 
+std::vector<int> Pool::GetIds() const
+{
+    assert(m_end != 0);
+
+    std::vector<int> ids;
+
+    for (int id = m_begin; id < m_size; id++)
+    {
+        ids.push_back(id);
+    }
+
+    return ids;
+}
+
 int Pool::GetBegin() const
 {
     return m_begin;

@@ -8,4 +8,6 @@ class Asteroids : public Pool
     const int TOTAL = 10;
 
     virtual void Init(Scene &scene) override;
+
+    virtual void UpdateIds(Scene &scene) override;
 };

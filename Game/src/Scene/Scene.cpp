@@ -83,22 +83,22 @@ Ships &Scene::GetShips()
     return m_ships;
 }
 
-std::vector<int> Scene::GetActiveIds() const
+std::vector<int> Scene::GetAllIds() const
 {
     std::vector<int> ids;
-    for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
+    for (auto id : m_asteroids.GetIds())
     {
         ids.push_back(id);
     }
-    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
+    for (auto &id : m_bullets.GetIds())
     {
         ids.push_back(id);
     }
-    for (int id = m_grid.GetBegin(); id < m_grid.GetSize(); id++)
+    for (auto &id : m_grid.GetIds())
     {
         ids.push_back(id);
     }
-    for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
+    for (auto &id : m_ships.GetIds())
     {
         ids.push_back(id);
     }
@@ -141,28 +141,32 @@ void Scene::Update(float deltaTime)
     SetTime(deltaTime);
     MoveCamera(deltaTime);
 
-    for (int id = m_ships.GetBegin(); id < m_ships.GetSize(); id++)
+    for (auto id : m_ships.GetIds())
     {
         Systems::MoveShip(*this, id);
         Systems::ShootBullet(*this, id);
         Systems::UpdatePosition(*this, id);
+        Systems::AddRotation(*this, id);
     }
 
-    for (int id = m_asteroids.GetBegin(); id < m_asteroids.GetSize(); id++)
+    for (auto id : m_asteroids.GetIds())
     {
         Systems::UpdatePosition(*this, id);
         Systems::AddRotation(*this, id);
     }
 
-    for (int id = m_bullets.GetBegin(); id < m_bullets.GetSize(); id++)
+    for (auto id : m_bullets.GetIds())
     {
         Systems::UpdatePosition(*this, id);
         Systems::AddRotation(*this, id);
-        Systems::CheckBulletHit(*this, id);
     }
 
     // TODO: Move this into Game.cpp
     m_renderer.Update(deltaTime);
+    m_asteroids.UpdateIds(*this);
+    m_bullets.UpdateIds(*this);
+    m_grid.UpdateIds(*this);
+    m_ships.UpdateIds(*this);
 }
 
 void Scene::Render()
@@ -208,7 +212,7 @@ void Scene::MoveCamera(float deltaTime)
     }
 
     // Follow ship with camera
-    int id = m_ships.GetBegin();
+    int id = m_ships.GetIds().front();
     Vector3 ship = GetTransform(id).position;
     Vector3 mouse = GetMousePosition();
     Vector3 direction = mouse - ship;

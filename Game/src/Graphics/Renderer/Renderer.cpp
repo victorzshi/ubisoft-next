@@ -144,7 +144,7 @@ void Renderer::UpdateVisible()
 {
     m_visible.clear();
 
-    for (auto &id : m_scene->GetActiveIds())
+    for (auto &id : m_scene->GetAllIds())
     {
         Model model = m_scene->GetModel(id);
         std::vector<Face> faces = model.mesh.GetFaces();

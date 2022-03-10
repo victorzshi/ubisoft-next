@@ -37,8 +37,8 @@ class Scene
     Grid &GetGrid();
     Ships &GetShips();
 
-    // Get IDs of active objects
-    std::vector<int> GetActiveIds() const;
+    // Get IDs of all active objects
+    std::vector<int> GetAllIds() const;
 
     // Set component arrays
     void SetModel(int id, Model model);

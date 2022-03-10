@@ -9,4 +9,6 @@ class Ships : public Pool
     const float DELTA_VELOCITY = 2.0f;
 
     virtual void Init(Scene &scene) override;
+
+    virtual void UpdateIds(Scene &scene) override;
 };

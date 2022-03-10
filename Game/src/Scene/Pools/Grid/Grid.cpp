@@ -34,6 +34,12 @@ void Grid::Init(Scene &scene)
     SetEnd(index);
 }
 
+void Grid::UpdateIds(Scene &scene)
+{
+    // Grid will not change.
+    return;
+}
+
 std::vector<Vector3> Grid::CreatePositions()
 {
     // Assumes unit length model.

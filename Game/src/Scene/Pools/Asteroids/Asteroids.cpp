@@ -37,3 +37,8 @@ void Asteroids::Init(Scene &scene)
     SetSize(index + 1);
     SetEnd(index);
 }
+
+void Asteroids::UpdateIds(Scene &scene)
+{
+    // TODO: Check asteroid health.
+}

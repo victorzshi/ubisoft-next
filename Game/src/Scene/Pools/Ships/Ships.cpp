@@ -12,7 +12,7 @@ void Ships::Init(Scene &scene)
         int id = scene.CreateId();
 
         Model model;
-        model.mesh.SetMesh(Meshes::SPHERE); 
+        model.mesh.SetMesh(Meshes::SPHERE);
         model.color.SetColor(Colors::PURPLE);
         model.light.SetLight(Lights::SHADOW);
         scene.SetModel(id, model);
@@ -24,4 +24,9 @@ void Ships::Init(Scene &scene)
     SetBegin(index - (TOTAL - 1));
     SetSize(index + 1);
     SetEnd(index);
+}
+
+void Ships::UpdateIds(Scene &scene)
+{
+    // TODO: Check ship health.
 }
