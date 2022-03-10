@@ -1,17 +1,22 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include "Graphics/Color/Color.h"
 #include "Graphics/Mesh/Mesh.h"
-#include "Graphics/Light/Light.h"
+
+enum class Lighting
+{
+    BRIGHT,
+    SHADOW,
+    OUTLINE,
+};
 
 struct Model
 {
     Mesh mesh;
     Color color;
-    Light light;
+    Lighting lighting;
 
     Model();
+
+    void ApplyLighting(float dot, Face &face);
 };

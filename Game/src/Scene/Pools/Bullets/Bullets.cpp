@@ -14,7 +14,6 @@ void Bullets::Init(Scene &scene)
         Model model;
         model.mesh.SetMesh(Meshes::CUBE);
         model.color.SetColor(Colors::GREEN);
-        model.light.SetLight(Lights::BRIGHT);
         scene.SetModel(id, model);
 
         Transform transform;

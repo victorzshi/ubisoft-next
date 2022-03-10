@@ -12,9 +12,9 @@ void Ships::Init(Scene &scene)
         int id = scene.CreateId();
 
         Model model;
-        model.mesh.SetMesh(Meshes::SPHERE);
-        model.color.SetColor(Colors::PURPLE);
-        model.light.SetLight(Lights::SHADOW);
+        model.mesh.SetMesh(Meshes::ICOSPHERE);
+        model.color.SetColor(Colors::BLUE);
+        model.lighting = Lighting::SHADOW;
         scene.SetModel(id, model);
 
         index = id;

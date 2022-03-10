@@ -87,8 +87,8 @@ void Systems::AddRotation(Scene &scene, int id)
     Physics physics = scene.GetPhysics(id);
     Transform transform = scene.GetTransform(id);
 
-    transform.rotation.x += physics.velocity.x;
-    transform.rotation.y += physics.velocity.y;
+    transform.rotation.x += physics.velocity.y;
+    transform.rotation.y += -physics.velocity.x;
     transform.rotation.z += physics.velocity.z;
 
     transform.rotation.x = fmod(transform.rotation.x, 360.0f);
