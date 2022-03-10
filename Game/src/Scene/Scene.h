@@ -12,6 +12,7 @@
 #include "Pools/Asteroids/Asteroids.h"
 #include "Pools/Bullets/Bullets.h"
 #include "Pools/Grid/Grid.h"
+#include "Pools/Particles/Particles.h"
 #include "Pools/Ships/Ships.h"
 
 class Scene
@@ -39,6 +40,7 @@ class Scene
     Asteroids &GetAsteroids();
     Bullets &GetBullets();
     Grid &GetGrid();
+    Particles &GetParticles();
     Ships &GetShips();
 
     // Get IDs of all active objects
@@ -80,6 +82,7 @@ class Scene
     Asteroids m_asteroids;
     Bullets m_bullets;
     Grid m_grid;
+    Particles m_particles;
     Ships m_ships;
 
     // Handle graphics

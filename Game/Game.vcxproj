@@ -210,6 +210,7 @@
     <ClInclude Include="src\Scene\Pools\Asteroids\Asteroids.h" />
     <ClInclude Include="src\Scene\Pools\Bullets\Bullets.h" />
     <ClInclude Include="src\Scene\Pools\Grid\Grid.h" />
+    <ClInclude Include="src\Scene\Pools\Particles\Particles.h" />
     <ClInclude Include="src\Scene\Pools\Pool.h" />
     <ClInclude Include="src\Scene\Pools\Ships\Ships.h" />
     <ClInclude Include="src\Scene\Scene.h" />
@@ -247,6 +248,7 @@
     <ClCompile Include="src\Scene\Pools\Asteroids\Asteroids.cpp" />
     <ClCompile Include="src\Scene\Pools\Bullets\Bullets.cpp" />
     <ClCompile Include="src\Scene\Pools\Grid\Grid.cpp" />
+    <ClCompile Include="src\Scene\Pools\Particles\Particles.cpp" />
     <ClCompile Include="src\Scene\Pools\Pool.cpp" />
     <ClCompile Include="src\Scene\Pools\Ships\Ships.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />

@@ -124,6 +124,8 @@ void Systems::CheckAsteroidCollision(Scene &scene, int id)
             health = scene.GetHealth(asteroid);
             health.points--;
             scene.SetHealth(asteroid, health);
+
+            scene.GetParticles().CreateExplosion(scene, scene.GetTransform(id).position);
         }
     }
 }

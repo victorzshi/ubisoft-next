@@ -21,6 +21,7 @@ void Scene::Init()
     m_asteroids.Init(*this);
     m_bullets.Init(*this);
     m_grid.Init(*this);
+    m_particles.Init(*this);
     m_ships.Init(*this);
 
     // TODO: Initialize space but leave all objects inactive. Use level data to generate objects.
@@ -90,6 +91,11 @@ Grid &Scene::GetGrid()
     return m_grid;
 }
 
+Particles &Scene::GetParticles()
+{
+    return m_particles;
+}
+
 Ships &Scene::GetShips()
 {
     return m_ships;
@@ -107,6 +113,10 @@ std::vector<int> Scene::GetAllIds() const
         ids.push_back(id);
     }
     for (auto &id : m_grid.GetIds())
+    {
+        ids.push_back(id);
+    }
+    for (auto &id : m_particles.GetIds())
     {
         ids.push_back(id);
     }
@@ -165,7 +175,7 @@ void Scene::Update(float deltaTime)
     SetTime(deltaTime);
     MoveCamera(deltaTime);
 
-    for (auto id : m_ships.GetIds())
+    for (auto &id : m_ships.GetIds())
     {
         Systems::MoveShip(*this, id);
         Systems::ShootBullet(*this, id);
@@ -173,17 +183,23 @@ void Scene::Update(float deltaTime)
         Systems::AddRotation(*this, id);
     }
 
-    for (auto id : m_asteroids.GetIds())
+    for (auto &id : m_asteroids.GetIds())
     {
         Systems::UpdatePosition(*this, id);
         Systems::AddRotation(*this, id);
     }
 
-    for (auto id : m_bullets.GetIds())
+    for (auto &id : m_bullets.GetIds())
     {
         Systems::UpdatePosition(*this, id);
         Systems::AddRotation(*this, id);
         Systems::CheckAsteroidCollision(*this, id);
+    }
+
+    for (auto &id : m_particles.GetIds())
+    {
+        Systems::UpdatePosition(*this, id);
+        Systems::AddRotation(*this, id);
     }
 
     UpdatePools();
@@ -254,5 +270,6 @@ void Scene::UpdatePools()
     m_asteroids.Update(*this);
     m_bullets.Update(*this);
     m_grid.Update(*this);
+    m_particles.Update(*this);
     m_ships.Update(*this);
 }
