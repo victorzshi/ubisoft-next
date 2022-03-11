@@ -29,11 +29,16 @@ void Particles::Update(Scene &scene)
 {
     float current = scene.GetTime();
 
-    for (int id = GetBegin(); id < GetSize(); id++)
+    int id = GetBegin();
+    while (id < GetSize())
     {
         if (scene.GetTimer(id).Elapsed(current) >= DURATION)
         {
             Deactivate(id);
+        }
+        else
+        {
+            id++;
         }
     }
 
@@ -78,7 +83,7 @@ void Particles::CreateExplosion(Scene &scene, Vector3 &position)
 
 void Particles::CreateBigExplosion(Scene &scene, Vector3 &position)
 {
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 50; i++)
     {
         int id = GetSize();
 

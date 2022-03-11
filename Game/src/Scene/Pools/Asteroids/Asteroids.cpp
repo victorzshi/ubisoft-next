@@ -48,13 +48,18 @@ void Asteroids::Init(Scene &scene)
 
 void Asteroids::Update(Scene &scene)
 {
-    for (int id = GetBegin(); id < GetSize(); id++)
+    int id = GetBegin();
+    while (id < GetSize())
     {
         if (scene.GetHealth(id).points <= 0)
         {
             scene.GetParticles().CreateBigExplosion(scene, scene.GetTransform(id).position);
 
             Deactivate(id);
+        }
+        else
+        {
+            id++;
         }
     }
 

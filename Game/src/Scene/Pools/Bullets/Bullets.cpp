@@ -41,16 +41,20 @@ void Bullets::Update(Scene &scene)
 {
     float current = scene.GetTime();
 
-    for (int id = GetBegin(); id < GetSize(); id++)
+    int id = GetBegin();
+    while (id < GetSize())
     {
         if (scene.GetTimer(id).Elapsed(current) >= DURATION)
         {
             Deactivate(id);
         }
-
-        if (scene.GetHealth(id).points <= 0)
+        else if (scene.GetHealth(id).points <= 0)
         {
             Deactivate(id);
+        }
+        else
+        {
+            id++;
         }
     }
 
