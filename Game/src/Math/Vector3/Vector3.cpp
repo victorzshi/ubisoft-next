@@ -84,8 +84,12 @@ float Vector3::LengthSquared() const
 
 Vector3 Vector3::Normalize() const
 {
-    assert(this->LengthSquared() > 0);
-    return *this / this->Length();
+    Vector3 v;
+    if (this->LengthSquared() > 0)
+    {
+        v = *this / this->Length();
+    }
+    return v;
 }
 
 float Vector3::Dot(const Vector3 &other) const

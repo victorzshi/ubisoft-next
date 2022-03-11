@@ -9,6 +9,7 @@
 #include "Components/Timer/Timer.h"
 #include "Components/Transform/Transform.h"
 #include "Graphics/Renderer/Renderer.h"
+#include "Pools/Aliens/Aliens.h"
 #include "Pools/Asteroids/Asteroids.h"
 #include "Pools/Bullets/Bullets.h"
 #include "Pools/Grid/Grid.h"
@@ -38,6 +39,7 @@ class Scene
     Transform GetTransform(int id) const;
 
     // Get object pools
+    Aliens &GetAliens();
     Asteroids &GetAsteroids();
     Bullets &GetBullets();
     Grid &GetGrid();
@@ -80,6 +82,7 @@ class Scene
     std::vector<Transform> m_transform;
 
     // Object pools
+    Aliens m_aliens;
     Asteroids m_asteroids;
     Bullets m_bullets;
     Grid m_grid;

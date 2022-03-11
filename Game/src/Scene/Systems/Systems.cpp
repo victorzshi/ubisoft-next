@@ -90,25 +90,25 @@ void Systems::UpdatePosition(Scene &scene, int id)
     physics.velocity += physics.acceleration * elapsed;
     transform.position += physics.velocity * elapsed;
 
-    // float width = 7.0f;
-    // if (transform.position.x > width)
-    //{
-    //     transform.position.x = -width;
-    // }
-    // else if (transform.position.x < -width)
-    //{
-    //     transform.position.x = width;
-    // }
+    float width = 10.0f;
+    if (transform.position.x > width)
+    {
+        transform.position.x = -width;
+    }
+    else if (transform.position.x < -width)
+    {
+        transform.position.x = width;
+    }
 
-    // float height = 4.0f;
-    // if (transform.position.y > height)
-    //{
-    //     transform.position.y = -height;
-    // }
-    // else if (transform.position.y < -height)
-    //{
-    //     transform.position.y = height;
-    // }
+    float height = 10.0f;
+    if (transform.position.y > height)
+    {
+        transform.position.y = -height;
+    }
+    else if (transform.position.y < -height)
+    {
+        transform.position.y = height;
+    }
 
     scene.SetPhysics(id, physics);
     scene.SetTransform(id, transform);
@@ -130,11 +130,21 @@ void Systems::AddRotation(Scene &scene, int id)
     scene.SetTransform(id, transform);
 }
 
-void Systems::CheckAsteroidCollision(Scene &scene, int id)
+void Systems::CheckBulletHit(Scene &scene, int id)
 {
+    std::vector<int> targets;
     for (auto &asteroid : scene.GetAsteroids().GetIds())
     {
-        if (Collider::IsHit(scene, id, asteroid))
+        targets.push_back(asteroid);
+    }
+    for (auto &alien : scene.GetAliens().GetIds())
+    {
+        targets.push_back(alien);
+    }
+
+    for (auto &target : targets)
+    {
+        if (Collider::IsHit(scene, id, target))
         {
             Health health;
 
@@ -142,9 +152,9 @@ void Systems::CheckAsteroidCollision(Scene &scene, int id)
             health.points--;
             scene.SetHealth(id, health);
 
-            health = scene.GetHealth(asteroid);
+            health = scene.GetHealth(target);
             health.points--;
-            scene.SetHealth(asteroid, health);
+            scene.SetHealth(target, health);
 
             scene.GetParticles().CreateExplosion(scene, id);
         }

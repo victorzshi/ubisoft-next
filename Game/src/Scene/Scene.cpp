@@ -18,6 +18,8 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
 void Scene::Init()
 {
     m_renderer.Init(*this);
+
+    m_aliens.Init(*this);
     m_asteroids.Init(*this);
     m_bullets.Init(*this);
     m_grid.Init(*this);
@@ -76,6 +78,11 @@ Transform Scene::GetTransform(int id) const
     return m_transform[id];
 }
 
+Aliens &Scene::GetAliens()
+{
+    return m_aliens;
+}
+
 Asteroids &Scene::GetAsteroids()
 {
     return m_asteroids;
@@ -104,7 +111,11 @@ Ships &Scene::GetShips()
 std::vector<int> Scene::GetAllIds() const
 {
     std::vector<int> ids;
-    for (auto id : m_asteroids.GetIds())
+    for (auto &id : m_aliens.GetIds())
+    {
+        ids.push_back(id);
+    }
+    for (auto &id : m_asteroids.GetIds())
     {
         ids.push_back(id);
     }
@@ -195,7 +206,7 @@ void Scene::Update(float deltaTime)
     {
         m_systems.UpdatePosition(*this, id);
         m_systems.AddRotation(*this, id);
-        m_systems.CheckAsteroidCollision(*this, id);
+        m_systems.CheckBulletHit(*this, id);
     }
 
     for (auto &id : m_particles.GetIds())
@@ -271,6 +282,7 @@ void Scene::MoveCamera(float deltaTime)
 
 void Scene::UpdatePools()
 {
+    m_aliens.Update(*this);
     m_asteroids.Update(*this);
     m_bullets.Update(*this);
     m_grid.Update(*this);
