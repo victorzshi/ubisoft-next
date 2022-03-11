@@ -45,74 +45,78 @@ void Particles::Update(Scene &scene)
     UpdateIds();
 }
 
-void Particles::CreateExplosion(Scene &scene, Vector3 &position)
+void Particles::CreateExplosion(Scene &scene, int id)
 {
+    Vector3 position = scene.GetTransform(id).position;
+
     for (int i = 0; i < 5; i++)
     {
-        int id = GetSize();
+        int particle = GetSize();
 
-        if (Activate(id))
+        if (Activate(particle))
         {
-            Model model = scene.GetModel(id);
+            Model model = scene.GetModel(particle);
             model.mesh.SetMesh(Meshes::SPHERE);
             model.color.SetColor(Colors::RANDOM);
-            scene.SetModel(id, model);
+            scene.SetModel(particle, model);
 
             float scale = Random::GetFloat(0.0f, 0.1f);
 
-            Transform transform = scene.GetTransform(id);
+            Transform transform = scene.GetTransform(particle);
             transform.position = position;
             transform.scaling = Vector3(scale, scale, scale);
             transform.rotation.x = Random::GetFloat(0.0f, 360.0f);
             transform.rotation.y = Random::GetFloat(0.0f, 360.0f);
             transform.rotation.z = Random::GetFloat(0.0f, 360.0f);
-            scene.SetTransform(id, transform);
+            scene.SetTransform(particle, transform);
 
-            Physics physics = scene.GetPhysics(id);
+            Physics physics = scene.GetPhysics(particle);
             physics.velocity.x = Random::GetFloat(-5.0f, 5.0f);
             physics.velocity.y = Random::GetFloat(-5.0f, 5.0f);
             physics.velocity.z = Random::GetFloat(-1.0f, 1.0f);
-            scene.SetPhysics(id, physics);
+            scene.SetPhysics(particle, physics);
 
-            Timer timer = scene.GetTimer(id);
+            Timer timer = scene.GetTimer(particle);
             timer.start = scene.GetTime();
-            scene.SetTimer(id, timer);
+            scene.SetTimer(particle, timer);
         }
     }
 }
 
-void Particles::CreateBigExplosion(Scene &scene, Vector3 &position)
+void Particles::CreateBigExplosion(Scene &scene, int id)
 {
+    Vector3 position = scene.GetTransform(id).position;
+
     for (int i = 0; i < 50; i++)
     {
-        int id = GetSize();
+        int particle = GetSize();
 
-        if (Activate(id))
+        if (Activate(particle))
         {
-            Model model = scene.GetModel(id);
+            Model model = scene.GetModel(particle);
             model.mesh.SetMesh(Meshes::CONE);
             model.color.SetColor(Colors::RANDOM);
-            scene.SetModel(id, model);
+            scene.SetModel(particle, model);
 
             float scale = Random::GetFloat(0.0f, 0.5f);
 
-            Transform transform = scene.GetTransform(id);
+            Transform transform = scene.GetTransform(particle);
             transform.position = position;
             transform.scaling = Vector3(scale, scale, scale);
             transform.rotation.x = Random::GetFloat(0.0f, 360.0f);
             transform.rotation.y = Random::GetFloat(0.0f, 360.0f);
             transform.rotation.z = Random::GetFloat(0.0f, 360.0f);
-            scene.SetTransform(id, transform);
+            scene.SetTransform(particle, transform);
 
-            Physics physics = scene.GetPhysics(id);
+            Physics physics = scene.GetPhysics(particle);
             physics.velocity.x = Random::GetFloat(-5.0f, 5.0f);
             physics.velocity.y = Random::GetFloat(-5.0f, 5.0f);
             physics.velocity.z = Random::GetFloat(-5.0f, 5.0f);
-            scene.SetPhysics(id, physics);
+            scene.SetPhysics(particle, physics);
 
-            Timer timer = scene.GetTimer(id);
+            Timer timer = scene.GetTimer(particle);
             timer.start = scene.GetTime();
-            scene.SetTimer(id, timer);
+            scene.SetTimer(particle, timer);
         }
     }
 }
