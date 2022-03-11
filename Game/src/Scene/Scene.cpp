@@ -12,7 +12,7 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     m_time = m_current - m_start;
 
     // Initialize camera position
-    m_position = Vector3(0.0f, 0.0f, 15.0f);
+    m_position = Vector3(0.0f, 0.0f, 20.0f);
 }
 
 void Scene::Init()
@@ -177,10 +177,11 @@ void Scene::Update(float deltaTime)
 
     for (auto &id : m_ships.GetIds())
     {
-        m_systems.MoveShip(*this, id);
+        m_systems.AccelerateShip(*this, id);
+        m_systems.ApplyGravity(*this, id);
+        m_systems.LimitShipVelocity(*this, id);
         m_systems.ShootBullet(*this, id);
         m_systems.UpdatePosition(*this, id);
-        m_systems.AddRotation(*this, id);
     }
 
     for (auto &id : m_asteroids.GetIds())

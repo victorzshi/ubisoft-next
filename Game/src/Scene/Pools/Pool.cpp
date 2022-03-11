@@ -58,8 +58,6 @@ bool Pool::Deactivate(int id)
 
 void Pool::UpdateIds()
 {
-    assert(m_end != 0);
-
     m_ids.clear();
 
     for (int id = m_begin; id < m_size; id++)

@@ -67,10 +67,10 @@ void Bullets::CreateBullet(Scene &scene, int id)
 
     if (Activate(bullet))
     {
-        Vector3 mouse = scene.GetMousePosition();
+        Vector3 to = scene.GetMousePosition();
         Vector3 from = scene.GetTransform(id).position;
-        Vector3 direction = (mouse - from).Normalize();
-        Vector3 position = scene.GetTransform(id).position + direction;
+        Vector3 direction = (to - from).Normalize();
+        Vector3 position = scene.GetTransform(id).position + direction * 0.5f;
 
         Health health = scene.GetHealth(bullet);
         health.points = 1;

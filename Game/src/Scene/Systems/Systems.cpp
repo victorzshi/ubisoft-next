@@ -4,34 +4,28 @@
 
 #include "Scene/Scene.h"
 
-void Systems::MoveShip(Scene &scene, int id)
+void Systems::AccelerateShip(Scene &scene, int id)
 {
-    float deltaVelocity = scene.GetShips().DELTA_VELOCITY;
+    float deltaAcceleration = scene.GetShips().DELTA_ACCELERATION;
 
-    Physics physics;
+    Physics physics = scene.GetPhysics(id);
+
+    physics.acceleration = Vector3();
     if (App::GetController().GetLeftThumbStickX() > 0.5f)
     {
-        physics.velocity.x = +deltaVelocity;
+        physics.acceleration.x = +deltaAcceleration;
     }
     if (App::GetController().GetLeftThumbStickX() < -0.5f)
     {
-        physics.velocity.x = -deltaVelocity;
-    }
-    if (App::GetController().GetLeftThumbStickX() == 0.0f)
-    {
-        physics.velocity.x = 0.0f;
+        physics.acceleration.x = -deltaAcceleration;
     }
     if (App::GetController().GetLeftThumbStickY() > 0.5f)
     {
-        physics.velocity.y = +deltaVelocity;
+        physics.acceleration.y = +deltaAcceleration;
     }
     if (App::GetController().GetLeftThumbStickY() < -0.5f)
     {
-        physics.velocity.y = -deltaVelocity;
-    }
-    if (App::GetController().GetLeftThumbStickY() == 0.0f)
-    {
-        physics.velocity.y = 0.0f;
+        physics.acceleration.y = -deltaAcceleration;
     }
 
     scene.SetPhysics(id, physics);
@@ -61,7 +55,10 @@ void Systems::UpdatePosition(Scene &scene, int id)
     Physics physics = scene.GetPhysics(id);
     Transform transform = scene.GetTransform(id);
 
-    transform.position += physics.velocity * scene.GetDeltaTime() / 1000.0f;
+    float elapsed = scene.GetDeltaTime() / 1000.0f;
+
+    physics.velocity += physics.acceleration * elapsed;
+    transform.position += physics.velocity * elapsed;
 
     float width = 7.0f;
     if (transform.position.x > width)
@@ -83,6 +80,7 @@ void Systems::UpdatePosition(Scene &scene, int id)
         transform.position.y = height;
     }
 
+    scene.SetPhysics(id, physics);
     scene.SetTransform(id, transform);
 }
 
@@ -121,4 +119,35 @@ void Systems::CheckAsteroidCollision(Scene &scene, int id)
             scene.GetParticles().CreateExplosion(scene, id);
         }
     }
+}
+
+void Systems::ApplyGravity(Scene &scene, int id)
+{
+    Physics physics = scene.GetPhysics(id);
+
+    // Assume world origin is center of gravity
+    Vector3 to = Vector3();
+    Vector3 from = scene.GetTransform(id).position;
+    Vector3 direction;
+    if (to - from != Vector3())
+    {
+        direction = (to - from).Normalize();
+    }
+
+    physics.acceleration += direction;
+
+    scene.SetPhysics(id, physics);
+}
+
+void Systems::LimitShipVelocity(Scene &scene, int id)
+{
+    Physics physics = scene.GetPhysics(id);
+
+    float max = scene.GetShips().MAX_VELOCITY;
+    if (physics.velocity.LengthSquared() > max * max)
+    {
+        physics.velocity = physics.velocity.Normalize() * max;
+    }
+
+    scene.SetPhysics(id, physics);
 }
