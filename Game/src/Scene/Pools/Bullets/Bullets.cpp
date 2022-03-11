@@ -41,43 +41,52 @@ void Bullets::Update(Scene &scene)
 {
     float current = scene.GetTime();
 
-    for (int id = GetBegin(); id < GetSize(); id++)
+    int id = GetBegin();
+    while (id < GetSize())
     {
         if (scene.GetTimer(id).Elapsed(current) >= DURATION)
         {
             Deactivate(id);
         }
-
-        if (scene.GetHealth(id).points <= 0)
+        else if (scene.GetHealth(id).points <= 0)
         {
             Deactivate(id);
+        }
+        else
+        {
+            id++;
         }
     }
 
     UpdateIds();
 }
 
-void Bullets::CreateBullet(Scene &scene, Vector3 &position, Vector3 &direction)
+void Bullets::CreateBullet(Scene &scene, int id)
 {
-    int id = GetSize();
+    int bullet = GetSize();
 
-    if (Activate(id))
+    if (Activate(bullet))
     {
-        Health health = scene.GetHealth(id);
-        health.points = 1;
-        scene.SetHealth(id, health);
+        Vector3 mouse = scene.GetMousePosition();
+        Vector3 from = scene.GetTransform(id).position;
+        Vector3 direction = (mouse - from).Normalize();
+        Vector3 position = scene.GetTransform(id).position + direction;
 
-        Transform transform = scene.GetTransform(id);
+        Health health = scene.GetHealth(bullet);
+        health.points = 1;
+        scene.SetHealth(bullet, health);
+
+        Transform transform = scene.GetTransform(bullet);
         transform.position = position;
         transform.scaling = Vector3(0.1f, 0.1f, 0.1f);
-        scene.SetTransform(id, transform);
+        scene.SetTransform(bullet, transform);
 
-        Physics physics = scene.GetPhysics(id);
+        Physics physics = scene.GetPhysics(bullet);
         physics.velocity = direction * DELTA_VELOCITY;
-        scene.SetPhysics(id, physics);
+        scene.SetPhysics(bullet, physics);
 
-        Timer timer = scene.GetTimer(id);
+        Timer timer = scene.GetTimer(bullet);
         timer.start = scene.GetTime();
-        scene.SetTimer(id, timer);
+        scene.SetTimer(bullet, timer);
     }
 }

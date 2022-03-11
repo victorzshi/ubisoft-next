@@ -50,14 +50,7 @@ void Systems::ShootBullet(Scene &scene, int id)
 
     if (elapsed > cooldown)
     {
-        Vector3 mouse = scene.GetMousePosition();
-        Vector3 ship = scene.GetTransform(id).position;
-
-        Vector3 direction = (mouse - ship).Normalize();
-
-        Vector3 position = scene.GetTransform(id).position + direction;
-
-        scene.GetBullets().CreateBullet(scene, position, direction);
+        scene.GetBullets().CreateBullet(scene, id);
 
         scene.GetShips().ResetBulletCooldown(scene, id);
     }
@@ -125,7 +118,7 @@ void Systems::CheckAsteroidCollision(Scene &scene, int id)
             health.points--;
             scene.SetHealth(asteroid, health);
 
-            scene.GetParticles().CreateExplosion(scene, scene.GetTransform(id).position);
+            scene.GetParticles().CreateExplosion(scene, id);
         }
     }
 }

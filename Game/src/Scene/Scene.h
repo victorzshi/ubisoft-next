@@ -14,6 +14,7 @@
 #include "Pools/Grid/Grid.h"
 #include "Pools/Particles/Particles.h"
 #include "Pools/Ships/Ships.h"
+#include "Scene/Systems/Systems.h"
 
 class Scene
 {
@@ -84,6 +85,9 @@ class Scene
     Grid m_grid;
     Particles m_particles;
     Ships m_ships;
+
+    // Gameplay logic
+    Systems m_systems;
 
     // Handle graphics
     Vector3 m_position;

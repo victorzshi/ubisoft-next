@@ -177,29 +177,29 @@ void Scene::Update(float deltaTime)
 
     for (auto &id : m_ships.GetIds())
     {
-        Systems::MoveShip(*this, id);
-        Systems::ShootBullet(*this, id);
-        Systems::UpdatePosition(*this, id);
-        Systems::AddRotation(*this, id);
+        m_systems.MoveShip(*this, id);
+        m_systems.ShootBullet(*this, id);
+        m_systems.UpdatePosition(*this, id);
+        m_systems.AddRotation(*this, id);
     }
 
     for (auto &id : m_asteroids.GetIds())
     {
-        Systems::UpdatePosition(*this, id);
-        Systems::AddRotation(*this, id);
+        m_systems.UpdatePosition(*this, id);
+        m_systems.AddRotation(*this, id);
     }
 
     for (auto &id : m_bullets.GetIds())
     {
-        Systems::UpdatePosition(*this, id);
-        Systems::AddRotation(*this, id);
-        Systems::CheckAsteroidCollision(*this, id);
+        m_systems.UpdatePosition(*this, id);
+        m_systems.AddRotation(*this, id);
+        m_systems.CheckAsteroidCollision(*this, id);
     }
 
     for (auto &id : m_particles.GetIds())
     {
-        Systems::UpdatePosition(*this, id);
-        Systems::AddRotation(*this, id);
+        m_systems.UpdatePosition(*this, id);
+        m_systems.AddRotation(*this, id);
     }
 
     UpdatePools();
