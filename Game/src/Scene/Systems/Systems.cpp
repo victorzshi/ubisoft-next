@@ -4,7 +4,7 @@
 
 #include "Scene/Scene.h"
 
-void Systems::MoveShip(Scene &scene, int id)
+void Systems::AccelerateShip(Scene &scene, int id)
 {
     float deltaAcceleration = scene.GetShips().DELTA_ACCELERATION;
 
@@ -119,4 +119,35 @@ void Systems::CheckAsteroidCollision(Scene &scene, int id)
             scene.GetParticles().CreateExplosion(scene, id);
         }
     }
+}
+
+void Systems::ApplyGravity(Scene &scene, int id)
+{
+    Physics physics = scene.GetPhysics(id);
+
+    // Assume world origin is center of gravity
+    Vector3 to = Vector3();
+    Vector3 from = scene.GetTransform(id).position;
+    Vector3 direction;
+    if (to - from != Vector3())
+    {
+        direction = (to - from).Normalize();
+    }
+
+    physics.acceleration += direction;
+
+    scene.SetPhysics(id, physics);
+}
+
+void Systems::LimitShipVelocity(Scene &scene, int id)
+{
+    Physics physics = scene.GetPhysics(id);
+
+    float max = scene.GetShips().MAX_VELOCITY;
+    if (physics.velocity.LengthSquared() > max * max)
+    {
+        physics.velocity = physics.velocity.Normalize() * max;
+    }
+
+    scene.SetPhysics(id, physics);
 }
