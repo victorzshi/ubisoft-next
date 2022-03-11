@@ -4,6 +4,36 @@
 
 #include "Scene/Scene.h"
 
+void Systems::RotateTowardsMouse(Scene &scene, int id)
+{
+    Transform transform = scene.GetTransform(id);
+
+    Vector3 from = Vector3(0.0f, -1.0f, 0.0f); // Model's up direction.
+    Vector3 to = scene.GetMousePosition() - transform.position;
+
+    // Get positive angle between two vectors
+    float angle = 0.0f;
+    if (to - from != Vector3())
+    {
+        float dot = from.Dot(to);
+        float magnitude = sqrt(from.LengthSquared() * to.LengthSquared());
+        angle = acos(dot / magnitude);
+    }
+
+    // Flip angle based on z plane normal
+    Vector3 normal = Vector3(0.0f, 0.0f, -1.0f);
+    Vector3 cross = from.Cross(to);
+    if (normal.Dot(cross) < 0)
+    {
+        angle = -angle;
+    }
+
+    // Convert angle to degrees
+    transform.rotation.z = angle * 180.0f / PI;
+
+    scene.SetTransform(id, transform);
+}
+
 void Systems::AccelerateShip(Scene &scene, int id)
 {
     float deltaAcceleration = scene.GetShips().DELTA_ACCELERATION;
@@ -60,25 +90,25 @@ void Systems::UpdatePosition(Scene &scene, int id)
     physics.velocity += physics.acceleration * elapsed;
     transform.position += physics.velocity * elapsed;
 
-    float width = 7.0f;
-    if (transform.position.x > width)
-    {
-        transform.position.x = -width;
-    }
-    else if (transform.position.x < -width)
-    {
-        transform.position.x = width;
-    }
+    // float width = 7.0f;
+    // if (transform.position.x > width)
+    //{
+    //     transform.position.x = -width;
+    // }
+    // else if (transform.position.x < -width)
+    //{
+    //     transform.position.x = width;
+    // }
 
-    float height = 4.0f;
-    if (transform.position.y > height)
-    {
-        transform.position.y = -height;
-    }
-    else if (transform.position.y < -height)
-    {
-        transform.position.y = height;
-    }
+    // float height = 4.0f;
+    // if (transform.position.y > height)
+    //{
+    //     transform.position.y = -height;
+    // }
+    // else if (transform.position.y < -height)
+    //{
+    //     transform.position.y = height;
+    // }
 
     scene.SetPhysics(id, physics);
     scene.SetTransform(id, transform);
