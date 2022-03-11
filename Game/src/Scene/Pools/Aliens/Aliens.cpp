@@ -12,6 +12,10 @@ void Aliens::Init(Scene &scene)
     {
         int id = scene.CreateId();
 
+        AI ai;
+        ai.attackRange = 5.0f;
+        scene.SetAI(id, ai);
+
         Collider collider;
         collider.radius = WIDTH / 2.0f;
         scene.SetCollider(id, collider);

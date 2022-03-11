@@ -48,6 +48,11 @@ float Scene::GetTime() const
     return m_time.count();
 }
 
+AI Scene::GetAI(int id) const
+{
+    return m_ai[id];
+}
+
 Collider Scene::GetCollider(int id) const
 {
     return m_collider[id];
@@ -138,6 +143,11 @@ std::vector<int> Scene::GetAllIds() const
     return ids;
 }
 
+void Scene::SetAI(int id, AI ai)
+{
+    m_ai[id] = ai;
+}
+
 void Scene::SetCollider(int id, Collider collider)
 {
     m_collider[id] = collider;
@@ -170,6 +180,7 @@ void Scene::SetTransform(int id, Transform transform)
 
 int Scene::CreateId()
 {
+    m_ai.push_back(AI());
     m_collider.push_back(Collider());
     m_health.push_back(Health());
     m_model.push_back(Model());
@@ -194,6 +205,11 @@ void Scene::Update(float deltaTime)
         m_systems.LimitShipVelocity(*this, id);
         m_systems.ShootBullet(*this, id);
         m_systems.UpdatePosition(*this, id);
+    }
+
+    for (auto &id : m_aliens.GetIds())
+    {
+        m_systems.RotateTowardsShip(*this, id);
     }
 
     for (auto &id : m_asteroids.GetIds())

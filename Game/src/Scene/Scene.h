@@ -2,6 +2,7 @@
 
 #include <chrono>
 
+#include "Components/AI/AI.h"
 #include "Components/Collider/Collider.h"
 #include "Components/Health/Health.h"
 #include "Components/Model/Model.h"
@@ -31,6 +32,7 @@ class Scene
     float GetTime() const;
 
     // Get component arrays
+    AI GetAI(int id) const;
     Collider GetCollider(int id) const;
     Health GetHealth(int id) const;
     Model GetModel(int id) const;
@@ -50,6 +52,7 @@ class Scene
     std::vector<int> GetAllIds() const;
 
     // Set component arrays
+    void SetAI(int id, AI ai);
     void SetCollider(int id, Collider collider);
     void SetHealth(int id, Health health);
     void SetModel(int id, Model model);
@@ -74,6 +77,7 @@ class Scene
     std::chrono::duration<float> m_time;
 
     // Component arrays
+    std::vector<AI> m_ai;
     std::vector<Collider> m_collider;
     std::vector<Health> m_health;
     std::vector<Model> m_model;

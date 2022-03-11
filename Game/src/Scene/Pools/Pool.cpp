@@ -100,6 +100,10 @@ void Pool::SwapMemory(int id)
         return;
     }
 
+    AI ai = m_scene->GetAI(m_size);
+    m_scene->SetAI(m_size, m_scene->GetAI(id));
+    m_scene->SetAI(id, ai);
+
     Collider collider = m_scene->GetCollider(m_size);
     m_scene->SetCollider(m_size, m_scene->GetCollider(id));
     m_scene->SetCollider(id, collider);
