@@ -2,7 +2,7 @@
 
 #include "Asteroids.h"
 
-#include "Math/Random/Random.h"
+#include "Math/Utils/Utils.h"
 #include "Scene/Scene.h"
 
 void Asteroids::Init(Scene &scene)
@@ -27,14 +27,14 @@ void Asteroids::Init(Scene &scene)
         scene.SetModel(id, model);
 
         Physics physics;
-        physics.velocity.x = Random::GetFloat(-1.0f, 1.0f);
-        physics.velocity.y = Random::GetFloat(-1.0f, 1.0f);
+        physics.velocity.x = Utils::RandomFloat(-1.0f, 1.0f);
+        physics.velocity.y = Utils::RandomFloat(-1.0f, 1.0f);
         scene.SetPhysics(id, physics);
 
         Transform transform;
-        transform.rotation.x = Random::GetFloat(0.0f, 360.0f);
-        transform.rotation.y = Random::GetFloat(0.0f, 360.0f);
-        transform.rotation.z = Random::GetFloat(0.0f, 360.0f);
+        transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
+        transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
+        transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
         scene.SetTransform(id, transform);
 
         index = id;

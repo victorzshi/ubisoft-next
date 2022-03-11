@@ -2,7 +2,7 @@
 
 #include "Aliens.h"
 
-#include "Math/Random/Random.h"
+#include "Math/Utils/Utils.h"
 #include "Scene/Scene.h"
 
 void Aliens::Init(Scene &scene)
@@ -31,8 +31,8 @@ void Aliens::Init(Scene &scene)
         scene.SetModel(id, model);
 
         Transform transform;
-        transform.position.x = Random::GetFloat(-10.0f, 10.0f);
-        transform.position.y = Random::GetFloat(-10.0f, 10.0f);
+        transform.position.x = Utils::RandomFloat(-10.0f, 10.0f);
+        transform.position.y = Utils::RandomFloat(-10.0f, 10.0f);
         scene.SetTransform(id, transform);
 
         index = id;

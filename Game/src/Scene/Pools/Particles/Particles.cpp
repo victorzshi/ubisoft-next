@@ -2,7 +2,7 @@
 
 #include "Particles.h"
 
-#include "Math/Random/Random.h"
+#include "Math/Utils/Utils.h"
 #include "Scene/Scene.h"
 
 void Particles::Init(Scene &scene)
@@ -60,20 +60,20 @@ void Particles::CreateExplosion(Scene &scene, int id)
             model.color.SetColor(Colors::RANDOM);
             scene.SetModel(particle, model);
 
-            float scale = Random::GetFloat(0.0f, 0.1f);
+            float scale = Utils::RandomFloat(0.0f, 0.1f);
 
             Transform transform = scene.GetTransform(particle);
             transform.position = position;
             transform.scaling = Vector3(scale, scale, scale);
-            transform.rotation.x = Random::GetFloat(0.0f, 360.0f);
-            transform.rotation.y = Random::GetFloat(0.0f, 360.0f);
-            transform.rotation.z = Random::GetFloat(0.0f, 360.0f);
+            transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
+            transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
+            transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
             scene.SetTransform(particle, transform);
 
             Physics physics = scene.GetPhysics(particle);
-            physics.velocity.x = Random::GetFloat(-5.0f, 5.0f);
-            physics.velocity.y = Random::GetFloat(-5.0f, 5.0f);
-            physics.velocity.z = Random::GetFloat(-1.0f, 1.0f);
+            physics.velocity.x = Utils::RandomFloat(-5.0f, 5.0f);
+            physics.velocity.y = Utils::RandomFloat(-5.0f, 5.0f);
+            physics.velocity.z = Utils::RandomFloat(-1.0f, 1.0f);
             scene.SetPhysics(particle, physics);
 
             Timer timer = scene.GetTimer(particle);
@@ -98,20 +98,20 @@ void Particles::CreateBigExplosion(Scene &scene, int id)
             model.color.SetColor(Colors::RANDOM);
             scene.SetModel(particle, model);
 
-            float scale = Random::GetFloat(0.0f, 0.5f);
+            float scale = Utils::RandomFloat(0.0f, 0.5f);
 
             Transform transform = scene.GetTransform(particle);
             transform.position = position;
             transform.scaling = Vector3(scale, scale, scale);
-            transform.rotation.x = Random::GetFloat(0.0f, 360.0f);
-            transform.rotation.y = Random::GetFloat(0.0f, 360.0f);
-            transform.rotation.z = Random::GetFloat(0.0f, 360.0f);
+            transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
+            transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
+            transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
             scene.SetTransform(particle, transform);
 
             Physics physics = scene.GetPhysics(particle);
-            physics.velocity.x = Random::GetFloat(-5.0f, 5.0f);
-            physics.velocity.y = Random::GetFloat(-5.0f, 5.0f);
-            physics.velocity.z = Random::GetFloat(-5.0f, 5.0f);
+            physics.velocity.x = Utils::RandomFloat(-5.0f, 5.0f);
+            physics.velocity.y = Utils::RandomFloat(-5.0f, 5.0f);
+            physics.velocity.z = Utils::RandomFloat(-5.0f, 5.0f);
             scene.SetPhysics(particle, physics);
 
             Timer timer = scene.GetTimer(particle);

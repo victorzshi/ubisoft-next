@@ -4,34 +4,16 @@
 
 #include "Scene/Scene.h"
 
-#include "Math/Random/Random.h"
+#include "Math/Utils/Utils.h"
 
 void Systems::RotateTowardsMouse(Scene &scene, int id)
 {
     Transform transform = scene.GetTransform(id);
 
-    Vector3 from = Vector3(0.0f, -1.0f, 0.0f); // Model's up direction.
+    Vector3 from = transform.up;
     Vector3 to = scene.GetMousePosition() - transform.position;
 
-    // Get positive angle between two vectors
-    float angle = 0.0f;
-    if (to - from != Vector3())
-    {
-        float dot = from.Dot(to);
-        float magnitude = sqrt(from.LengthSquared() * to.LengthSquared());
-        angle = acos(dot / magnitude);
-    }
-
-    // Flip angle based on z plane normal
-    Vector3 normal = Vector3(0.0f, 0.0f, -1.0f);
-    Vector3 cross = from.Cross(to);
-    if (normal.Dot(cross) < 0)
-    {
-        angle = -angle;
-    }
-
-    // Convert angle to degrees
-    transform.rotation.z = angle * 180.0f / PI;
+    transform.rotation.z = Utils::Angle(from, to);
 
     scene.SetTransform(id, transform);
 }
@@ -45,43 +27,24 @@ void Systems::RotateTowardsShip(Scene &scene, int id)
     {
         Vector3 shipPosition = scene.GetTransform(ship).position;
 
-        if (Random::Distance(transform.position, shipPosition) < ai.attackRange)
+        if (Utils::Distance(transform.position, shipPosition) < ai.attackRange)
         {
-
-            Vector3 from = Vector3(0.0f, -1.0f, 0.0f); // Model's up direction.
+            Vector3 from = transform.up;
             Vector3 to = shipPosition - transform.position;
 
-            // Get positive angle between two vectors
-            float angle = 0.0f;
-            if (to - from != Vector3())
-            {
-                float dot = from.Dot(to);
-                float magnitude = sqrt(from.LengthSquared() * to.LengthSquared());
-                angle = acos(dot / magnitude);
-            }
-
-            // Flip angle based on z plane normal
-            Vector3 normal = Vector3(0.0f, 0.0f, -1.0f);
-            Vector3 cross = from.Cross(to);
-            if (normal.Dot(cross) < 0)
-            {
-                angle = -angle;
-            }
-
-            // Convert angle to degrees
             transform.rotation.y = 180.0f;
             transform.rotation.x = -90.0f;
-            transform.rotation.z = angle * 180.0f / PI;
+            transform.rotation.z = Utils::Angle(from, to);
 
-            scene.SetTransform(id, transform);
+            break;
         }
         else
         {
             transform.rotation = Vector3();
-
-            scene.SetTransform(id, transform);
         }
     }
+
+    scene.SetTransform(id, transform);
 }
 
 void Systems::AccelerateShip(Scene &scene, int id)
