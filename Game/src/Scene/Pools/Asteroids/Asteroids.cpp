@@ -32,6 +32,8 @@ void Asteroids::Init(Scene &scene)
         scene.SetPhysics(id, physics);
 
         Transform transform;
+        transform.position.x = Utils::RandomFloat(-10.0f, 10.0f);
+        transform.position.y = Utils::RandomFloat(-10.0f, 10.0f);
         transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
         transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
         transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
@@ -53,7 +55,7 @@ void Asteroids::Update(Scene &scene)
     {
         if (scene.GetHealth(id).points <= 0)
         {
-            scene.GetParticles().CreateBigExplosion(scene, id);
+            scene.GetParticles().CreateBigExplosion(scene, scene.GetTransform(id).position);
 
             Deactivate(id);
         }

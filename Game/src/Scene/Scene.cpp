@@ -203,13 +203,14 @@ void Scene::Update(float deltaTime)
         m_systems.AccelerateShip(*this, id);
         m_systems.ApplyGravity(*this, id);
         m_systems.LimitShipVelocity(*this, id);
-        m_systems.ShootBullet(*this, id);
+        m_systems.ShootAtMouse(*this, id);
         m_systems.UpdatePosition(*this, id);
     }
 
     for (auto &id : m_aliens.GetIds())
     {
         m_systems.RotateTowardsShip(*this, id);
+        m_systems.ShootAtShip(*this, id);
     }
 
     for (auto &id : m_asteroids.GetIds())

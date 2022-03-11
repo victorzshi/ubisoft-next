@@ -8,7 +8,8 @@ class Systems
     void RotateTowardsMouse(Scene &scene, int id);
     void RotateTowardsShip(Scene &scene, int id);
     void AccelerateShip(Scene &scene, int id);
-    void ShootBullet(Scene &scene, int id);
+    void ShootAtMouse(Scene &scene, int id);
+    void ShootAtShip(Scene &scene, int id);
     void UpdatePosition(Scene &scene, int id);
     void AddRotation(Scene &scene, int id);
     void CheckBulletHit(Scene &scene, int id);

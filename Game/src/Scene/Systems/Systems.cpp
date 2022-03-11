@@ -74,7 +74,7 @@ void Systems::AccelerateShip(Scene &scene, int id)
     scene.SetPhysics(id, physics);
 }
 
-void Systems::ShootBullet(Scene &scene, int id)
+void Systems::ShootAtMouse(Scene &scene, int id)
 {
     if (!App::IsKeyPressed(VK_LBUTTON))
     {
@@ -87,9 +87,48 @@ void Systems::ShootBullet(Scene &scene, int id)
 
     if (elapsed > cooldown)
     {
-        scene.GetBullets().CreateBullet(scene, id);
+        Vector3 from = scene.GetTransform(id).position;
+        Vector3 to = scene.GetMousePosition();
 
-        scene.GetShips().ResetBulletCooldown(scene, id);
+        scene.GetBullets().ShootAt(scene, from, to);
+
+        Timer timer = scene.GetTimer(id);
+        timer.start = scene.GetTime();
+        scene.SetTimer(id, timer);
+    }
+}
+
+void Systems::ShootAtShip(Scene &scene, int id)
+{
+    float current = scene.GetTime();
+    float elapsed = scene.GetTimer(id).Elapsed(current);
+    float cooldown = scene.GetAliens().BULLET_COOLDOWN;
+
+    AI ai = scene.GetAI(id);
+    Transform transform = scene.GetTransform(id);
+
+    if (elapsed < cooldown)
+    {
+        return;
+    }
+
+    for (auto &ship : scene.GetShips().GetIds())
+    {
+        Vector3 shipPosition = scene.GetTransform(ship).position;
+
+        if (Utils::Distance(transform.position, shipPosition) < ai.attackRange)
+        {
+            Vector3 from = transform.position;
+            Vector3 to = shipPosition;
+
+            scene.GetBullets().ShootAt(scene, from, to);
+
+            Timer timer = scene.GetTimer(id);
+            timer.start = scene.GetTime();
+            scene.SetTimer(id, timer);
+
+            break;
+        }
     }
 }
 
@@ -169,7 +208,7 @@ void Systems::CheckBulletHit(Scene &scene, int id)
             health.points--;
             scene.SetHealth(target, health);
 
-            scene.GetParticles().CreateExplosion(scene, id);
+            scene.GetParticles().CreateExplosion(scene, scene.GetTransform(id).position);
         }
     }
 }

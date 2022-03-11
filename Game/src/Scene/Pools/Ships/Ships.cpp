@@ -36,10 +36,3 @@ void Ships::Update(Scene &scene)
 
     UpdateIds();
 }
-
-void Ships::ResetBulletCooldown(Scene& scene, int id)
-{
-    Timer timer = scene.GetTimer(id);
-    timer.start = scene.GetTime();
-    scene.SetTimer(id, timer);
-}

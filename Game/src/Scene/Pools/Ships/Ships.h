@@ -13,6 +13,4 @@ class Ships : public Pool
     virtual void Init(Scene &scene) override;
 
     virtual void Update(Scene &scene) override;
-
-    void ResetBulletCooldown(Scene& scene, int id);
 };

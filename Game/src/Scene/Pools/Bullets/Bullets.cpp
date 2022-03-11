@@ -61,16 +61,14 @@ void Bullets::Update(Scene &scene)
     UpdateIds();
 }
 
-void Bullets::CreateBullet(Scene &scene, int id)
+void Bullets::ShootAt(Scene &scene, Vector3 &from, Vector3 &to)
 {
     int bullet = GetSize();
 
     if (Activate(bullet))
     {
-        Vector3 to = scene.GetMousePosition();
-        Vector3 from = scene.GetTransform(id).position;
         Vector3 direction = (to - from).Normalize();
-        Vector3 position = scene.GetTransform(id).position + direction * 0.5f;
+        Vector3 position = from + direction * 0.5f;
 
         Health health = scene.GetHealth(bullet);
         health.points = 1;

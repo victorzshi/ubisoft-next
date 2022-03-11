@@ -45,10 +45,8 @@ void Particles::Update(Scene &scene)
     UpdateIds();
 }
 
-void Particles::CreateExplosion(Scene &scene, int id)
+void Particles::CreateExplosion(Scene &scene, Vector3 &position)
 {
-    Vector3 position = scene.GetTransform(id).position;
-
     for (int i = 0; i < 5; i++)
     {
         int particle = GetSize();
@@ -83,10 +81,8 @@ void Particles::CreateExplosion(Scene &scene, int id)
     }
 }
 
-void Particles::CreateBigExplosion(Scene &scene, int id)
+void Particles::CreateBigExplosion(Scene &scene, Vector3 &position)
 {
-    Vector3 position = scene.GetTransform(id).position;
-
     for (int i = 0; i < 50; i++)
     {
         int particle = GetSize();
