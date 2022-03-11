@@ -12,7 +12,7 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     m_time = m_current - m_start;
 
     // Initialize camera position
-    m_position = Vector3(0.0f, 0.0f, 20.0f);
+    m_position = Vector3(0.0f, 0.0f, 10.0f);
 }
 
 void Scene::Init()
@@ -177,6 +177,7 @@ void Scene::Update(float deltaTime)
 
     for (auto &id : m_ships.GetIds())
     {
+        m_systems.RotateTowardsMouse(*this, id);
         m_systems.AccelerateShip(*this, id);
         m_systems.ApplyGravity(*this, id);
         m_systems.LimitShipVelocity(*this, id);
@@ -253,16 +254,18 @@ void Scene::MoveCamera(float deltaTime)
     if (!m_ships.GetIds().empty())
     {
         int id = m_ships.GetIds().front();
-        Vector3 ship = GetTransform(id).position;
-        Vector3 mouse = GetMousePosition();
-        Vector3 direction = mouse - ship;
+        Vector3 from = GetTransform(id).position;
+        Vector3 to = GetMousePosition();
+        Vector3 direction = to - from;
         if (direction != Vector3())
         {
-            direction = direction.Normalize() * 2.0f;
+            direction = direction.Normalize();
         }
 
-        m_renderer.SetCameraPosition(ship + m_position);
-        m_renderer.SetCameraTarget(ship + direction);
+        // Put the camera behind the ship
+        m_renderer.SetCameraPosition(from + m_position - direction * 10.0f);
+        // Look in front of the ship
+        m_renderer.SetCameraTarget(from + direction * 2.0f);
     }
 }
 
