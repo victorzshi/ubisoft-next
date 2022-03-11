@@ -6,32 +6,26 @@
 
 void Systems::MoveShip(Scene &scene, int id)
 {
-    float deltaVelocity = scene.GetShips().DELTA_VELOCITY;
+    float deltaAcceleration = scene.GetShips().DELTA_ACCELERATION;
 
-    Physics physics;
+    Physics physics = scene.GetPhysics(id);
+
+    physics.acceleration = Vector3();
     if (App::GetController().GetLeftThumbStickX() > 0.5f)
     {
-        physics.velocity.x = +deltaVelocity;
+        physics.acceleration.x = +deltaAcceleration;
     }
     if (App::GetController().GetLeftThumbStickX() < -0.5f)
     {
-        physics.velocity.x = -deltaVelocity;
-    }
-    if (App::GetController().GetLeftThumbStickX() == 0.0f)
-    {
-        physics.velocity.x = 0.0f;
+        physics.acceleration.x = -deltaAcceleration;
     }
     if (App::GetController().GetLeftThumbStickY() > 0.5f)
     {
-        physics.velocity.y = +deltaVelocity;
+        physics.acceleration.y = +deltaAcceleration;
     }
     if (App::GetController().GetLeftThumbStickY() < -0.5f)
     {
-        physics.velocity.y = -deltaVelocity;
-    }
-    if (App::GetController().GetLeftThumbStickY() == 0.0f)
-    {
-        physics.velocity.y = 0.0f;
+        physics.acceleration.y = -deltaAcceleration;
     }
 
     scene.SetPhysics(id, physics);
@@ -61,7 +55,10 @@ void Systems::UpdatePosition(Scene &scene, int id)
     Physics physics = scene.GetPhysics(id);
     Transform transform = scene.GetTransform(id);
 
-    transform.position += physics.velocity * scene.GetDeltaTime() / 1000.0f;
+    float elapsed = scene.GetDeltaTime() / 1000.0f;
+
+    physics.velocity += physics.acceleration * elapsed;
+    transform.position += physics.velocity * elapsed;
 
     float width = 7.0f;
     if (transform.position.x > width)
@@ -83,6 +80,7 @@ void Systems::UpdatePosition(Scene &scene, int id)
         transform.position.y = height;
     }
 
+    scene.SetPhysics(id, physics);
     scene.SetTransform(id, transform);
 }
 
