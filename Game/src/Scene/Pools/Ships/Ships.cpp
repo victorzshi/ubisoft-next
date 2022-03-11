@@ -11,6 +11,14 @@ void Ships::Init(Scene &scene)
     {
         int id = scene.CreateId();
 
+        Collider collider;
+        collider.radius = WIDTH / 2.0f;
+        scene.SetCollider(id, collider);
+
+        Health health;
+        health.points = HEALTH;
+        scene.SetHealth(id, health);
+
         Model model;
         model.mesh.SetMesh(Meshes::CONE);
         model.color.SetColor(Colors::BLUE);
@@ -32,7 +40,20 @@ void Ships::Init(Scene &scene)
 
 void Ships::Update(Scene &scene)
 {
-    // TODO: Check ship health.
+    int id = GetBegin();
+    while (id < GetSize())
+    {
+        if (scene.GetHealth(id).points <= 0)
+        {
+            scene.GetParticles().Explosion(scene, id);
+
+            Deactivate(id);
+        }
+        else
+        {
+            id++;
+        }
+    }
 
     UpdateIds();
 }

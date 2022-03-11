@@ -185,6 +185,10 @@ void Systems::AddRotation(Scene &scene, int id)
 void Systems::CheckBulletHit(Scene &scene, int id)
 {
     std::vector<int> targets;
+    for (auto &ship : scene.GetShips().GetIds())
+    {
+        targets.push_back(ship);
+    }
     for (auto &asteroid : scene.GetAsteroids().GetIds())
     {
         targets.push_back(asteroid);
@@ -208,7 +212,7 @@ void Systems::CheckBulletHit(Scene &scene, int id)
             health.points--;
             scene.SetHealth(target, health);
 
-            scene.GetParticles().CreateExplosion(scene, scene.GetTransform(id).position);
+            scene.GetParticles().Ricochet(scene, id);
         }
     }
 }

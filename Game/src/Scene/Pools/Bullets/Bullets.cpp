@@ -68,7 +68,7 @@ void Bullets::ShootAt(Scene &scene, Vector3 &from, Vector3 &to)
     if (Activate(bullet))
     {
         Vector3 direction = (to - from).Normalize();
-        Vector3 position = from + direction * 0.5f;
+        Vector3 position = from + direction; // Spawn the bullet a little in front of the model
 
         Health health = scene.GetHealth(bullet);
         health.points = 1;

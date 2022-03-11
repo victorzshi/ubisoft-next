@@ -21,7 +21,7 @@ void Aliens::Init(Scene &scene)
         scene.SetCollider(id, collider);
 
         Health health;
-        health.points = HEALTH_POINTS;
+        health.points = HEALTH;
         scene.SetHealth(id, health);
 
         Model model;
@@ -51,7 +51,7 @@ void Aliens::Update(Scene &scene)
     {
         if (scene.GetHealth(id).points <= 0)
         {
-            scene.GetParticles().CreateBigExplosion(scene, scene.GetTransform(id).position);
+            scene.GetParticles().Explosion(scene, id);
 
             Deactivate(id);
         }

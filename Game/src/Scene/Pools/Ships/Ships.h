@@ -6,6 +6,8 @@ class Ships : public Pool
 {
   public:
     const int TOTAL = 1;
+    const int HEALTH = 10;
+    const float WIDTH = 1.0f;
     const float DELTA_ACCELERATION = 2.0f;
     const float MAX_VELOCITY = 3.0f;
     const float BULLET_COOLDOWN = 0.05f;
