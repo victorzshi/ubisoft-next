@@ -18,6 +18,8 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
 void Scene::Init()
 {
     m_renderer.Init(*this);
+
+    m_aliens.Init(*this);
     m_asteroids.Init(*this);
     m_bullets.Init(*this);
     m_grid.Init(*this);
@@ -44,6 +46,11 @@ float Scene::GetDeltaTime() const
 float Scene::GetTime() const
 {
     return m_time.count();
+}
+
+AI Scene::GetAI(int id) const
+{
+    return m_ai[id];
 }
 
 Collider Scene::GetCollider(int id) const
@@ -76,6 +83,11 @@ Transform Scene::GetTransform(int id) const
     return m_transform[id];
 }
 
+Aliens &Scene::GetAliens()
+{
+    return m_aliens;
+}
+
 Asteroids &Scene::GetAsteroids()
 {
     return m_asteroids;
@@ -104,7 +116,11 @@ Ships &Scene::GetShips()
 std::vector<int> Scene::GetAllIds() const
 {
     std::vector<int> ids;
-    for (auto id : m_asteroids.GetIds())
+    for (auto &id : m_aliens.GetIds())
+    {
+        ids.push_back(id);
+    }
+    for (auto &id : m_asteroids.GetIds())
     {
         ids.push_back(id);
     }
@@ -125,6 +141,11 @@ std::vector<int> Scene::GetAllIds() const
         ids.push_back(id);
     }
     return ids;
+}
+
+void Scene::SetAI(int id, AI ai)
+{
+    m_ai[id] = ai;
 }
 
 void Scene::SetCollider(int id, Collider collider)
@@ -159,6 +180,7 @@ void Scene::SetTransform(int id, Transform transform)
 
 int Scene::CreateId()
 {
+    m_ai.push_back(AI());
     m_collider.push_back(Collider());
     m_health.push_back(Health());
     m_model.push_back(Model());
@@ -181,8 +203,14 @@ void Scene::Update(float deltaTime)
         m_systems.AccelerateShip(*this, id);
         m_systems.ApplyGravity(*this, id);
         m_systems.LimitShipVelocity(*this, id);
-        m_systems.ShootBullet(*this, id);
+        m_systems.ShootAtMouse(*this, id);
         m_systems.UpdatePosition(*this, id);
+    }
+
+    for (auto &id : m_aliens.GetIds())
+    {
+        m_systems.RotateTowardsShip(*this, id);
+        m_systems.ShootAtShip(*this, id);
     }
 
     for (auto &id : m_asteroids.GetIds())
@@ -195,7 +223,7 @@ void Scene::Update(float deltaTime)
     {
         m_systems.UpdatePosition(*this, id);
         m_systems.AddRotation(*this, id);
-        m_systems.CheckAsteroidCollision(*this, id);
+        m_systems.CheckBulletHit(*this, id);
     }
 
     for (auto &id : m_particles.GetIds())
@@ -271,6 +299,7 @@ void Scene::MoveCamera(float deltaTime)
 
 void Scene::UpdatePools()
 {
+    m_aliens.Update(*this);
     m_asteroids.Update(*this);
     m_bullets.Update(*this);
     m_grid.Update(*this);

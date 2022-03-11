@@ -14,7 +14,7 @@ class Particles : public Pool
 
     virtual void Update(Scene &scene) override;
 
-    void CreateExplosion(Scene &scene, int id);
+    void Ricochet(Scene &scene, int id);
 
-    void CreateBigExplosion(Scene &scene, int id);
+    void Explosion(Scene &scene, int id);
 };

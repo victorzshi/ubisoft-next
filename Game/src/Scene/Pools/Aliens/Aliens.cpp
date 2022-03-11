@@ -1,16 +1,20 @@
 #include "stdafx.h"
 
-#include "Asteroids.h"
+#include "Aliens.h"
 
 #include "Math/Utils/Utils.h"
 #include "Scene/Scene.h"
 
-void Asteroids::Init(Scene &scene)
+void Aliens::Init(Scene &scene)
 {
     int index = 0;
     for (int i = 0; i < TOTAL; i++)
     {
         int id = scene.CreateId();
+
+        AI ai;
+        ai.attackRange = 5.0f;
+        scene.SetAI(id, ai);
 
         Collider collider;
         collider.radius = WIDTH / 2.0f;
@@ -21,22 +25,14 @@ void Asteroids::Init(Scene &scene)
         scene.SetHealth(id, health);
 
         Model model;
-        model.mesh.SetMesh(Meshes::TORUS);
-        model.color.SetColor(Colors::RED);
+        model.mesh.SetMesh(Meshes::MONKEY);
+        model.color.SetColor(Colors::PURPLE);
         model.lighting = Lighting::OUTLINE;
         scene.SetModel(id, model);
-
-        Physics physics;
-        physics.velocity.x = Utils::RandomFloat(-1.0f, 1.0f);
-        physics.velocity.y = Utils::RandomFloat(-1.0f, 1.0f);
-        scene.SetPhysics(id, physics);
 
         Transform transform;
         transform.position.x = Utils::RandomFloat(-10.0f, 10.0f);
         transform.position.y = Utils::RandomFloat(-10.0f, 10.0f);
-        transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
-        transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
-        transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
         scene.SetTransform(id, transform);
 
         index = id;
@@ -48,7 +44,7 @@ void Asteroids::Init(Scene &scene)
     SetEnd(index);
 }
 
-void Asteroids::Update(Scene &scene)
+void Aliens::Update(Scene &scene)
 {
     int id = GetBegin();
     while (id < GetSize())

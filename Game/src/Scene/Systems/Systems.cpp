@@ -4,32 +4,45 @@
 
 #include "Scene/Scene.h"
 
+#include "Math/Utils/Utils.h"
+
 void Systems::RotateTowardsMouse(Scene &scene, int id)
 {
     Transform transform = scene.GetTransform(id);
 
-    Vector3 from = Vector3(0.0f, -1.0f, 0.0f); // Model's up direction.
+    Vector3 from = transform.up;
     Vector3 to = scene.GetMousePosition() - transform.position;
 
-    // Get positive angle between two vectors
-    float angle = 0.0f;
-    if (to - from != Vector3())
-    {
-        float dot = from.Dot(to);
-        float magnitude = sqrt(from.LengthSquared() * to.LengthSquared());
-        angle = acos(dot / magnitude);
-    }
+    transform.rotation.z = Utils::Angle(from, to);
 
-    // Flip angle based on z plane normal
-    Vector3 normal = Vector3(0.0f, 0.0f, -1.0f);
-    Vector3 cross = from.Cross(to);
-    if (normal.Dot(cross) < 0)
-    {
-        angle = -angle;
-    }
+    scene.SetTransform(id, transform);
+}
 
-    // Convert angle to degrees
-    transform.rotation.z = angle * 180.0f / PI;
+void Systems::RotateTowardsShip(Scene &scene, int id)
+{
+    AI ai = scene.GetAI(id);
+    Transform transform = scene.GetTransform(id);
+
+    for (auto &ship : scene.GetShips().GetIds())
+    {
+        Vector3 shipPosition = scene.GetTransform(ship).position;
+
+        if (Utils::Distance(transform.position, shipPosition) < ai.attackRange)
+        {
+            Vector3 from = transform.up;
+            Vector3 to = shipPosition - transform.position;
+
+            transform.rotation.y = 180.0f;
+            transform.rotation.x = -90.0f;
+            transform.rotation.z = Utils::Angle(from, to);
+
+            break;
+        }
+        else
+        {
+            transform.rotation = Vector3();
+        }
+    }
 
     scene.SetTransform(id, transform);
 }
@@ -61,7 +74,7 @@ void Systems::AccelerateShip(Scene &scene, int id)
     scene.SetPhysics(id, physics);
 }
 
-void Systems::ShootBullet(Scene &scene, int id)
+void Systems::ShootAtMouse(Scene &scene, int id)
 {
     if (!App::IsKeyPressed(VK_LBUTTON))
     {
@@ -74,9 +87,48 @@ void Systems::ShootBullet(Scene &scene, int id)
 
     if (elapsed > cooldown)
     {
-        scene.GetBullets().CreateBullet(scene, id);
+        Vector3 from = scene.GetTransform(id).position;
+        Vector3 to = scene.GetMousePosition();
 
-        scene.GetShips().ResetBulletCooldown(scene, id);
+        scene.GetBullets().ShootAt(scene, from, to);
+
+        Timer timer = scene.GetTimer(id);
+        timer.start = scene.GetTime();
+        scene.SetTimer(id, timer);
+    }
+}
+
+void Systems::ShootAtShip(Scene &scene, int id)
+{
+    float current = scene.GetTime();
+    float elapsed = scene.GetTimer(id).Elapsed(current);
+    float cooldown = scene.GetAliens().BULLET_COOLDOWN;
+
+    AI ai = scene.GetAI(id);
+    Transform transform = scene.GetTransform(id);
+
+    if (elapsed < cooldown)
+    {
+        return;
+    }
+
+    for (auto &ship : scene.GetShips().GetIds())
+    {
+        Vector3 shipPosition = scene.GetTransform(ship).position;
+
+        if (Utils::Distance(transform.position, shipPosition) < ai.attackRange)
+        {
+            Vector3 from = transform.position;
+            Vector3 to = shipPosition;
+
+            scene.GetBullets().ShootAt(scene, from, to);
+
+            Timer timer = scene.GetTimer(id);
+            timer.start = scene.GetTime();
+            scene.SetTimer(id, timer);
+
+            break;
+        }
     }
 }
 
@@ -90,25 +142,25 @@ void Systems::UpdatePosition(Scene &scene, int id)
     physics.velocity += physics.acceleration * elapsed;
     transform.position += physics.velocity * elapsed;
 
-    // float width = 7.0f;
-    // if (transform.position.x > width)
-    //{
-    //     transform.position.x = -width;
-    // }
-    // else if (transform.position.x < -width)
-    //{
-    //     transform.position.x = width;
-    // }
+    float width = 10.0f;
+    if (transform.position.x > width)
+    {
+        transform.position.x = -width;
+    }
+    else if (transform.position.x < -width)
+    {
+        transform.position.x = width;
+    }
 
-    // float height = 4.0f;
-    // if (transform.position.y > height)
-    //{
-    //     transform.position.y = -height;
-    // }
-    // else if (transform.position.y < -height)
-    //{
-    //     transform.position.y = height;
-    // }
+    float height = 10.0f;
+    if (transform.position.y > height)
+    {
+        transform.position.y = -height;
+    }
+    else if (transform.position.y < -height)
+    {
+        transform.position.y = height;
+    }
 
     scene.SetPhysics(id, physics);
     scene.SetTransform(id, transform);
@@ -130,11 +182,25 @@ void Systems::AddRotation(Scene &scene, int id)
     scene.SetTransform(id, transform);
 }
 
-void Systems::CheckAsteroidCollision(Scene &scene, int id)
+void Systems::CheckBulletHit(Scene &scene, int id)
 {
+    std::vector<int> targets;
+    for (auto &ship : scene.GetShips().GetIds())
+    {
+        targets.push_back(ship);
+    }
     for (auto &asteroid : scene.GetAsteroids().GetIds())
     {
-        if (Collider::IsHit(scene, id, asteroid))
+        targets.push_back(asteroid);
+    }
+    for (auto &alien : scene.GetAliens().GetIds())
+    {
+        targets.push_back(alien);
+    }
+
+    for (auto &target : targets)
+    {
+        if (Collider::IsHit(scene, id, target))
         {
             Health health;
 
@@ -142,11 +208,11 @@ void Systems::CheckAsteroidCollision(Scene &scene, int id)
             health.points--;
             scene.SetHealth(id, health);
 
-            health = scene.GetHealth(asteroid);
+            health = scene.GetHealth(target);
             health.points--;
-            scene.SetHealth(asteroid, health);
+            scene.SetHealth(target, health);
 
-            scene.GetParticles().CreateExplosion(scene, id);
+            scene.GetParticles().Ricochet(scene, id);
         }
     }
 }

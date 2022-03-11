@@ -2,7 +2,7 @@
 
 #include "Color.h"
 
-#include "Math/Random/Random.h"
+#include "Math/Utils/Utils.h"
 
 Color::Color() : r(255), g(255), b(255)
 {
@@ -67,9 +67,9 @@ void Color::SetColor(Colors color)
         break;
 
     case Colors::RANDOM:
-        r = Random::GetInt(0, 255);
-        g = Random::GetInt(0, 255);
-        b = Random::GetInt(0, 255);
+        r = Utils::RandomInt(0, 255);
+        g = Utils::RandomInt(0, 255);
+        b = Utils::RandomInt(0, 255);
         break;
     }
 }

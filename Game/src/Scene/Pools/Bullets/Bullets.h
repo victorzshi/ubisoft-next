@@ -16,5 +16,5 @@ class Bullets : public Pool
 
     virtual void Update(Scene &scene) override;
 
-    void CreateBullet(Scene &scene, int id);
+    void ShootAt(Scene &scene, Vector3 &from, Vector3 &to);
 };

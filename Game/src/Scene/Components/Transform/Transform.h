@@ -4,7 +4,7 @@
 
 struct Transform
 {
-    Vector3 position, rotation, scaling;
+    Vector3 position, rotation, scaling, up;
 
     Transform();
 };

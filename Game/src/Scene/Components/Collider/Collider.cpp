@@ -4,21 +4,18 @@
 
 #include "Scene/Scene.h"
 
+#include "Math/Utils/Utils.h"
+
 Collider::Collider() : radius(0.0f)
 {
 }
 
-bool Collider::IsHit(Scene &scene, int from, int to)
+bool Collider::IsHit(Scene &scene, int a, int b)
 {
-    Vector3 a = scene.GetTransform(from).position;
-    Vector3 b = scene.GetTransform(to).position;
+    Vector3 from = scene.GetTransform(a).position;
+    Vector3 to = scene.GetTransform(b).position;
 
-    float x = (a.x - b.x) * (a.x - b.x);
-    float y = (a.y - b.y) * (a.y - b.y);
-    float z = (a.z - b.z) * (a.z - b.z);
-    float distance = sqrtf(x + y + z);
-
-    if (distance > scene.GetCollider(from).radius + scene.GetCollider(to).radius)
+    if (Utils::Distance(from, to) > scene.GetCollider(a).radius + scene.GetCollider(b).radius)
     {
         return false;
     }
