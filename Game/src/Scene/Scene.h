@@ -28,6 +28,7 @@ class Scene
     void Shutdown();
 
     // Utilities
+    Vector3 GetScenePosition() const;
     Vector3 GetMousePosition() const;
     float GetDeltaTime() const;
     float GetTime() const;
@@ -52,6 +53,11 @@ class Scene
 
     // Get IDs of all active objects
     std::vector<int> GetAllIds() const;
+
+    // Set camera related
+    void SetScenePosition(Vector3 position);
+    void SetCameraPosition(Vector3 position);
+    void SetCameraTarget(Vector3 target);
 
     // Set component arrays
     void SetAI(int id, AI ai);
@@ -96,15 +102,14 @@ class Scene
     Ships m_ships;
     Stars m_stars;
 
-    // Gameplay logic
-    Systems m_systems;
-
-    // Handle graphics
+    // Handle camera
     Vector3 m_position;
     Renderer m_renderer;
 
+    // Gameplay logic
+    Systems m_systems;
+
     // Helper functions
     void SetTime(float deltaTime);
-    void MoveCamera(float deltaTime);
     void UpdatePools();
 };

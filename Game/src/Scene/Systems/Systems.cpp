@@ -6,6 +6,48 @@
 
 #include "Math/Utils/Utils.h"
 
+void Systems::MoveCamera(Scene &scene, int id)
+{
+    float closest = Utils::MaxFloat();
+    for (auto &planet : scene.GetPlanets().GetIds())
+    {
+        Vector3 shipPosition = scene.GetTransform(id).position;
+        Vector3 planetPosition = scene.GetTransform(planet).position;
+
+        float distance = Utils::Distance(shipPosition, planetPosition) - scene.GetCollider(planet).radius;
+        if (distance < closest)
+        {
+            closest = distance;
+        }
+    }
+
+    // Switch between zoomed in and zoomed out views
+    Vector3 position = scene.GetScenePosition();
+    if (closest < 15.0f)
+    {
+        position.z = Utils::Lerp(position.z, 10.0f, 0.05f);
+    }
+    else
+    {
+        position.z = Utils::Lerp(position.z, 300.0f, 0.01f);
+    }
+    scene.SetScenePosition(position);
+
+    // Follow ship with camera
+    Vector3 from = scene.GetTransform(id).position;
+    Vector3 to = scene.GetMousePosition();
+    Vector3 direction = to - from;
+    if (direction != Vector3())
+    {
+        direction = direction.Normalize();
+    }
+
+    // Put the camera behind the ship
+    scene.SetCameraPosition(from + position - direction * 10.0f);
+    // Look in front of the ship
+    scene.SetCameraTarget(from + direction * 2.0f);
+}
+
 void Systems::RotateTowardsMouse(Scene &scene, int id)
 {
     Transform transform = scene.GetTransform(id);

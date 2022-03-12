@@ -5,6 +5,7 @@ class Scene;
 class Systems
 {
   public:
+    void MoveCamera(Scene &scene, int id);
     void RotateTowardsMouse(Scene &scene, int id);
     void RotateTowardsShip(Scene &scene, int id);
     void AccelerateShip(Scene &scene, int id);

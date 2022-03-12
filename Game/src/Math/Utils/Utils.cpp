@@ -2,6 +2,7 @@
 
 #include "Utils.h"
 
+#include <limits>
 #include <random>
 
 #include "Math/Vector3/Vector3.h"
@@ -20,6 +21,16 @@ float Utils::RandomFloat(float min, float max)
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> dis(min, max);
     return dis(gen);
+}
+
+float Utils::MaxFloat()
+{
+    return std::numeric_limits<float>::infinity();
+}
+
+float Utils::Lerp(float a, float b, float t)
+{
+    return (a * (1.0f - t)) + (b * t);
 }
 
 float Utils::Distance(Vector3 from, Vector3 to)

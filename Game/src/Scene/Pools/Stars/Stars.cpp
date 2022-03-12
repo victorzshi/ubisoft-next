@@ -18,8 +18,8 @@ void Stars::Init(Scene &scene)
         model.lighting = Lighting::SHADOW;
         scene.SetModel(id, model);
 
-        float x = Utils::RandomFloat(-200.0f, 200.0f);
-        float y = Utils::RandomFloat(-200.0f, 200.0f);
+        float x = Utils::RandomFloat(-300.0f, 300.0f);
+        float y = Utils::RandomFloat(-300.0f, 300.0f);
         float z = Utils::RandomFloat(-100.0f, -75.0f);
 
         Transform transform;
