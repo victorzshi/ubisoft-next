@@ -93,7 +93,7 @@ void Systems::ShootAtMouse(Scene &scene, int id)
         Vector3 from = scene.GetTransform(id).position;
         Vector3 to = scene.GetMousePosition();
 
-        scene.GetBullets().ShootAt(scene, from, to);
+        scene.GetBullets().ShootAt(scene, from, to, Colors::WHITE);
 
         Timer timer = scene.GetTimer(id);
         timer.start = scene.GetTime();
@@ -124,7 +124,7 @@ void Systems::ShootAtShip(Scene &scene, int id)
             Vector3 from = transform.position;
             Vector3 to = shipPosition;
 
-            scene.GetBullets().ShootAt(scene, from, to);
+            scene.GetBullets().ShootAt(scene, from, to, Colors::RED);
 
             Timer timer = scene.GetTimer(id);
             timer.start = scene.GetTime();
@@ -296,4 +296,45 @@ void Systems::SpinPlanet(Scene &scene, int id)
     transform.rotation.y = fmod(transform.rotation.y, 360.0f);
 
     scene.SetTransform(id, transform);
+}
+
+void Systems::CheckCollision(Scene &scene, int id)
+{
+    std::vector<int> targets;
+
+    if (scene.GetAI(id).attackRange == 0.0f) // Is ship
+    {
+        for (auto &alien : scene.GetAliens().GetIds())
+        {
+            targets.push_back(alien);
+        }
+        for (auto &planet : scene.GetPlanets().GetIds())
+        {
+            targets.push_back(planet);
+        }
+    }
+
+    for (auto &target : targets)
+    {
+        if (Collider::IsHit(scene, id, target))
+        {
+            Physics physics = scene.GetPhysics(id);
+            Transform transform = scene.GetTransform(id);
+
+            float elapsed = scene.GetDeltaTime() / 1000.0f;
+
+            transform.position -= physics.velocity * elapsed;
+
+            Vector3 from = scene.GetTransform(target).position;
+            Vector3 to = transform.position;
+            Vector3 direction = (to - from).Normalize();
+            // physics.velocity += physics.acceleration * elapsed;
+            physics.velocity = direction * 10.0f;
+
+            scene.SetPhysics(id, physics);
+            scene.SetTransform(id, transform);
+
+            scene.GetParticles().Ricochet(scene, id);
+        }
+    }
 }

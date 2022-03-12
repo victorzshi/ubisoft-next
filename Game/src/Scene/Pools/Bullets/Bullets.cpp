@@ -21,7 +21,6 @@ void Bullets::Init(Scene &scene)
 
         Model model;
         model.mesh.SetMesh(Meshes::CUBE);
-        model.color.SetColor(Colors::WHITE);
         scene.SetModel(id, model);
 
         Transform transform;
@@ -61,7 +60,7 @@ void Bullets::Update(Scene &scene)
     UpdateIds();
 }
 
-void Bullets::ShootAt(Scene &scene, Vector3 &from, Vector3 &to)
+void Bullets::ShootAt(Scene &scene, Vector3 &from, Vector3 &to, Colors color)
 {
     int bullet = GetSize();
 
@@ -69,6 +68,10 @@ void Bullets::ShootAt(Scene &scene, Vector3 &from, Vector3 &to)
     {
         Vector3 direction = (to - from).Normalize();
         Vector3 position = from + direction; // Spawn the bullet a little in front of the model
+
+        Model model = scene.GetModel(bullet);
+        model.color.SetColor(color);
+        scene.SetModel(bullet, model);
 
         Health health = scene.GetHealth(bullet);
         health.points = 1;
