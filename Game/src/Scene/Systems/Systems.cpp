@@ -40,10 +40,10 @@ void Systems::RotateTowardsShip(Scene &scene, int id)
         }
         else
         {
-            transform.rotation.x = 0.0f;
-            transform.rotation.z = 0.0f;
-            transform.rotation.y += scene.GetDeltaTime() / 10.0f;
-            transform.rotation.y = fmod(transform.rotation.y, 360.0f);
+            // transform.rotation.x = 0.0f;
+            // transform.rotation.z = 0.0f;
+            // transform.rotation.y += scene.GetDeltaTime() / 10.0f;
+            // transform.rotation.y = fmod(transform.rotation.y, 360.0f);
         }
     }
 
@@ -222,20 +222,29 @@ void Systems::CheckBulletHit(Scene &scene, int id)
 
 void Systems::ApplyGravity(Scene &scene, int id)
 {
-    Physics physics = scene.GetPhysics(id);
+    Vector3 position = scene.GetTransform(id).position;
 
-    // Assume world origin is center of gravity
-    Vector3 to = Vector3();
-    Vector3 from = scene.GetTransform(id).position;
-    Vector3 direction;
-    if (to - from != Vector3())
+    for (auto &planet : scene.GetPlanets().GetIds())
     {
-        direction = (to - from).Normalize();
+        AI ai = scene.GetAI(planet);
+
+        Vector3 planetPosition = scene.GetTransform(planet).position;
+
+        if (Utils::Distance(position, planetPosition) < ai.attackRange)
+        {
+            Physics physics = scene.GetPhysics(id);
+
+            Vector3 to = planetPosition;
+            Vector3 from = scene.GetTransform(id).position;
+            Vector3 direction = (to - from).Normalize();
+
+            // Bigger planets have more gravity :)
+            float scale = scene.GetTransform(planet).scaling.x;
+            physics.acceleration += direction * scale * 0.25f;
+
+            scene.SetPhysics(id, physics);
+        }
     }
-
-    physics.acceleration += direction;
-
-    scene.SetPhysics(id, physics);
 }
 
 void Systems::LimitShipVelocity(Scene &scene, int id)

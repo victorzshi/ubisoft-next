@@ -2,11 +2,10 @@
 
 #include "Scene/Pools/Pool.h"
 
-class Asteroids : public Pool
+class Stars : public Pool
 {
   public:
-    const int TOTAL = 0;
-    const int HEALTH = 20;
+    const int TOTAL = 5000;
 
     virtual void Init(Scene &scene) override;
 

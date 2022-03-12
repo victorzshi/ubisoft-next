@@ -211,7 +211,7 @@
     <ClInclude Include="src\Scene\Pools\Aliens\Aliens.h" />
     <ClInclude Include="src\Scene\Pools\Asteroids\Asteroids.h" />
     <ClInclude Include="src\Scene\Pools\Bullets\Bullets.h" />
-    <ClInclude Include="src\Scene\Pools\Grid\Grid.h" />
+    <ClInclude Include="src\Scene\Pools\Stars\Stars.h" />
     <ClInclude Include="src\Scene\Pools\Particles\Particles.h" />
     <ClInclude Include="src\Scene\Pools\Planets\Planets.h" />
     <ClInclude Include="src\Scene\Pools\Pool.h" />
@@ -252,7 +252,7 @@
     <ClCompile Include="src\Scene\Pools\Aliens\Aliens.cpp" />
     <ClCompile Include="src\Scene\Pools\Asteroids\Asteroids.cpp" />
     <ClCompile Include="src\Scene\Pools\Bullets\Bullets.cpp" />
-    <ClCompile Include="src\Scene\Pools\Grid\Grid.cpp" />
+    <ClCompile Include="src\Scene\Pools\Stars\Stars.cpp" />
     <ClCompile Include="src\Scene\Pools\Particles\Particles.cpp" />
     <ClCompile Include="src\Scene\Pools\Planets\Planets.cpp" />
     <ClCompile Include="src\Scene\Pools\Pool.cpp" />

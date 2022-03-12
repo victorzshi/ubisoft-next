@@ -15,7 +15,7 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     // m_position = Vector3(0.0f, 0.0f, 10.0f);
     // m_position = Vector3(0.0f, 0.0f, 30.0f);
     // m_position = Vector3(0.0f, 0.0f, 50.0f);
-     m_position = Vector3(0.0f, 0.0f, 100.0f);
+    m_position = Vector3(0.0f, 0.0f, 100.0f);
 }
 
 void Scene::Init()
@@ -25,10 +25,10 @@ void Scene::Init()
     m_aliens.Init(*this);
     m_asteroids.Init(*this);
     m_bullets.Init(*this);
-    m_grid.Init(*this);
     m_particles.Init(*this);
     m_planets.Init(*this);
     m_ships.Init(*this);
+    m_stars.Init(*this);
 
     // TODO: Initialize space but leave all objects inactive. Use level data to generate objects.
 }
@@ -102,19 +102,24 @@ Bullets &Scene::GetBullets()
     return m_bullets;
 }
 
-Grid &Scene::GetGrid()
-{
-    return m_grid;
-}
-
 Particles &Scene::GetParticles()
 {
     return m_particles;
 }
 
+Planets &Scene::GetPlanets()
+{
+    return m_planets;
+}
+
 Ships &Scene::GetShips()
 {
     return m_ships;
+}
+
+Stars &Scene::GetStars()
+{
+    return m_stars;
 }
 
 std::vector<int> Scene::GetAllIds() const
@@ -132,10 +137,6 @@ std::vector<int> Scene::GetAllIds() const
     {
         ids.push_back(id);
     }
-    for (auto &id : m_grid.GetIds())
-    {
-        ids.push_back(id);
-    }
     for (auto &id : m_particles.GetIds())
     {
         ids.push_back(id);
@@ -145,6 +146,10 @@ std::vector<int> Scene::GetAllIds() const
         ids.push_back(id);
     }
     for (auto &id : m_ships.GetIds())
+    {
+        ids.push_back(id);
+    }
+    for (auto &id : m_stars.GetIds())
     {
         ids.push_back(id);
     }
@@ -225,6 +230,7 @@ void Scene::Update(float deltaTime)
     {
         m_systems.UpdatePosition(*this, id);
         m_systems.AddRotation(*this, id);
+        m_systems.RotateTowardsShip(*this, id);
     }
 
     for (auto &id : m_bullets.GetIds())
@@ -240,14 +246,14 @@ void Scene::Update(float deltaTime)
         m_systems.AddRotation(*this, id);
     }
 
-    for (auto &id : m_grid.GetIds())
-    {
-        m_systems.ChangeColor(*this, id);
-    }
-
     for (auto &id : m_planets.GetIds())
     {
         m_systems.SpinPlanet(*this, id);
+    }
+
+    for (auto &id : m_stars.GetIds())
+    {
+        // m_systems.ChangeColor(*this, id);
     }
 
     UpdatePools();
@@ -320,8 +326,8 @@ void Scene::UpdatePools()
     m_aliens.Update(*this);
     m_asteroids.Update(*this);
     m_bullets.Update(*this);
-    m_grid.Update(*this);
     m_particles.Update(*this);
     m_planets.Update(*this);
     m_ships.Update(*this);
+    m_stars.Update(*this);
 }

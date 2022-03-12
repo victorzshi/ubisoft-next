@@ -14,6 +14,10 @@ void Asteroids::Init(Scene &scene)
 
         float scale = Utils::RandomFloat(1.0f, 2.0f);
 
+        AI ai;
+        ai.attackRange = 5.0f;
+        scene.SetAI(id, ai);
+
         Collider collider;
         collider.radius = scale / 2.0f;
         scene.SetCollider(id, collider);
@@ -23,9 +27,9 @@ void Asteroids::Init(Scene &scene)
         scene.SetHealth(id, health);
 
         Model model;
-        model.mesh.SetMesh(Meshes::ICOSPHERE);
-        model.color.SetColor(Colors::GREY);
-        model.lighting = Lighting::SHADOW;
+        model.mesh.SetMesh(Meshes::TORUS);
+        model.color.SetColor(Colors::RED);
+        model.lighting = Lighting::OUTLINE;
         scene.SetModel(id, model);
 
         Physics physics;

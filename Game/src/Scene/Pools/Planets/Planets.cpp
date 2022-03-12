@@ -95,6 +95,10 @@ void Planets::GeneratePlanet(Scene &scene, int id, Vector3 &position)
 {
     float scale = Utils::RandomFloat(5.0f, 10.0f);
 
+    AI ai;
+    ai.attackRange = scale * 2.0f;
+    scene.SetAI(id, ai);
+
     Model model;
     model.mesh.SetMesh(Meshes::SPHERE);
     model.color.SetColor(Colors::GREEN);
