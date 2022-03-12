@@ -10,30 +10,34 @@ void Systems::MoveCamera(Scene &scene, int id)
 {
     float deltaVelocity = scene.GetDeltaTime() / 10.0f;
 
+    Vector3 position = scene.GetScenePosition();
+
     if (App::IsKeyPressed(VK_NUMPAD6))
     {
-        scene.position.x += deltaVelocity;
+        position.x += deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD4))
     {
-        scene.position.x -= deltaVelocity;
+        position.x -= deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD8))
     {
-        scene.position.z -= deltaVelocity;
+        position.z -= deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD2))
     {
-        scene.position.z += deltaVelocity;
+        position.z += deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD7))
     {
-        scene.position.y += deltaVelocity;
+        position.y += deltaVelocity;
     }
     if (App::IsKeyPressed(VK_NUMPAD9))
     {
-        scene.position.y -= deltaVelocity;
+        position.y -= deltaVelocity;
     }
+
+    scene.SetScenePosition(position);
 
     // Follow ship with camera
     Vector3 from = scene.GetTransform(id).position;
@@ -45,9 +49,9 @@ void Systems::MoveCamera(Scene &scene, int id)
     }
 
     // Put the camera behind the ship
-    scene.renderer.SetCameraPosition(from + scene.position - direction * 10.0f);
+    scene.SetCameraPosition(from + position - direction * 10.0f);
     // Look in front of the ship
-    scene.renderer.SetCameraTarget(from + direction * 2.0f);
+    scene.SetCameraTarget(from + direction * 2.0f);
 }
 
 void Systems::RotateTowardsMouse(Scene &scene, int id)

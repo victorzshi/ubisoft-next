@@ -15,12 +15,12 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     // m_position = Vector3(0.0f, 0.0f, 10.0f);
     // m_position = Vector3(0.0f, 0.0f, 30.0f);
     // m_position = Vector3(0.0f, 0.0f, 50.0f);
-    position = Vector3(0.0f, 0.0f, 100.0f);
+    m_position = Vector3(0.0f, 0.0f, 100.0f);
 }
 
 void Scene::Init()
 {
-    renderer.Init(*this);
+    m_renderer.Init(*this);
 
     m_planets.Init(*this); // Planets go first
 
@@ -38,9 +38,14 @@ void Scene::Shutdown()
 {
 }
 
+Vector3 Scene::GetScenePosition() const
+{
+    return m_position;
+}
+
 Vector3 Scene::GetMousePosition() const
 {
-    return renderer.GetMousePosition();
+    return m_renderer.GetMousePosition();
 }
 
 float Scene::GetDeltaTime() const
@@ -157,6 +162,21 @@ std::vector<int> Scene::GetAllIds() const
     return ids;
 }
 
+void Scene::SetScenePosition(Vector3 position)
+{
+    m_position = position;
+}
+
+void Scene::SetCameraPosition(Vector3 position)
+{
+    m_renderer.SetCameraPosition(position);
+}
+
+void Scene::SetCameraTarget(Vector3 target)
+{
+    m_renderer.SetCameraTarget(target);
+}
+
 void Scene::SetAI(int id, AI ai)
 {
     m_ai[id] = ai;
@@ -261,12 +281,12 @@ void Scene::Update(float deltaTime)
 
     UpdatePools();
 
-    renderer.Update(deltaTime);
+    m_renderer.Update(deltaTime);
 }
 
 void Scene::Render()
 {
-    renderer.Render();
+    m_renderer.Render();
 }
 
 void Scene::SetTime(float deltaTime)
