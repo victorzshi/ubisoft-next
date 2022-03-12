@@ -328,11 +328,21 @@ void Systems::CheckCollision(Scene &scene, int id)
             Vector3 from = scene.GetTransform(target).position;
             Vector3 to = transform.position;
             Vector3 direction = (to - from).Normalize();
-            // physics.velocity += physics.acceleration * elapsed;
             physics.velocity = direction * 10.0f;
+            physics.acceleration = Vector3();
 
             scene.SetPhysics(id, physics);
             scene.SetTransform(id, transform);
+
+            Health health;
+
+            health = scene.GetHealth(id);
+            health.points -= 10;
+            scene.SetHealth(id, health);
+
+            health = scene.GetHealth(target);
+            health.points -= 10;
+            scene.SetHealth(target, health);
 
             scene.GetParticles().Ricochet(scene, id);
         }
