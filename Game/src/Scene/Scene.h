@@ -13,10 +13,10 @@
 #include "Pools/Aliens/Aliens.h"
 #include "Pools/Asteroids/Asteroids.h"
 #include "Pools/Bullets/Bullets.h"
-#include "Pools/Grid/Grid.h"
 #include "Pools/Particles/Particles.h"
 #include "Pools/Planets/Planets.h"
 #include "Pools/Ships/Ships.h"
+#include "Pools/Stars/Stars.h"
 #include "Scene/Systems/Systems.h"
 
 class Scene
@@ -45,10 +45,10 @@ class Scene
     Aliens &GetAliens();
     Asteroids &GetAsteroids();
     Bullets &GetBullets();
-    Grid &GetGrid();
     Particles &GetParticles();
     Planets &GetPlanets();
     Ships &GetShips();
+    Stars &GetStars();
 
     // Get IDs of all active objects
     std::vector<int> GetAllIds() const;
@@ -91,10 +91,10 @@ class Scene
     Aliens m_aliens;
     Asteroids m_asteroids;
     Bullets m_bullets;
-    Grid m_grid;
     Particles m_particles;
     Planets m_planets;
     Ships m_ships;
+    Stars m_stars;
 
     // Gameplay logic
     Systems m_systems;
