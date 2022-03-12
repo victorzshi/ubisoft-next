@@ -10,6 +10,7 @@ class Grid : public Pool
   public:
     const int ROWS = 20;
     const int COLUMNS = 20;
+    const float COLOR_COOLDOWN = 1.0f;
 
     virtual void Init(Scene &scene) override;
 

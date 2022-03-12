@@ -247,3 +247,23 @@ void Systems::LimitShipVelocity(Scene &scene, int id)
 
     scene.SetPhysics(id, physics);
 }
+
+void Systems::ChangeGridColor(Scene &scene, int id)
+{
+    float current = scene.GetTime();
+    float elapsed = scene.GetTimer(id).Elapsed(current);
+    float cooldown = scene.GetGrid().COLOR_COOLDOWN;
+
+    if (elapsed < cooldown)
+    {
+        return;
+    }
+
+    Model model = scene.GetModel(id);
+    model.color.SetColor(Colors::RANDOM);
+    scene.SetModel(id, model);
+
+    Timer timer = scene.GetTimer(id);
+    timer.start = scene.GetTime();
+    scene.SetTimer(id, timer);
+}

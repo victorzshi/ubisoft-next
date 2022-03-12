@@ -232,6 +232,11 @@ void Scene::Update(float deltaTime)
         m_systems.AddRotation(*this, id);
     }
 
+    for (auto &id : m_grid.GetIds())
+    {
+        m_systems.ChangeGridColor(*this, id);
+    }
+
     UpdatePools();
 
     m_renderer.Update(deltaTime);

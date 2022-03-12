@@ -15,4 +15,5 @@ class Systems
     void CheckBulletHit(Scene &scene, int id);
     void ApplyGravity(Scene &scene, int id);
     void LimitShipVelocity(Scene &scene, int id);
+    void ChangeGridColor(Scene &scene, int id);
 };
