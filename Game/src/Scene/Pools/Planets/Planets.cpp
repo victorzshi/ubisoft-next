@@ -98,11 +98,15 @@ int Planets::CreatePlanet(Scene &scene, Vector3 &position)
     float scale = Utils::RandomFloat(5.0f, 10.0f);
 
     AI ai;
-    ai.attackRange = scale * 2.0f;
+    ai.attackRange = scale * 2.0f; // For gravity
     scene.SetAI(id, ai);
 
+    Collider collider;
+    collider.radius = scale * 0.5f;
+    scene.SetCollider(id, collider);
+
     Model model;
-    model.mesh.SetMesh(Meshes::SPHERE);
+    model.mesh.SetMesh(Meshes::ICOSPHERE);
     model.color.SetColor(Colors::GREEN);
     model.lighting = Lighting::SHADOW;
     scene.SetModel(id, model);
@@ -110,6 +114,9 @@ int Planets::CreatePlanet(Scene &scene, Vector3 &position)
     Transform transform;
     transform.position = position;
     transform.scaling = Vector3(scale, scale, scale);
+    transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
+    transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
+    transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
     scene.SetTransform(id, transform);
 
     return id;

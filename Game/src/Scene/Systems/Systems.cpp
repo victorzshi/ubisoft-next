@@ -40,10 +40,10 @@ void Systems::RotateTowardsShip(Scene &scene, int id)
         }
         else
         {
-            // transform.rotation.x = 0.0f;
-            // transform.rotation.z = 0.0f;
-            // transform.rotation.y += scene.GetDeltaTime() / 10.0f;
-            // transform.rotation.y = fmod(transform.rotation.y, 360.0f);
+            transform.rotation.x = 0.0f;
+            transform.rotation.z = 0.0f;
+            transform.rotation.y += scene.GetDeltaTime() / 10.0f;
+            transform.rotation.y = fmod(transform.rotation.y, 360.0f);
         }
     }
 
@@ -93,7 +93,7 @@ void Systems::ShootAtMouse(Scene &scene, int id)
         Vector3 from = scene.GetTransform(id).position;
         Vector3 to = scene.GetMousePosition();
 
-        scene.GetBullets().ShootAt(scene, from, to);
+        scene.GetBullets().ShootAt(scene, from, to, Colors::WHITE);
 
         Timer timer = scene.GetTimer(id);
         timer.start = scene.GetTime();
@@ -124,7 +124,7 @@ void Systems::ShootAtShip(Scene &scene, int id)
             Vector3 from = transform.position;
             Vector3 to = shipPosition;
 
-            scene.GetBullets().ShootAt(scene, from, to);
+            scene.GetBullets().ShootAt(scene, from, to, Colors::RED);
 
             Timer timer = scene.GetTimer(id);
             timer.start = scene.GetTime();
@@ -200,6 +200,10 @@ void Systems::CheckBulletHit(Scene &scene, int id)
     {
         targets.push_back(alien);
     }
+    for (auto &planet : scene.GetPlanets().GetIds())
+    {
+        targets.push_back(planet);
+    }
 
     for (auto &target : targets)
     {
@@ -239,8 +243,8 @@ void Systems::ApplyGravity(Scene &scene, int id)
             Vector3 direction = (to - from).Normalize();
 
             // Bigger planets have more gravity :)
-            float scale = scene.GetTransform(planet).scaling.x;
-            physics.acceleration += direction * scale * 0.25f;
+            float scale = scene.GetCollider(planet).radius * 0.5f;
+            physics.acceleration += direction * scale;
 
             scene.SetPhysics(id, physics);
         }
@@ -283,9 +287,60 @@ void Systems::SpinPlanet(Scene &scene, int id)
 {
     Transform transform = scene.GetTransform(id);
 
-    transform.rotation.y += scene.GetDeltaTime() / 100.0f;
+    float deltaRotation = 1.0f / scene.GetCollider(id).radius;
 
+    transform.rotation.x += deltaRotation;
+    transform.rotation.y += deltaRotation;
+
+    transform.rotation.x = fmod(transform.rotation.x, 360.0f);
     transform.rotation.y = fmod(transform.rotation.y, 360.0f);
 
     scene.SetTransform(id, transform);
+}
+
+void Systems::CheckShipCollision(Scene &scene, int id)
+{
+    std::vector<int> targets;
+    for (auto &alien : scene.GetAliens().GetIds())
+    {
+        targets.push_back(alien);
+    }
+    for (auto &planet : scene.GetPlanets().GetIds())
+    {
+        targets.push_back(planet);
+    }
+
+    for (auto &target : targets)
+    {
+        if (Collider::IsHit(scene, id, target))
+        {
+            Physics physics = scene.GetPhysics(id);
+            Transform transform = scene.GetTransform(id);
+
+            float elapsed = scene.GetDeltaTime() / 1000.0f;
+
+            transform.position -= physics.velocity * elapsed;
+
+            Vector3 from = scene.GetTransform(target).position;
+            Vector3 to = transform.position;
+            Vector3 direction = (to - from).Normalize();
+            physics.velocity = direction * scene.GetShips().MAX_VELOCITY;
+            physics.acceleration = Vector3();
+
+            scene.SetPhysics(id, physics);
+            scene.SetTransform(id, transform);
+
+            Health health;
+
+            health = scene.GetHealth(id);
+            health.points -= 10;
+            scene.SetHealth(id, health);
+
+            health = scene.GetHealth(target);
+            health.points -= 10;
+            scene.SetHealth(target, health);
+
+            scene.GetParticles().Ricochet(scene, id);
+        }
+    }
 }
