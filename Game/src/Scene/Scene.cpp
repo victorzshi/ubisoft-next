@@ -112,6 +112,11 @@ Particles &Scene::GetParticles()
     return m_particles;
 }
 
+Planets &Scene::GetPlanets()
+{
+    return m_planets;
+}
+
 Ships &Scene::GetShips()
 {
     return m_ships;
