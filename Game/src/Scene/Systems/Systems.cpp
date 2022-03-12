@@ -8,35 +8,29 @@
 
 void Systems::MoveCamera(Scene &scene, int id)
 {
-    float deltaVelocity = scene.GetDeltaTime() / 10.0f;
+    float closest = Utils::MaxFloat();
+    for (auto &planet : scene.GetPlanets().GetIds())
+    {
+        Vector3 shipPosition = scene.GetTransform(id).position;
+        Vector3 planetPosition = scene.GetTransform(planet).position;
 
+        float distance = Utils::Distance(shipPosition, planetPosition) - scene.GetCollider(planet).radius;
+        if (distance < closest)
+        {
+            closest = distance;
+        }
+    }
+
+    // Switch between zoomed in and zoomed out views
     Vector3 position = scene.GetScenePosition();
-
-    if (App::IsKeyPressed(VK_NUMPAD6))
+    if (closest < 15.0f)
     {
-        position.x += deltaVelocity;
+        position.z = Utils::Lerp(position.z, 10.0f, 0.05f);
     }
-    if (App::IsKeyPressed(VK_NUMPAD4))
+    else
     {
-        position.x -= deltaVelocity;
+        position.z = Utils::Lerp(position.z, 300.0f, 0.01f);
     }
-    if (App::IsKeyPressed(VK_NUMPAD8))
-    {
-        position.z -= deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD2))
-    {
-        position.z += deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD7))
-    {
-        position.y += deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD9))
-    {
-        position.y -= deltaVelocity;
-    }
-
     scene.SetScenePosition(position);
 
     // Follow ship with camera

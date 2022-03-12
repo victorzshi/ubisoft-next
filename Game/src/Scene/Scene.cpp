@@ -12,10 +12,7 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     m_time = m_current - m_start;
 
     // Initialize camera position
-    // m_position = Vector3(0.0f, 0.0f, 10.0f);
-    // m_position = Vector3(0.0f, 0.0f, 30.0f);
-    // m_position = Vector3(0.0f, 0.0f, 50.0f);
-    m_position = Vector3(0.0f, 0.0f, 100.0f);
+    m_position = Vector3(0.0f, 0.0f, 750.0f);
 }
 
 void Scene::Init()
