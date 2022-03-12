@@ -2,11 +2,11 @@
 
 #include "Scene/Pools/Pool.h"
 
-class Asteroids : public Pool
+class Planets : public Pool
 {
   public:
-    const int TOTAL = 10;
-    const int HEALTH = 20;
+    // TODO: Add camera clipping.
+    const int TOTAL = 4;
 
     virtual void Init(Scene &scene) override;
 

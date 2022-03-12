@@ -15,6 +15,7 @@
 #include "Pools/Bullets/Bullets.h"
 #include "Pools/Grid/Grid.h"
 #include "Pools/Particles/Particles.h"
+#include "Pools/Planets/Planets.h"
 #include "Pools/Ships/Ships.h"
 #include "Scene/Systems/Systems.h"
 
@@ -46,6 +47,7 @@ class Scene
     Bullets &GetBullets();
     Grid &GetGrid();
     Particles &GetParticles();
+    Planets &GetPlanets();
     Ships &GetShips();
 
     // Get IDs of all active objects
@@ -91,6 +93,7 @@ class Scene
     Bullets m_bullets;
     Grid m_grid;
     Particles m_particles;
+    Planets m_planets;
     Ships m_ships;
 
     // Gameplay logic

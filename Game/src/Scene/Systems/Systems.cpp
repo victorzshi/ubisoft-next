@@ -142,7 +142,7 @@ void Systems::UpdatePosition(Scene &scene, int id)
     physics.velocity += physics.acceleration * elapsed;
     transform.position += physics.velocity * elapsed;
 
-    float width = 10.0f;
+    float width = 20.0f;
     if (transform.position.x > width)
     {
         transform.position.x = -width;
@@ -152,7 +152,7 @@ void Systems::UpdatePosition(Scene &scene, int id)
         transform.position.x = width;
     }
 
-    float height = 10.0f;
+    float height = 20.0f;
     if (transform.position.y > height)
     {
         transform.position.y = -height;
@@ -248,13 +248,12 @@ void Systems::LimitShipVelocity(Scene &scene, int id)
     scene.SetPhysics(id, physics);
 }
 
-void Systems::ChangeGridColor(Scene &scene, int id)
+void Systems::ChangeColor(Scene &scene, int id)
 {
     float current = scene.GetTime();
     float elapsed = scene.GetTimer(id).Elapsed(current);
-    float cooldown = scene.GetGrid().COLOR_COOLDOWN;
 
-    if (elapsed < cooldown)
+    if (elapsed < 1.0f)
     {
         return;
     }
@@ -266,4 +265,15 @@ void Systems::ChangeGridColor(Scene &scene, int id)
     Timer timer = scene.GetTimer(id);
     timer.start = scene.GetTime();
     scene.SetTimer(id, timer);
+}
+
+void Systems::SpinPlanet(Scene &scene, int id)
+{
+    Transform transform = scene.GetTransform(id);
+
+    transform.rotation.y += scene.GetDeltaTime() / 100.0f;
+
+    transform.rotation.y = fmod(transform.rotation.y, 360.0f);
+
+    scene.SetTransform(id, transform);
 }

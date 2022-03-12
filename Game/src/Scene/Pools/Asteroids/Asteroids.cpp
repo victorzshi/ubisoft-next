@@ -12,8 +12,10 @@ void Asteroids::Init(Scene &scene)
     {
         int id = scene.CreateId();
 
+        float scale = Utils::RandomFloat(1.0f, 2.0f);
+
         Collider collider;
-        collider.radius = WIDTH / 2.0f;
+        collider.radius = scale / 2.0f;
         scene.SetCollider(id, collider);
 
         Health health;
@@ -21,9 +23,9 @@ void Asteroids::Init(Scene &scene)
         scene.SetHealth(id, health);
 
         Model model;
-        model.mesh.SetMesh(Meshes::TORUS);
-        model.color.SetColor(Colors::RED);
-        model.lighting = Lighting::OUTLINE;
+        model.mesh.SetMesh(Meshes::ICOSPHERE);
+        model.color.SetColor(Colors::GREY);
+        model.lighting = Lighting::SHADOW;
         scene.SetModel(id, model);
 
         Physics physics;
@@ -32,11 +34,12 @@ void Asteroids::Init(Scene &scene)
         scene.SetPhysics(id, physics);
 
         Transform transform;
-        transform.position.x = Utils::RandomFloat(-10.0f, 10.0f);
-        transform.position.y = Utils::RandomFloat(-10.0f, 10.0f);
+        transform.position.x = Utils::RandomFloat(-20.0f, 20.0f);
+        transform.position.y = Utils::RandomFloat(-20.0f, 20.0f);
         transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
         transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
         transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
+        transform.scaling = Vector3(scale, scale, scale);
         scene.SetTransform(id, transform);
 
         index = id;
