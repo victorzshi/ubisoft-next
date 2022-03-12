@@ -18,5 +18,5 @@ class Planets : public Pool
   private:
     std::set<int> m_random;
 
-    void GeneratePlanet(Scene &scene, int id, Vector3 &position);
+    int CreatePlanet(Scene &scene, Vector3 &position);
 };

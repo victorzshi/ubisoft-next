@@ -7,41 +7,38 @@
 
 void Aliens::Init(Scene &scene)
 {
-    int index = 0;
-    for (int i = 0; i < TOTAL; i++)
+    int id = 0;
+    int total = 0;
+    for (auto &planet : scene.GetPlanets().GetIds())
     {
-        int id = scene.CreateId();
+        Transform transform = scene.GetTransform(planet);
 
-        AI ai;
-        ai.attackRange = 5.0f;
-        scene.SetAI(id, ai);
+        // Bigger planets have more enemies
+        int count = 0;
+        int enemies = (int)floor(transform.scaling.x);
+        total += enemies;
+        while (count < enemies)
+        {
+            Vector3 planetPosition = transform.position;
 
-        Collider collider;
-        collider.radius = WIDTH / 2.0f;
-        scene.SetCollider(id, collider);
+            Vector3 direction = Utils::RandomUnitCircleVector();
+            // float distance = transform.scaling.x * Utils::RandomFloat(0.6f, 1.5f);
+            float radius = transform.scaling.x * 0.5f;
 
-        Health health;
-        health.points = HEALTH;
-        scene.SetHealth(id, health);
+            Vector3 alienPosition;
+            alienPosition = planetPosition + direction * radius;
 
-        Model model;
-        model.mesh.SetMesh(Meshes::MONKEY);
-        model.color.SetColor(Colors::RED);
-        model.lighting = Lighting::OUTLINE;
-        scene.SetModel(id, model);
+            // TODO: Check that the alien position isn't inside any other planet
 
-        Transform transform;
-        transform.position.x = Utils::RandomFloat(-10.0f, 10.0f);
-        transform.position.y = Utils::RandomFloat(-10.0f, 10.0f);
-        scene.SetTransform(id, transform);
-
-        index = id;
+            id = CreateAlien(scene, alienPosition);
+            count++;
+        }
     }
 
     SetScene(&scene);
-    SetBegin(index - (TOTAL - 1));
-    SetSize(index + 1);
-    SetEnd(index);
+    SetBegin(id - (total - 1));
+    SetSize(id + 1);
+    SetEnd(id);
 }
 
 void Aliens::Update(Scene &scene)
@@ -62,4 +59,33 @@ void Aliens::Update(Scene &scene)
     }
 
     UpdateIds();
+}
+
+int Aliens::CreateAlien(Scene &scene, Vector3 &position)
+{
+    int id = scene.CreateId();
+
+    AI ai;
+    ai.attackRange = 10.0f;
+    scene.SetAI(id, ai);
+
+    Collider collider;
+    collider.radius = 0.5f;
+    scene.SetCollider(id, collider);
+
+    Health health;
+    health.points = 10;
+    scene.SetHealth(id, health);
+
+    Model model;
+    model.mesh.SetMesh(Meshes::MONKEY);
+    model.color.SetColor(Colors::RED);
+    model.lighting = Lighting::OUTLINE;
+    scene.SetModel(id, model);
+
+    Transform transform;
+    transform.position = position;
+    scene.SetTransform(id, transform);
+
+    return id;
 }

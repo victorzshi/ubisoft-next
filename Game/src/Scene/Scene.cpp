@@ -22,11 +22,12 @@ void Scene::Init()
 {
     m_renderer.Init(*this);
 
+    m_planets.Init(*this); // Planets go first
+
     m_aliens.Init(*this);
     m_asteroids.Init(*this);
     m_bullets.Init(*this);
     m_particles.Init(*this);
-    m_planets.Init(*this);
     m_ships.Init(*this);
     m_stars.Init(*this);
 
