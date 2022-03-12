@@ -26,7 +26,7 @@ void Aliens::Init(Scene &scene)
 
         Model model;
         model.mesh.SetMesh(Meshes::MONKEY);
-        model.color.SetColor(Colors::PURPLE);
+        model.color.SetColor(Colors::RED);
         model.lighting = Lighting::OUTLINE;
         scene.SetModel(id, model);
 

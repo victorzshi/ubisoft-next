@@ -40,7 +40,10 @@ void Systems::RotateTowardsShip(Scene &scene, int id)
         }
         else
         {
-            transform.rotation = Vector3();
+            transform.rotation.x = 0.0f;
+            transform.rotation.z = 0.0f;
+            transform.rotation.y += scene.GetDeltaTime() / 10.0f;
+            transform.rotation.y = fmod(transform.rotation.y, 360.0f);
         }
     }
 
@@ -142,25 +145,25 @@ void Systems::UpdatePosition(Scene &scene, int id)
     physics.velocity += physics.acceleration * elapsed;
     transform.position += physics.velocity * elapsed;
 
-    float width = 10.0f;
-    if (transform.position.x > width)
-    {
-        transform.position.x = -width;
-    }
-    else if (transform.position.x < -width)
-    {
-        transform.position.x = width;
-    }
+    // float width = 20.0f;
+    // if (transform.position.x > width)
+    //{
+    //     transform.position.x = -width;
+    // }
+    // else if (transform.position.x < -width)
+    //{
+    //     transform.position.x = width;
+    // }
 
-    float height = 10.0f;
-    if (transform.position.y > height)
-    {
-        transform.position.y = -height;
-    }
-    else if (transform.position.y < -height)
-    {
-        transform.position.y = height;
-    }
+    // float height = 20.0f;
+    // if (transform.position.y > height)
+    //{
+    //     transform.position.y = -height;
+    // }
+    // else if (transform.position.y < -height)
+    //{
+    //     transform.position.y = height;
+    // }
 
     scene.SetPhysics(id, physics);
     scene.SetTransform(id, transform);
@@ -246,4 +249,34 @@ void Systems::LimitShipVelocity(Scene &scene, int id)
     }
 
     scene.SetPhysics(id, physics);
+}
+
+void Systems::ChangeColor(Scene &scene, int id)
+{
+    float current = scene.GetTime();
+    float elapsed = scene.GetTimer(id).Elapsed(current);
+
+    if (elapsed < 1.0f)
+    {
+        return;
+    }
+
+    Model model = scene.GetModel(id);
+    model.color.SetColor(Colors::RANDOM);
+    scene.SetModel(id, model);
+
+    Timer timer = scene.GetTimer(id);
+    timer.start = scene.GetTime();
+    scene.SetTimer(id, timer);
+}
+
+void Systems::SpinPlanet(Scene &scene, int id)
+{
+    Transform transform = scene.GetTransform(id);
+
+    transform.rotation.y += scene.GetDeltaTime() / 100.0f;
+
+    transform.rotation.y = fmod(transform.rotation.y, 360.0f);
+
+    scene.SetTransform(id, transform);
 }

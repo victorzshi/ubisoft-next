@@ -78,7 +78,7 @@ void Particles::Explosion(Scene &scene, int id)
 {
     Transform transform = scene.GetTransform(id);
     Model model = scene.GetModel(id);
-    model.mesh.SetMesh(Meshes::ICOSPHERE);
+    model.mesh.SetMesh(Meshes::CUBE);
     model.lighting = Lighting::SHADOW;
     Physics physics = scene.GetPhysics(id);
     Timer timer = scene.GetTimer(id);

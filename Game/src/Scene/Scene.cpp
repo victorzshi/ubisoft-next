@@ -12,7 +12,10 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     m_time = m_current - m_start;
 
     // Initialize camera position
-    m_position = Vector3(0.0f, 0.0f, 10.0f);
+    // m_position = Vector3(0.0f, 0.0f, 10.0f);
+    // m_position = Vector3(0.0f, 0.0f, 30.0f);
+    // m_position = Vector3(0.0f, 0.0f, 50.0f);
+     m_position = Vector3(0.0f, 0.0f, 100.0f);
 }
 
 void Scene::Init()
@@ -24,6 +27,7 @@ void Scene::Init()
     m_bullets.Init(*this);
     m_grid.Init(*this);
     m_particles.Init(*this);
+    m_planets.Init(*this);
     m_ships.Init(*this);
 
     // TODO: Initialize space but leave all objects inactive. Use level data to generate objects.
@@ -136,6 +140,10 @@ std::vector<int> Scene::GetAllIds() const
     {
         ids.push_back(id);
     }
+    for (auto &id : m_planets.GetIds())
+    {
+        ids.push_back(id);
+    }
     for (auto &id : m_ships.GetIds())
     {
         ids.push_back(id);
@@ -232,6 +240,16 @@ void Scene::Update(float deltaTime)
         m_systems.AddRotation(*this, id);
     }
 
+    for (auto &id : m_grid.GetIds())
+    {
+        m_systems.ChangeColor(*this, id);
+    }
+
+    for (auto &id : m_planets.GetIds())
+    {
+        m_systems.SpinPlanet(*this, id);
+    }
+
     UpdatePools();
 
     m_renderer.Update(deltaTime);
@@ -251,7 +269,7 @@ void Scene::SetTime(float deltaTime)
 
 void Scene::MoveCamera(float deltaTime)
 {
-    float deltaVelocity = deltaTime / 100.0f;
+    float deltaVelocity = deltaTime / 10.0f;
 
     if (App::IsKeyPressed(VK_NUMPAD6))
     {
@@ -304,5 +322,6 @@ void Scene::UpdatePools()
     m_bullets.Update(*this);
     m_grid.Update(*this);
     m_particles.Update(*this);
+    m_planets.Update(*this);
     m_ships.Update(*this);
 }
