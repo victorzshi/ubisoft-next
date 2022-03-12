@@ -9,4 +9,5 @@ class Utils
     static float RandomFloat(float min, float max);
     static float Distance(Vector3 from, Vector3 to);
     static float Angle(Vector3 from, Vector3 to);
+    static Vector3 RandomUnitCircleVector();
 };

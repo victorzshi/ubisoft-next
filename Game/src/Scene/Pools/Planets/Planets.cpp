@@ -7,7 +7,7 @@
 
 void Planets::Init(Scene &scene)
 {
-    int index = 0;
+    int id = 0;
     int count = 0;
     while (count < TOTAL)
     {
@@ -17,8 +17,6 @@ void Planets::Init(Scene &scene)
         if (m_random.count(random) == 0)
         {
             m_random.insert(random);
-
-            int id = scene.CreateId();
 
             float x = Utils::RandomFloat(10.0f, 30.0f);
             float y = Utils::RandomFloat(10.0f, 30.0f);
@@ -73,17 +71,19 @@ void Planets::Init(Scene &scene)
             }
 
             Vector3 position = Vector3(x, y, 0.0f);
-            GeneratePlanet(scene, id, position);
 
-            index = id;
+            id = CreatePlanet(scene, position);
             count++;
         }
     }
 
     SetScene(&scene);
-    SetBegin(index - (TOTAL - 1));
-    SetSize(index + 1);
-    SetEnd(index);
+    SetBegin(id - (TOTAL - 1));
+    SetSize(id + 1);
+    SetEnd(id);
+
+    // Aliens require planet data
+    UpdateIds();
 }
 
 void Planets::Update(Scene &scene)
@@ -91,8 +91,10 @@ void Planets::Update(Scene &scene)
     UpdateIds();
 }
 
-void Planets::GeneratePlanet(Scene &scene, int id, Vector3 &position)
+int Planets::CreatePlanet(Scene &scene, Vector3 &position)
 {
+    int id = scene.CreateId();
+
     float scale = Utils::RandomFloat(5.0f, 10.0f);
 
     AI ai;
@@ -109,4 +111,6 @@ void Planets::GeneratePlanet(Scene &scene, int id, Vector3 &position)
     transform.position = position;
     transform.scaling = Vector3(scale, scale, scale);
     scene.SetTransform(id, transform);
+
+    return id;
 }

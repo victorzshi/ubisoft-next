@@ -5,7 +5,11 @@
 class Stars : public Pool
 {
   public:
+#ifdef _DEBUG
+    const int TOTAL = 1000;
+#else
     const int TOTAL = 5000;
+#endif
 
     virtual void Init(Scene &scene) override;
 

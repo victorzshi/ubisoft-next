@@ -52,3 +52,26 @@ float Utils::Angle(Vector3 from, Vector3 to)
     // Convert angle to degrees
     return angle * 180.0f / PI;
 }
+
+Vector3 Utils::RandomUnitCircleVector()
+{
+    Vector3 random;
+    Vector3 origin = Vector3(0.0f, 0.0f, 0.0f);
+
+    bool isValid = false;
+    while (!isValid)
+    {
+        // Generate random vector within unit square
+        float x = RandomFloat(-1.0f, 1.0f);
+        float y = RandomFloat(-1.0f, 1.0f);
+        random = Vector3(x, y, 0.0f);
+
+        // Check if the vector is inside unit circle
+        if (Distance(random, origin) <= 1.0f)
+        {
+            isValid = true;
+        }
+    }
+
+    return random.Normalize();
+}

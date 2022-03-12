@@ -9,7 +9,7 @@ class Bullets : public Pool
   public:
     const int TOTAL = 100;
     const float WIDTH = 0.1f;
-    const float DELTA_VELOCITY = 5.0f;
+    const float DELTA_VELOCITY = 10.0f;
     const float DURATION = 1.0f;
 
     virtual void Init(Scene &scene) override;
