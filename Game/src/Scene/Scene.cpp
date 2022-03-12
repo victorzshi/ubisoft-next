@@ -15,12 +15,12 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     // m_position = Vector3(0.0f, 0.0f, 10.0f);
     // m_position = Vector3(0.0f, 0.0f, 30.0f);
     // m_position = Vector3(0.0f, 0.0f, 50.0f);
-    m_position = Vector3(0.0f, 0.0f, 100.0f);
+    position = Vector3(0.0f, 0.0f, 100.0f);
 }
 
 void Scene::Init()
 {
-    m_renderer.Init(*this);
+    renderer.Init(*this);
 
     m_planets.Init(*this); // Planets go first
 
@@ -40,7 +40,7 @@ void Scene::Shutdown()
 
 Vector3 Scene::GetMousePosition() const
 {
-    return m_renderer.GetMousePosition();
+    return renderer.GetMousePosition();
 }
 
 float Scene::GetDeltaTime() const
@@ -209,10 +209,10 @@ int Scene::CreateId()
 void Scene::Update(float deltaTime)
 {
     SetTime(deltaTime);
-    MoveCamera(deltaTime);
 
     for (auto &id : m_ships.GetIds())
     {
+        m_systems.MoveCamera(*this, id);
         m_systems.RotateTowardsMouse(*this, id);
         m_systems.AccelerateShip(*this, id);
         m_systems.ApplyGravity(*this, id);
@@ -261,12 +261,12 @@ void Scene::Update(float deltaTime)
 
     UpdatePools();
 
-    m_renderer.Update(deltaTime);
+    renderer.Update(deltaTime);
 }
 
 void Scene::Render()
 {
-    m_renderer.Render();
+    renderer.Render();
 }
 
 void Scene::SetTime(float deltaTime)
@@ -274,54 +274,6 @@ void Scene::SetTime(float deltaTime)
     m_deltaTime = deltaTime;
     m_current = std::chrono::steady_clock::now();
     m_time = m_current - m_start;
-}
-
-void Scene::MoveCamera(float deltaTime)
-{
-    float deltaVelocity = deltaTime / 10.0f;
-
-    if (App::IsKeyPressed(VK_NUMPAD6))
-    {
-        m_position.x += deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD4))
-    {
-        m_position.x -= deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD8))
-    {
-        m_position.z -= deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD2))
-    {
-        m_position.z += deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD7))
-    {
-        m_position.y += deltaVelocity;
-    }
-    if (App::IsKeyPressed(VK_NUMPAD9))
-    {
-        m_position.y -= deltaVelocity;
-    }
-
-    // Follow ship with camera
-    if (!m_ships.GetIds().empty())
-    {
-        int id = m_ships.GetIds().front();
-        Vector3 from = GetTransform(id).position;
-        Vector3 to = GetMousePosition();
-        Vector3 direction = to - from;
-        if (direction != Vector3())
-        {
-            direction = direction.Normalize();
-        }
-
-        // Put the camera behind the ship
-        m_renderer.SetCameraPosition(from + m_position - direction * 10.0f);
-        // Look in front of the ship
-        m_renderer.SetCameraTarget(from + direction * 2.0f);
-    }
 }
 
 void Scene::UpdatePools()

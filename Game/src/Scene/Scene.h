@@ -22,6 +22,10 @@
 class Scene
 {
   public:
+    // Handle graphics
+    Vector3 position;
+    Renderer renderer;
+
     Scene();
 
     void Init();
@@ -99,12 +103,7 @@ class Scene
     // Gameplay logic
     Systems m_systems;
 
-    // Handle graphics
-    Vector3 m_position;
-    Renderer m_renderer;
-
     // Helper functions
     void SetTime(float deltaTime);
-    void MoveCamera(float deltaTime);
     void UpdatePools();
 };

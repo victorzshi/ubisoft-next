@@ -6,6 +6,50 @@
 
 #include "Math/Utils/Utils.h"
 
+void Systems::MoveCamera(Scene &scene, int id)
+{
+    float deltaVelocity = scene.GetDeltaTime() / 10.0f;
+
+    if (App::IsKeyPressed(VK_NUMPAD6))
+    {
+        scene.position.x += deltaVelocity;
+    }
+    if (App::IsKeyPressed(VK_NUMPAD4))
+    {
+        scene.position.x -= deltaVelocity;
+    }
+    if (App::IsKeyPressed(VK_NUMPAD8))
+    {
+        scene.position.z -= deltaVelocity;
+    }
+    if (App::IsKeyPressed(VK_NUMPAD2))
+    {
+        scene.position.z += deltaVelocity;
+    }
+    if (App::IsKeyPressed(VK_NUMPAD7))
+    {
+        scene.position.y += deltaVelocity;
+    }
+    if (App::IsKeyPressed(VK_NUMPAD9))
+    {
+        scene.position.y -= deltaVelocity;
+    }
+
+    // Follow ship with camera
+    Vector3 from = scene.GetTransform(id).position;
+    Vector3 to = scene.GetMousePosition();
+    Vector3 direction = to - from;
+    if (direction != Vector3())
+    {
+        direction = direction.Normalize();
+    }
+
+    // Put the camera behind the ship
+    scene.renderer.SetCameraPosition(from + scene.position - direction * 10.0f);
+    // Look in front of the ship
+    scene.renderer.SetCameraTarget(from + direction * 2.0f);
+}
+
 void Systems::RotateTowardsMouse(Scene &scene, int id)
 {
     Transform transform = scene.GetTransform(id);
