@@ -145,25 +145,25 @@ void Systems::UpdatePosition(Scene &scene, int id)
     physics.velocity += physics.acceleration * elapsed;
     transform.position += physics.velocity * elapsed;
 
-    float width = 20.0f;
-    if (transform.position.x > width)
-    {
-        transform.position.x = -width;
-    }
-    else if (transform.position.x < -width)
-    {
-        transform.position.x = width;
-    }
+    // float width = 20.0f;
+    // if (transform.position.x > width)
+    //{
+    //     transform.position.x = -width;
+    // }
+    // else if (transform.position.x < -width)
+    //{
+    //     transform.position.x = width;
+    // }
 
-    float height = 20.0f;
-    if (transform.position.y > height)
-    {
-        transform.position.y = -height;
-    }
-    else if (transform.position.y < -height)
-    {
-        transform.position.y = height;
-    }
+    // float height = 20.0f;
+    // if (transform.position.y > height)
+    //{
+    //     transform.position.y = -height;
+    // }
+    // else if (transform.position.y < -height)
+    //{
+    //     transform.position.y = height;
+    // }
 
     scene.SetPhysics(id, physics);
     scene.SetTransform(id, transform);

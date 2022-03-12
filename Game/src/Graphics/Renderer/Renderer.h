@@ -32,7 +32,7 @@ class Renderer
     const float m_DISTANCE = 1.0f / tanf(m_THETA * 0.5f);
     const float m_ASPECT_RATIO = m_SCREEN_WIDTH / m_SCREEN_HEIGHT;
     const float m_Z_NEAR = 0.1f;
-    const float m_Z_FAR = 25.0f;
+    const float m_Z_FAR = 100.0f;
 
     // 3D graphics
     Camera m_camera;

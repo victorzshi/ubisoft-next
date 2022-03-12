@@ -8,25 +8,75 @@
 void Planets::Init(Scene &scene)
 {
     int index = 0;
-    for (int i = 0; i < TOTAL; i++)
+    int count = 0;
+    while (count < TOTAL)
     {
-        int id = scene.CreateId();
+        // Select a different quadrant for each planet going clockwise
+        // Max 8 quadrants
+        int random = Utils::RandomInt(0, 7);
+        if (m_random.count(random) == 0)
+        {
+            m_random.insert(random);
 
-        float scale = Utils::RandomFloat(5.0f, 10.0f);
+            int id = scene.CreateId();
 
-        Model model;
-        model.mesh.SetMesh(Meshes::SPHERE);
-        model.color.SetColor(Colors::GREEN);
-        model.lighting = Lighting::SHADOW;
-        scene.SetModel(id, model);
+            float x = Utils::RandomFloat(20.0f, 30.0f);
+            float y = Utils::RandomFloat(20.0f, 30.0f);
 
-        Transform transform;
-        transform.position.x = Utils::RandomFloat(-20.0f, 20.0f);
-        transform.position.y = Utils::RandomFloat(-20.0f, 20.0f);
-        transform.scaling = Vector3(scale, scale, scale);
-        scene.SetTransform(id, transform);
+            switch (random)
+            {
+            case 0:
+                x = -x;
+                y = -y;
+                break;
 
-        index = id;
+            case 1:
+                x = 0;
+                y = -y;
+                break;
+
+            case 2:
+                x = x;
+                y = -y;
+                break;
+
+            case 3:
+                x = x;
+                y = 0;
+                break;
+
+            case 4:
+                x = x;
+                y = y;
+                break;
+
+            case 5:
+                x = 0;
+                y = y;
+                break;
+
+            case 6:
+                x = -x;
+                y = y;
+                break;
+
+            case 7:
+                x = -x;
+                y = 0;
+                break;
+
+            default:
+                x = 0;
+                y = 0;
+                break;
+            }
+
+            Vector3 position = Vector3(x, y, 0.0f);
+            GeneratePlanet(scene, id, position);
+
+            index = id;
+            count++;
+        }
     }
 
     SetScene(&scene);
@@ -38,4 +88,20 @@ void Planets::Init(Scene &scene)
 void Planets::Update(Scene &scene)
 {
     UpdateIds();
+}
+
+void Planets::GeneratePlanet(Scene &scene, int id, Vector3 &position)
+{
+    float scale = Utils::RandomFloat(5.0f, 10.0f);
+
+    Model model;
+    model.mesh.SetMesh(Meshes::SPHERE);
+    model.color.SetColor(Colors::GREEN);
+    model.lighting = Lighting::SHADOW;
+    scene.SetModel(id, model);
+
+    Transform transform;
+    transform.position = position;
+    transform.scaling = Vector3(scale, scale, scale);
+    scene.SetTransform(id, transform);
 }
