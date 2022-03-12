@@ -8,8 +8,8 @@
 class Grid : public Pool
 {
   public:
-    const int ROWS = 0;
-    const int COLUMNS = 0;
+    const int ROWS = 20;
+    const int COLUMNS = 20;
 
     virtual void Init(Scene &scene) override;
 

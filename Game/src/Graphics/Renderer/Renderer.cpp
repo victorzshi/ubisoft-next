@@ -195,39 +195,46 @@ void Renderer::UpdateVisible()
                     face.vertex[i] = m_projection * face.vertex[i];
                 }
 
-                // Normalize with reciprocal divide
-                for (int i = 0; i < face.vertices; i++)
+                Vector3 planePoint = Vector3(0.0f, 0.0f, m_Z_NEAR);
+                Vector3 planeNormal = Vector3(0.0f, 0.0f, 1.0f);
+                Face clipped = ClipAgainstPlane(planePoint, planeNormal, face);
+
+                if (clipped.vertices > 0)
                 {
-                    float w = face.vertex[i].w;
-                    if (w != 0.0f)
+                    // Normalize with reciprocal divide
+                    for (int i = 0; i < clipped.vertices; i++)
                     {
-                        face.vertex[i] /= w;
+                        float w = clipped.vertex[i].w;
+                        if (w != 0.0f)
+                        {
+                            clipped.vertex[i] /= w;
+                        }
                     }
-                }
 
-                // Offset into normalized space
-                float offsetWidth = m_SCREEN_WIDTH * 0.5f;
-                float offsetHeight = m_SCREEN_HEIGHT * 0.5f;
-                for (int i = 0; i < face.vertices; i++)
-                {
-                    face.vertex[i].x = offsetWidth * face.vertex[i].x + offsetWidth;
-                    face.vertex[i].y = -offsetHeight * face.vertex[i].y + offsetHeight;
-                    face.vertex[i].z = 0.5f * face.vertex[i].z + 0.5f;
-                }
+                    // Offset into normalized space
+                    float offsetWidth = m_SCREEN_WIDTH * 0.5f;
+                    float offsetHeight = m_SCREEN_HEIGHT * 0.5f;
+                    for (int i = 0; i < clipped.vertices; i++)
+                    {
+                        clipped.vertex[i].x = offsetWidth * clipped.vertex[i].x + offsetWidth;
+                        clipped.vertex[i].y = -offsetHeight * clipped.vertex[i].y + offsetHeight;
+                        clipped.vertex[i].z = 0.5f * clipped.vertex[i].z + 0.5f;
+                    }
 
-                // Add lighting effect
-                Vector3 sun;
-                if (model.lighting == Lighting::OUTLINE)
-                {
-                    sun = m_camera.from.Normalize();
-                }
-                else
-                {
-                    sun = Vector3(0.0f, 0.0f, 1.0f).Normalize();
-                }
-                model.ApplyLighting(normal.Dot(sun), face);
+                    // Add lighting effect
+                    Vector3 sun;
+                    if (model.lighting == Lighting::OUTLINE)
+                    {
+                        sun = m_camera.from.Normalize();
+                    }
+                    else
+                    {
+                        sun = Vector3(0.0f, 0.0f, 1.0f).Normalize();
+                    }
+                    model.ApplyLighting(normal.Dot(sun), clipped);
 
-                m_visible.push_back(face);
+                    m_visible.push_back(clipped);
+                }
             }
         }
     }
@@ -276,4 +283,30 @@ void Renderer::RenderBorder()
     App::DrawLine(x, h, w, h, r, g, b);
     App::DrawLine(w, h, w, y, r, g, b);
     App::DrawLine(w, y, x, y, r, g, b);
+}
+
+Face Renderer::ClipAgainstPlane(Vector3 &point, Vector3 &normal, Face &face) const
+{
+    Face clipped;
+
+    // If shortest distance from vertex to plane is positive, vertex lies on inside of plane
+    int count = 0;
+    float dot = normal.Dot(point);
+    for (int i = 0; i < face.vertices; i++)
+    {
+        Vector3 vertex = face.vertex[i];
+        float distance = normal.x * vertex.x + normal.y * vertex.y + normal.z * vertex.z - dot;
+        if (distance >= 0)
+        {
+            count++;
+        }
+    }
+
+    // Only keep faces that are fully in view
+    if (count == face.vertices)
+    {
+        clipped = face;
+    }
+
+    return clipped;
 }

@@ -52,4 +52,5 @@ class Renderer
     void SortVisible();
     void RenderVisible();
     void RenderBorder();
+    Face ClipAgainstPlane(Vector3 &point, Vector3 &normal, Face &face) const;
 };

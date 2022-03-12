@@ -42,9 +42,9 @@ float Utils::Angle(Vector3 from, Vector3 to)
     }
 
     // Flip angle based on z plane normal
-    Vector3 normal = Vector3(0.0f, 0.0f, -1.0f);
+    Vector3 normal = Vector3(0.0f, 0.0f, 1.0f);
     Vector3 cross = from.Cross(to);
-    if (normal.Dot(cross) < 0)
+    if (normal.Dot(cross) > 0)
     {
         angle = -angle;
     }
