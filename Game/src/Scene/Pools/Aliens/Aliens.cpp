@@ -29,6 +29,8 @@ void Aliens::Init(Scene &scene)
 
             // TODO: Check that the alien position isn't inside any other planet
 
+            // TODO: Turret OR flying enemy type.
+
             id = CreateAlien(scene, alienPosition);
             count++;
         }
