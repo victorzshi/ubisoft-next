@@ -11,8 +11,8 @@ void Planets::Init(Scene &scene)
     int count = 0;
     while (count < TOTAL)
     {
-        // Select a different quadrant for each planet going clockwise
-        // Max 8 quadrants
+        // Select a different direction for each planet going clockwise
+        // Max 8 directions
         int random = Utils::RandomInt(0, 7);
         if (m_random.count(random) == 0)
         {
@@ -20,8 +20,9 @@ void Planets::Init(Scene &scene)
 
             int id = scene.CreateId();
 
-            float x = Utils::RandomFloat(20.0f, 30.0f);
-            float y = Utils::RandomFloat(20.0f, 30.0f);
+            float x = Utils::RandomFloat(10.0f, 30.0f);
+            float y = Utils::RandomFloat(10.0f, 30.0f);
+            float radius = sqrtf(x * x + y * y);
 
             switch (random)
             {
@@ -31,8 +32,8 @@ void Planets::Init(Scene &scene)
                 break;
 
             case 1:
-                x = 0;
-                y = -y;
+                x = 0.0f;
+                y = -radius;
                 break;
 
             case 2:
@@ -41,8 +42,8 @@ void Planets::Init(Scene &scene)
                 break;
 
             case 3:
-                x = x;
-                y = 0;
+                x = radius;
+                y = 0.0f;
                 break;
 
             case 4:
@@ -51,8 +52,8 @@ void Planets::Init(Scene &scene)
                 break;
 
             case 5:
-                x = 0;
-                y = y;
+                x = 0.0f;
+                y = radius;
                 break;
 
             case 6:
@@ -61,13 +62,13 @@ void Planets::Init(Scene &scene)
                 break;
 
             case 7:
-                x = -x;
-                y = 0;
+                x = -radius;
+                y = 0.0f;
                 break;
 
             default:
-                x = 0;
-                y = 0;
+                x = 0.0f;
+                y = 0.0f;
                 break;
             }
 
