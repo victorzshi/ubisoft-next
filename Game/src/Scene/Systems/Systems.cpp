@@ -40,10 +40,10 @@ void Systems::RotateTowardsShip(Scene &scene, int id)
         }
         else
         {
-            // transform.rotation.x = 0.0f;
-            // transform.rotation.z = 0.0f;
-            // transform.rotation.y += scene.GetDeltaTime() / 10.0f;
-            // transform.rotation.y = fmod(transform.rotation.y, 360.0f);
+            transform.rotation.x = 0.0f;
+            transform.rotation.z = 0.0f;
+            transform.rotation.y += scene.GetDeltaTime() / 10.0f;
+            transform.rotation.y = fmod(transform.rotation.y, 360.0f);
         }
     }
 
@@ -199,6 +199,10 @@ void Systems::CheckBulletHit(Scene &scene, int id)
     for (auto &alien : scene.GetAliens().GetIds())
     {
         targets.push_back(alien);
+    }
+    for (auto &planet : scene.GetPlanets().GetIds())
+    {
+        targets.push_back(planet);
     }
 
     for (auto &target : targets)

@@ -11,22 +11,21 @@ void Aliens::Init(Scene &scene)
     int total = 0;
     for (auto &planet : scene.GetPlanets().GetIds())
     {
-        Transform transform = scene.GetTransform(planet);
+        float radius = scene.GetCollider(planet).radius;
 
         // Bigger planets have more enemies
         int count = 0;
-        int enemies = (int)floor(transform.scaling.x);
+        int enemies = (int)floor(radius * 2.0f);
         total += enemies;
         while (count < enemies)
         {
-            Vector3 planetPosition = transform.position;
+            Vector3 planetPosition = scene.GetTransform(planet).position;
 
             Vector3 direction = Utils::RandomUnitCircleVector();
-            // float distance = transform.scaling.x * Utils::RandomFloat(0.6f, 1.5f);
-            float radius = transform.scaling.x * 0.5f;
+            float distance = radius * Utils::RandomFloat(1.0f, 2.0f);
 
             Vector3 alienPosition;
-            alienPosition = planetPosition + direction * radius;
+            alienPosition = planetPosition + direction * distance;
 
             // TODO: Check that the alien position isn't inside any other planet
 
