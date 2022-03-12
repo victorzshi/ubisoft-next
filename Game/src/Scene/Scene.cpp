@@ -219,7 +219,7 @@ void Scene::Update(float deltaTime)
         m_systems.LimitShipVelocity(*this, id);
         m_systems.ShootAtMouse(*this, id);
         m_systems.UpdatePosition(*this, id);
-        m_systems.CheckCollision(*this, id);
+        m_systems.CheckShipCollision(*this, id);
     }
 
     for (auto &id : m_aliens.GetIds())

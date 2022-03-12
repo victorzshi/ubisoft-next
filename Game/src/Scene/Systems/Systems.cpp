@@ -298,20 +298,16 @@ void Systems::SpinPlanet(Scene &scene, int id)
     scene.SetTransform(id, transform);
 }
 
-void Systems::CheckCollision(Scene &scene, int id)
+void Systems::CheckShipCollision(Scene &scene, int id)
 {
     std::vector<int> targets;
-
-    if (scene.GetAI(id).attackRange == 0.0f) // Is ship
+    for (auto &alien : scene.GetAliens().GetIds())
     {
-        for (auto &alien : scene.GetAliens().GetIds())
-        {
-            targets.push_back(alien);
-        }
-        for (auto &planet : scene.GetPlanets().GetIds())
-        {
-            targets.push_back(planet);
-        }
+        targets.push_back(alien);
+    }
+    for (auto &planet : scene.GetPlanets().GetIds())
+    {
+        targets.push_back(planet);
     }
 
     for (auto &target : targets)
@@ -328,7 +324,7 @@ void Systems::CheckCollision(Scene &scene, int id)
             Vector3 from = scene.GetTransform(target).position;
             Vector3 to = transform.position;
             Vector3 direction = (to - from).Normalize();
-            physics.velocity = direction * 10.0f;
+            physics.velocity = direction * scene.GetShips().MAX_VELOCITY;
             physics.acceleration = Vector3();
 
             scene.SetPhysics(id, physics);
