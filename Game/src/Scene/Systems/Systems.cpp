@@ -40,10 +40,10 @@ void Systems::RotateTowardsShip(Scene &scene, int id)
         }
         else
         {
-            transform.rotation.x = 0.0f;
-            transform.rotation.z = 0.0f;
-            transform.rotation.y += scene.GetDeltaTime() / 10.0f;
-            transform.rotation.y = fmod(transform.rotation.y, 360.0f);
+            //transform.rotation.x = 0.0f;
+            //transform.rotation.z = 0.0f;
+            //transform.rotation.y += scene.GetDeltaTime() / 10.0f;
+            //transform.rotation.y = fmod(transform.rotation.y, 360.0f);
         }
     }
 

@@ -15,7 +15,7 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     // m_position = Vector3(0.0f, 0.0f, 10.0f);
     // m_position = Vector3(0.0f, 0.0f, 30.0f);
     // m_position = Vector3(0.0f, 0.0f, 50.0f);
-     m_position = Vector3(0.0f, 0.0f, 100.0f);
+    m_position = Vector3(0.0f, 0.0f, 100.0f);
 }
 
 void Scene::Init()
@@ -225,6 +225,7 @@ void Scene::Update(float deltaTime)
     {
         m_systems.UpdatePosition(*this, id);
         m_systems.AddRotation(*this, id);
+        m_systems.RotateTowardsShip(*this, id);
     }
 
     for (auto &id : m_bullets.GetIds())
