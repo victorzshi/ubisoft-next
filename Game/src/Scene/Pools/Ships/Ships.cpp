@@ -46,7 +46,7 @@ void Ships::Update(Scene &scene)
     {
         if (scene.GetHealth(id).points <= 0)
         {
-            scene.GetParticles().Explosion(scene, id);
+            scene.GetParticles().Explode(scene, id);
 
             Deactivate(id);
         }

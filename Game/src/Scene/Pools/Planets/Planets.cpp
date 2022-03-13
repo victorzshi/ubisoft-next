@@ -108,7 +108,8 @@ void Planets::Update(Scene &scene)
 
         if (!hasEnemies)
         {
-            scene.GetParticles().Explosion(scene, id);
+            scene.GetParticles().Explode(scene, id);
+            
             Deactivate(id);
         }
     }

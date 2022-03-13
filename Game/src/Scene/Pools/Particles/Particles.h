@@ -15,7 +15,7 @@ class Particles : public Pool
 
     void Ricochet(Scene &scene, int id);
 
-    void Explosion(Scene &scene, int id);
+    void Explode(Scene &scene, int id);
 
-    void Boost(Scene &scene, int id);
+    void Boost(Scene &scene, int id, Vector3 &direction);
 };

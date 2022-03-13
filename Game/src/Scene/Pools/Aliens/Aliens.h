@@ -12,5 +12,7 @@ class Aliens : public Pool
     virtual void Update(Scene &scene) override;
 
   private:
-    int CreateAlien(Scene &scene, Vector3 &position, int &planet);
+    int CreateTurret(Scene &scene, Vector3 &position);
+
+    int CreateBomber(Scene &scene, Vector3 &position);
 };
