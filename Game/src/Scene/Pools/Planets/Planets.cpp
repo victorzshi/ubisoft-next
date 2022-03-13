@@ -18,8 +18,8 @@ void Planets::Init(Scene &scene)
         {
             m_random.insert(random);
 
-            float x = Utils::RandomFloat(15.0f, 30.0f);
-            float y = Utils::RandomFloat(15.0f, 30.0f);
+            float x = Utils::RandomFloat(20.0f, 40.0f);
+            float y = Utils::RandomFloat(20.0f, 40.0f);
             float radius = sqrtf(x * x + y * y);
 
             switch (random)
