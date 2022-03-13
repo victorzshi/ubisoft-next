@@ -11,7 +11,6 @@
 #include "Components/Transform/Transform.h"
 #include "Graphics/Renderer/Renderer.h"
 #include "Pools/Aliens/Aliens.h"
-#include "Pools/Asteroids/Asteroids.h"
 #include "Pools/Bullets/Bullets.h"
 #include "Pools/Fuel/Fuel.h"
 #include "Pools/Particles/Particles.h"
@@ -45,7 +44,6 @@ class Scene
 
     // Get object pools
     Aliens &GetAliens();
-    Asteroids &GetAsteroids();
     Bullets &GetBullets();
     Fuel &GetFuel();
     Particles &GetParticles();
@@ -97,7 +95,6 @@ class Scene
 
     // Object pools
     Aliens m_aliens;
-    Asteroids m_asteroids;
     Bullets m_bullets;
     Fuel m_fuel;
     Particles m_particles;

@@ -26,9 +26,15 @@ void Aliens::Init(Scene &scene)
 
             // TODO: Check that the alien position isn't inside any other planet
 
-            // TODO: Turret OR flying enemy type.
+            if (Utils::RandomInt(0, 1) == 1)
+            {
+                id = CreateTurret(scene, alienPosition);
+            }
+            else
+            {
+                id = CreateBomber(scene, alienPosition);
+            }
 
-            id = CreateAlien(scene, alienPosition, planet);
             count++;
         }
     }
@@ -59,20 +65,61 @@ void Aliens::Update(Scene &scene)
     UpdateIds();
 }
 
-int Aliens::CreateAlien(Scene &scene, Vector3 &position, int &planet)
+int Aliens::CreateTurret(Scene &scene, Vector3 &position)
 {
     int id = scene.CreateId();
+
+    float width = 2.0f;
 
     AI ai;
     ai.attackRange = 12.0f;
     scene.SetAI(id, ai);
 
     Collider collider;
-    collider.radius = 0.5f;
+    collider.radius = width * 0.5f;
     scene.SetCollider(id, collider);
 
     Health health;
     health.points = 10;
+    scene.SetHealth(id, health);
+
+    Model model;
+    model.mesh.SetMesh(Meshes::TORUS);
+    model.color.SetColor(Colors::RED);
+    model.lighting = Lighting::OUTLINE;
+    scene.SetModel(id, model);
+
+    Timer timer;
+    timer.cooldown = 0.2f;
+    scene.SetTimer(id, timer);
+
+    Transform transform;
+    transform.position = position;
+    transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
+    transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
+    transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
+    transform.scaling = Vector3(width, width, width);
+    scene.SetTransform(id, transform);
+
+    return id;
+}
+
+int Aliens::CreateBomber(Scene &scene, Vector3 &position)
+{
+    int id = scene.CreateId();
+
+    float width = 0.5f;
+
+    AI ai;
+    ai.attackRange = 6.0f;
+    scene.SetAI(id, ai);
+
+    Collider collider;
+    collider.radius = width * 0.5f;
+    scene.SetCollider(id, collider);
+
+    Health health;
+    health.points = 1;
     scene.SetHealth(id, health);
 
     Model model;
@@ -87,6 +134,10 @@ int Aliens::CreateAlien(Scene &scene, Vector3 &position, int &planet)
 
     Transform transform;
     transform.position = position;
+    transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
+    transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
+    transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
+    transform.scaling = Vector3(width, width, width);
     scene.SetTransform(id, transform);
 
     return id;

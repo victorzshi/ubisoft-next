@@ -25,7 +25,6 @@ void Scene::Init()
     m_aliens.Init(*this);
     m_fuel.Init(*this);
 
-    m_asteroids.Init(*this);
     m_bullets.Init(*this);
     m_particles.Init(*this);
     m_ships.Init(*this);
@@ -98,11 +97,6 @@ Aliens &Scene::GetAliens()
     return m_aliens;
 }
 
-Asteroids &Scene::GetAsteroids()
-{
-    return m_asteroids;
-}
-
 Bullets &Scene::GetBullets()
 {
     return m_bullets;
@@ -137,10 +131,6 @@ std::vector<int> Scene::GetAllIds() const
 {
     std::vector<int> ids;
     for (auto &id : m_aliens.GetIds())
-    {
-        ids.push_back(id);
-    }
-    for (auto &id : m_asteroids.GetIds())
     {
         ids.push_back(id);
     }
@@ -254,15 +244,9 @@ void Scene::Update(float deltaTime)
 
     for (auto &id : m_aliens.GetIds())
     {
+        m_systems.AddRotationFromConstant(*this, id);
         m_systems.RotateTowardsShip(*this, id);
         m_systems.ShootAtShip(*this, id);
-    }
-
-    for (auto &id : m_asteroids.GetIds())
-    {
-        m_systems.UpdatePosition(*this, id);
-        m_systems.AddRotationFromVelocity(*this, id);
-        m_systems.RotateTowardsShip(*this, id);
     }
 
     for (auto &id : m_bullets.GetIds())
@@ -315,7 +299,6 @@ void Scene::SetTime(float deltaTime)
 void Scene::UpdatePools()
 {
     m_aliens.Update(*this);
-    m_asteroids.Update(*this);
     m_bullets.Update(*this);
     m_fuel.Update(*this);
     m_particles.Update(*this);
