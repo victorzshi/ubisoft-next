@@ -12,11 +12,13 @@ class Systems
     void ShootAtMouse(Scene &scene, int id);
     void ShootAtShip(Scene &scene, int id);
     void UpdatePosition(Scene &scene, int id);
-    void AddRotation(Scene &scene, int id);
+    void AddRotationFromVelocity(Scene &scene, int id);
+    void AddRotationFromConstant(Scene &scene, int id);
     void CheckBulletHit(Scene &scene, int id);
     void ApplyGravity(Scene &scene, int id);
     void LimitShipVelocity(Scene &scene, int id);
     void ChangeColor(Scene &scene, int id);
     void SpinPlanet(Scene &scene, int id);
     void CheckShipCollision(Scene &scene, int id);
+    void PickUpFuel(Scene &scene, int id);
 };

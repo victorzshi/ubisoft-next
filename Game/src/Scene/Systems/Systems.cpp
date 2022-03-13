@@ -186,31 +186,11 @@ void Systems::UpdatePosition(Scene &scene, int id)
     physics.velocity += physics.acceleration * elapsed;
     transform.position += physics.velocity * elapsed;
 
-    // float width = 20.0f;
-    // if (transform.position.x > width)
-    //{
-    //     transform.position.x = -width;
-    // }
-    // else if (transform.position.x < -width)
-    //{
-    //     transform.position.x = width;
-    // }
-
-    // float height = 20.0f;
-    // if (transform.position.y > height)
-    //{
-    //     transform.position.y = -height;
-    // }
-    // else if (transform.position.y < -height)
-    //{
-    //     transform.position.y = height;
-    // }
-
     scene.SetPhysics(id, physics);
     scene.SetTransform(id, transform);
 }
 
-void Systems::AddRotation(Scene &scene, int id)
+void Systems::AddRotationFromVelocity(Scene &scene, int id)
 {
     Physics physics = scene.GetPhysics(id);
     Transform transform = scene.GetTransform(id);
@@ -218,6 +198,23 @@ void Systems::AddRotation(Scene &scene, int id)
     transform.rotation.x += physics.velocity.y;
     transform.rotation.y += -physics.velocity.x;
     transform.rotation.z += physics.velocity.z;
+
+    transform.rotation.x = fmod(transform.rotation.x, 360.0f);
+    transform.rotation.y = fmod(transform.rotation.y, 360.0f);
+    transform.rotation.z = fmod(transform.rotation.z, 360.0f);
+
+    scene.SetTransform(id, transform);
+}
+
+void Systems::AddRotationFromConstant(Scene &scene, int id)
+{
+    Physics physics = scene.GetPhysics(id);
+    Transform transform = scene.GetTransform(id);
+
+    float deltaRotation = scene.GetDeltaTime() / 10.0f;
+
+    transform.rotation.x += deltaRotation;
+    transform.rotation.y += deltaRotation * 0.5f;
 
     transform.rotation.x = fmod(transform.rotation.x, 360.0f);
     transform.rotation.y = fmod(transform.rotation.y, 360.0f);
@@ -382,6 +379,25 @@ void Systems::CheckShipCollision(Scene &scene, int id)
             scene.SetHealth(target, health);
 
             scene.GetParticles().Ricochet(scene, id);
+        }
+    }
+}
+
+void Systems::PickUpFuel(Scene &scene, int id)
+{
+    for (auto &fuel : scene.GetFuel().GetIds())
+    {
+        if (Collider::IsHit(scene, id, fuel))
+        {
+            Health health;
+
+            health = scene.GetHealth(id);
+            health.points = 100; // Reset health
+            scene.SetHealth(id, health);
+
+            health = scene.GetHealth(fuel);
+            health.points = 0;
+            scene.SetHealth(fuel, health);
         }
     }
 }

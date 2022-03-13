@@ -13,6 +13,7 @@
 #include "Pools/Aliens/Aliens.h"
 #include "Pools/Asteroids/Asteroids.h"
 #include "Pools/Bullets/Bullets.h"
+#include "Pools/Fuel/Fuel.h"
 #include "Pools/Particles/Particles.h"
 #include "Pools/Planets/Planets.h"
 #include "Pools/Ships/Ships.h"
@@ -46,6 +47,7 @@ class Scene
     Aliens &GetAliens();
     Asteroids &GetAsteroids();
     Bullets &GetBullets();
+    Fuel &GetFuel();
     Particles &GetParticles();
     Planets &GetPlanets();
     Ships &GetShips();
@@ -97,6 +99,7 @@ class Scene
     Aliens m_aliens;
     Asteroids m_asteroids;
     Bullets m_bullets;
+    Fuel m_fuel;
     Particles m_particles;
     Planets m_planets;
     Ships m_ships;

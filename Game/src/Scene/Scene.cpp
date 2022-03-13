@@ -19,9 +19,12 @@ void Scene::Init()
 {
     m_renderer.Init(*this);
 
-    m_planets.Init(*this); // Planets go first
-
+    // Planets go first
+    m_planets.Init(*this);
+    // Because aliens and fuel depend on planet position
     m_aliens.Init(*this);
+    m_fuel.Init(*this);
+
     m_asteroids.Init(*this);
     m_bullets.Init(*this);
     m_particles.Init(*this);
@@ -105,6 +108,11 @@ Bullets &Scene::GetBullets()
     return m_bullets;
 }
 
+Fuel &Scene::GetFuel()
+{
+    return m_fuel;
+}
+
 Particles &Scene::GetParticles()
 {
     return m_particles;
@@ -137,6 +145,10 @@ std::vector<int> Scene::GetAllIds() const
         ids.push_back(id);
     }
     for (auto &id : m_bullets.GetIds())
+    {
+        ids.push_back(id);
+    }
+    for (auto &id : m_fuel.GetIds())
     {
         ids.push_back(id);
     }
@@ -237,6 +249,7 @@ void Scene::Update(float deltaTime)
         m_systems.ShootAtMouse(*this, id);
         m_systems.UpdatePosition(*this, id);
         m_systems.CheckShipCollision(*this, id);
+        m_systems.PickUpFuel(*this, id);
     }
 
     for (auto &id : m_aliens.GetIds())
@@ -248,21 +261,21 @@ void Scene::Update(float deltaTime)
     for (auto &id : m_asteroids.GetIds())
     {
         m_systems.UpdatePosition(*this, id);
-        m_systems.AddRotation(*this, id);
+        m_systems.AddRotationFromVelocity(*this, id);
         m_systems.RotateTowardsShip(*this, id);
     }
 
     for (auto &id : m_bullets.GetIds())
     {
         m_systems.UpdatePosition(*this, id);
-        m_systems.AddRotation(*this, id);
+        m_systems.AddRotationFromVelocity(*this, id);
         m_systems.CheckBulletHit(*this, id);
     }
 
     for (auto &id : m_particles.GetIds())
     {
         m_systems.UpdatePosition(*this, id);
-        m_systems.AddRotation(*this, id);
+        m_systems.AddRotationFromVelocity(*this, id);
     }
 
     for (auto &id : m_planets.GetIds())
@@ -272,8 +285,14 @@ void Scene::Update(float deltaTime)
 
     for (auto &id : m_stars.GetIds())
     {
-        // Disco mode
-        // m_systems.ChangeColor(*this, id);
+#ifdef _DEBUG
+        m_systems.ChangeColor(*this, id);
+#endif
+    }
+
+    for (auto &id : m_fuel.GetIds())
+    {
+        m_systems.AddRotationFromConstant(*this, id);
     }
 
     UpdatePools();
@@ -298,6 +317,7 @@ void Scene::UpdatePools()
     m_aliens.Update(*this);
     m_asteroids.Update(*this);
     m_bullets.Update(*this);
+    m_fuel.Update(*this);
     m_particles.Update(*this);
     m_planets.Update(*this);
     m_ships.Update(*this);
