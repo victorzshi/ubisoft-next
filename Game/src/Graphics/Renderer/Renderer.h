@@ -27,7 +27,7 @@ class Renderer
     // Constants for viewing frustum
     const float m_SCREEN_WIDTH = 960.0f;
     const float m_SCREEN_HEIGHT = 540.0f;
-    const float m_FOV = 90.0f;
+    const float m_FOV = 120.0f;
     const float m_THETA = m_FOV * (PI / 180.0f);
     const float m_DISTANCE = 1.0f / tanf(m_THETA * 0.5f);
     const float m_ASPECT_RATIO = m_SCREEN_WIDTH / m_SCREEN_HEIGHT;

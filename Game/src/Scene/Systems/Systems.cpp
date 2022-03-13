@@ -25,11 +25,11 @@ void Systems::MoveCamera(Scene &scene, int id)
     Vector3 position = scene.GetScenePosition();
     if (closest < 20.0f)
     {
-        position.z = Utils::Lerp(position.z, 10.0f, 0.05f);
+        position.z = Utils::Lerp(position.z, 20.0f, 0.05f);
     }
     else
     {
-        position.z = Utils::Lerp(position.z, 300.0f, 0.01f);
+        position.z = Utils::Lerp(position.z, 200.0f, 0.01f);
     }
     scene.SetScenePosition(position);
 
@@ -39,9 +39,9 @@ void Systems::MoveCamera(Scene &scene, int id)
     Vector3 direction = (to - from).Normalize();
 
     // Put the camera behind the ship
-    scene.SetCameraPosition(from + position - direction * 10.0f);
-    // Look in front of the ship
-    scene.SetCameraTarget(from + direction * 2.0f);
+    scene.SetCameraPosition(from + position + direction * -4.0f);
+    // Aim in front of the ship
+    scene.SetCameraTarget(from + direction);
 }
 
 void Systems::RotateTowardsMouse(Scene &scene, int id)
