@@ -90,7 +90,7 @@ void Bullets::ShootAt(Scene &scene, Vector3 &from, Vector3 &to, Colors color)
 
         Timer timer = scene.GetTimer(bullet);
         timer.start = scene.GetTime();
-        timer.stayAlive = 1.0f;
+        timer.stayAlive = 0.75f;
         scene.SetTimer(bullet, timer);
     }
 }

@@ -58,3 +58,13 @@ void Ships::Update(Scene &scene)
 
     UpdateIds();
 }
+
+float Ships::GetMaxVelocity()
+{
+    return m_maxVelocity;
+}
+
+void Ships::SetMaxVelocity(float velocity)
+{
+    m_maxVelocity = velocity;
+}

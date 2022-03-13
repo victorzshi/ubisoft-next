@@ -36,11 +36,7 @@ void Systems::MoveCamera(Scene &scene, int id)
     // Follow ship with camera
     Vector3 from = scene.GetTransform(id).position;
     Vector3 to = scene.GetMousePosition();
-    Vector3 direction = to - from;
-    if (direction != Vector3())
-    {
-        direction = direction.Normalize();
-    }
+    Vector3 direction = (to - from).Normalize();
 
     // Put the camera behind the ship
     scene.SetCameraPosition(from + position - direction * 10.0f);
@@ -96,24 +92,40 @@ void Systems::AccelerateShip(Scene &scene, int id)
 {
     float deltaAcceleration = scene.GetShips().DELTA_ACCELERATION;
 
-    Physics physics = scene.GetPhysics(id);
-
-    physics.acceleration = Vector3();
+    Vector3 direction;
     if (App::GetController().GetLeftThumbStickX() > 0.5f)
     {
-        physics.acceleration.x = +deltaAcceleration;
+        direction.x = +deltaAcceleration;
     }
     if (App::GetController().GetLeftThumbStickX() < -0.5f)
     {
-        physics.acceleration.x = -deltaAcceleration;
+        direction.x = -deltaAcceleration;
     }
     if (App::GetController().GetLeftThumbStickY() > 0.5f)
     {
-        physics.acceleration.y = +deltaAcceleration;
+        direction.y = +deltaAcceleration;
     }
     if (App::GetController().GetLeftThumbStickY() < -0.5f)
     {
-        physics.acceleration.y = -deltaAcceleration;
+        direction.y = -deltaAcceleration;
+    }
+
+    Physics physics = scene.GetPhysics(id);
+    Transform transform = scene.GetTransform(id);
+
+    Vector3 from = direction.Normalize();
+    Vector3 to = (scene.GetMousePosition() - transform.position).Normalize();
+
+    if (from.Dot(to) > 0.8f)
+    {
+        physics.acceleration = direction * 2.0f;
+        scene.GetShips().SetMaxVelocity(10.0f);
+        scene.GetParticles().Boost(scene, id);
+    }
+    else
+    {
+        physics.acceleration = direction;
+        scene.GetShips().SetMaxVelocity(5.0f);
     }
 
     scene.SetPhysics(id, physics);
@@ -281,7 +293,7 @@ void Systems::ApplyGravity(Scene &scene, int id)
             Vector3 direction = (to - from).Normalize();
 
             // Bigger planets have more gravity :)
-            float scale = scene.GetCollider(planet).radius * 0.5f;
+            float scale = scene.GetCollider(planet).radius;
             physics.acceleration += direction * scale;
 
             scene.SetPhysics(id, physics);
@@ -293,7 +305,7 @@ void Systems::LimitShipVelocity(Scene &scene, int id)
 {
     Physics physics = scene.GetPhysics(id);
 
-    float max = scene.GetShips().MAX_VELOCITY;
+    float max = scene.GetShips().GetMaxVelocity();
     if (physics.velocity.LengthSquared() > max * max)
     {
         physics.velocity = physics.velocity.Normalize() * max;
@@ -362,7 +374,7 @@ void Systems::CheckShipCollision(Scene &scene, int id)
             Vector3 from = scene.GetTransform(target).position;
             Vector3 to = transform.position;
             Vector3 direction = (to - from).Normalize();
-            physics.velocity = direction * scene.GetShips().MAX_VELOCITY;
+            physics.velocity = direction * scene.GetShips().GetMaxVelocity();
             physics.acceleration = Vector3();
 
             scene.SetPhysics(id, physics);
@@ -371,11 +383,11 @@ void Systems::CheckShipCollision(Scene &scene, int id)
             Health health;
 
             health = scene.GetHealth(id);
-            health.points -= 10;
+            health.points -= scene.GetShips().GetMaxVelocity();
             scene.SetHealth(id, health);
 
             health = scene.GetHealth(target);
-            health.points -= 10;
+            health.points -= scene.GetShips().GetMaxVelocity();
             scene.SetHealth(target, health);
 
             scene.GetParticles().Ricochet(scene, id);
