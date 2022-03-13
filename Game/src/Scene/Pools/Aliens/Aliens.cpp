@@ -50,7 +50,15 @@ void Aliens::Update(Scene &scene)
     int id = GetBegin();
     while (id < GetSize())
     {
+        Timer timer = scene.GetTimer(id);
+
         if (scene.GetHealth(id).points <= 0)
+        {
+            scene.GetParticles().Explosion(scene, id);
+
+            Deactivate(id);
+        }
+        else if (timer.stayAlive != 0.0f && timer.Elapsed(scene.GetTime()) > timer.stayAlive)
         {
             scene.GetParticles().Explosion(scene, id);
 
@@ -128,10 +136,6 @@ int Aliens::CreateBomber(Scene &scene, Vector3 &position)
     model.color.SetColor(Colors::RED);
     model.lighting = Lighting::OUTLINE;
     scene.SetModel(id, model);
-
-    Timer timer;
-    timer.cooldown = 0.2f;
-    scene.SetTimer(id, timer);
 
     Transform transform;
     transform.position = position;

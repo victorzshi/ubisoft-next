@@ -170,9 +170,19 @@ void Systems::AttackShip(Scene &scene, int id)
                 Vector3 to = shipPosition;
                 Vector3 direction = (to - from).Normalize();
 
-                physics.acceleration = direction * 5.0f;
+                physics.acceleration = direction * 10.0f;
+                physics.velocity = direction * 5.0f;
 
                 scene.SetPhysics(id, physics);
+
+                Timer timer = scene.GetTimer(id);
+                if (timer.stayAlive == 0.0f)
+                {
+                    timer.start = scene.GetTime();
+                    timer.stayAlive = 3.0f;
+                    scene.SetTimer(id, timer);
+                }
+   
                 scene.GetParticles().Boost(scene, id, direction);
 
                 break;
