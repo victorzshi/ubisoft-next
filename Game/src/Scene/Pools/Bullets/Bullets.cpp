@@ -43,7 +43,9 @@ void Bullets::Update(Scene &scene)
     int id = GetBegin();
     while (id < GetSize())
     {
-        if (scene.GetTimer(id).Elapsed(current) >= DURATION)
+        Timer timer = scene.GetTimer(id);
+
+        if (timer.Elapsed(current) >= timer.stayAlive)
         {
             Deactivate(id);
         }
@@ -88,6 +90,7 @@ void Bullets::ShootAt(Scene &scene, Vector3 &from, Vector3 &to, Colors color)
 
         Timer timer = scene.GetTimer(bullet);
         timer.start = scene.GetTime();
+        timer.stayAlive = 1.0f;
         scene.SetTimer(bullet, timer);
     }
 }

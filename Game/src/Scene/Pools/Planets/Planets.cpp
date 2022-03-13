@@ -18,8 +18,8 @@ void Planets::Init(Scene &scene)
         {
             m_random.insert(random);
 
-            float x = Utils::RandomFloat(15.0f, 30.0f);
-            float y = Utils::RandomFloat(15.0f, 30.0f);
+            float x = Utils::RandomFloat(20.0f, 40.0f);
+            float y = Utils::RandomFloat(20.0f, 40.0f);
             float radius = sqrtf(x * x + y * y);
 
             switch (random)
@@ -88,6 +88,31 @@ void Planets::Init(Scene &scene)
 
 void Planets::Update(Scene &scene)
 {
+    int id = GetBegin();
+    while (id < GetSize())
+    {
+        bool hasEnemies = false;
+
+        for (auto &alien : scene.GetAliens().GetIds())
+        {
+            Vector3 alienPosition = scene.GetTransform(alien).position;
+            Vector3 planetPosition = scene.GetTransform(id).position;
+
+            if (Utils::Distance(alienPosition, planetPosition) <= scene.GetCollider(id).radius * 3.0f)
+            {
+                hasEnemies = true;
+                id++;
+                break;
+            }
+        }
+
+        if (!hasEnemies)
+        {
+            scene.GetParticles().Explosion(scene, id);
+            Deactivate(id);
+        }
+    }
+
     UpdateIds();
 }
 
@@ -98,7 +123,8 @@ int Planets::CreatePlanet(Scene &scene, Vector3 &position)
     float scale = Utils::RandomFloat(5.0f, 10.0f);
 
     AI ai;
-    ai.attackRange = scale * 2.0f; // For gravity
+    ai.attackRange = scale * 2.0f;    // For gravity
+    ai.enemyCount = (int)ceil(scale); // Bigger planets have more enemies
     scene.SetAI(id, ai);
 
     Collider collider;

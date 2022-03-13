@@ -10,7 +10,6 @@ class Ships : public Pool
     const float WIDTH = 1.0f;
     const float DELTA_ACCELERATION = 3.0f;
     const float MAX_VELOCITY = 5.0f;
-    const float BULLET_COOLDOWN = 0.05f;
 
     virtual void Init(Scene &scene) override;
 

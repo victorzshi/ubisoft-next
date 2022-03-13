@@ -3,6 +3,8 @@
 struct Timer
 {
     float start;
+    float cooldown;
+    float stayAlive;
 
     Timer();
 
