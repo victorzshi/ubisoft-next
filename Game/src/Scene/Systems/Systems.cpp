@@ -147,7 +147,7 @@ void Systems::ShootAtMouse(Scene &scene, int id)
         Vector3 from = scene.GetTransform(id).position;
         Vector3 to = scene.GetMousePosition();
 
-        scene.GetBullets().ShootAt(scene, from, to, Colors::WHITE);
+        scene.GetBullets().ShipShootAt(scene, from, to);
 
         Timer timer = scene.GetTimer(id);
         timer.start = scene.GetTime();
@@ -177,7 +177,7 @@ void Systems::ShootAtShip(Scene &scene, int id)
             Vector3 from = transform.position;
             Vector3 to = shipPosition;
 
-            scene.GetBullets().ShootAt(scene, from, to, Colors::RED);
+            scene.GetBullets().AlienShootAt(scene, from, to);
 
             Timer timer = scene.GetTimer(id);
             timer.start = scene.GetTime();

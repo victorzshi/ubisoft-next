@@ -6,34 +6,17 @@
 
 void Bullets::Init(Scene &scene)
 {
-    int index = 0;
+    int id = 0;
     for (int i = 0; i < TOTAL; i++)
     {
-        int id = scene.CreateId();
-
-        Collider collider;
-        collider.radius = WIDTH / 2.0f;
-        scene.SetCollider(id, collider);
-
-        Health health;
-        health.points = 1;
-        scene.SetHealth(id, health);
-
-        Model model;
-        model.mesh.SetMesh(Meshes::CUBE);
-        scene.SetModel(id, model);
-
-        Transform transform;
-        transform.scaling = Vector3(WIDTH, WIDTH, WIDTH);
-        scene.SetTransform(id, transform);
-
-        index = id;
+        // Allocate memory
+        id = scene.CreateId();
     }
 
     SetScene(&scene);
-    SetBegin(index - (TOTAL - 1));
-    SetSize(index - (TOTAL - 1));
-    SetEnd(index);
+    SetBegin(id - (TOTAL - 1));
+    SetSize(id - (TOTAL - 1));
+    SetEnd(id);
 }
 
 void Bullets::Update(Scene &scene)
@@ -62,35 +45,82 @@ void Bullets::Update(Scene &scene)
     UpdateIds();
 }
 
-void Bullets::ShootAt(Scene &scene, Vector3 &from, Vector3 &to, Colors color)
+void Bullets::ShipShootAt(Scene &scene, Vector3 &from, Vector3 &to)
 {
     int bullet = GetSize();
 
     if (Activate(bullet))
     {
+        float width = 0.1f;
+
         Vector3 direction = (to - from).Normalize();
         Vector3 position = from + direction; // Spawn the bullet a little in front of the model
 
-        Model model = scene.GetModel(bullet);
-        model.color.SetColor(color);
+        Collider collider;
+        collider.radius = width * 0.5f;
+        scene.SetCollider(bullet, collider);
+
+        Model model;
+        model.mesh.SetMesh(Meshes::CUBE);
+        model.color.SetColor(Colors::WHITE);
         scene.SetModel(bullet, model);
 
-        Health health = scene.GetHealth(bullet);
+        Health health;
         health.points = 1;
         scene.SetHealth(bullet, health);
 
-        Transform transform = scene.GetTransform(bullet);
+        Transform transform;
         transform.position = position;
-        transform.scaling = Vector3(0.1f, 0.1f, 0.1f);
+        transform.scaling = Vector3(width, width, width);
         scene.SetTransform(bullet, transform);
 
-        Physics physics = scene.GetPhysics(bullet);
-        physics.velocity = direction * DELTA_VELOCITY;
+        Physics physics;
+        physics.velocity = direction * 15.0f;
         scene.SetPhysics(bullet, physics);
 
-        Timer timer = scene.GetTimer(bullet);
+        Timer timer;
         timer.start = scene.GetTime();
-        timer.stayAlive = 0.75f;
+        timer.stayAlive = 0.5f;
+        scene.SetTimer(bullet, timer);
+    }
+}
+
+void Bullets::AlienShootAt(Scene &scene, Vector3 &from, Vector3 &to)
+{
+    int bullet = GetSize();
+
+    if (Activate(bullet))
+    {
+        float width = 0.5f;
+
+        Vector3 direction = (to - from).Normalize();
+        Vector3 position = from + direction; // Spawn the bullet a little in front of the model
+
+        Collider collider;
+        collider.radius = width * 0.5f;
+        scene.SetCollider(bullet, collider);
+
+        Model model;
+        model.mesh.SetMesh(Meshes::CUBE);
+        model.color.SetColor(Colors::RED);
+        scene.SetModel(bullet, model);
+
+        Health health;
+        health.points = 1;
+        scene.SetHealth(bullet, health);
+
+        Transform transform;
+        transform.position = position;
+        transform.scaling = Vector3(width, width, width);
+        scene.SetTransform(bullet, transform);
+
+        Physics physics;
+        physics.velocity = direction * 5.0f;
+        scene.SetPhysics(bullet, physics);
+
+        Timer timer;
+        timer.start = scene.GetTime();
+        timer.stayAlive = 3.0f;
         scene.SetTimer(bullet, timer);
     }
 }

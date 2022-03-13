@@ -60,7 +60,7 @@ void Particles::Ricochet(Scene &scene, int id)
         {
             scene.SetModel(particle, model);
 
-            float scale = Utils::RandomFloat(0.0f, 0.1f);
+            float scale = Utils::RandomFloat(0.0f, transform.scaling.x * 0.5f);
             transform.scaling = Vector3(scale, scale, scale);
             transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
             transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
