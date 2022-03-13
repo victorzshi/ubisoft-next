@@ -7,8 +7,6 @@ struct Vector3;
 class Aliens : public Pool
 {
   public:
-    const float BULLET_COOLDOWN = 0.2f;
-
     virtual void Init(Scene &scene) override;
 
     virtual void Update(Scene &scene) override;

@@ -127,10 +127,10 @@ void Systems::ShootAtMouse(Scene &scene, int id)
     }
 
     float current = scene.GetTime();
-    float elapsed = scene.GetTimer(id).Elapsed(current);
-    float cooldown = scene.GetShips().BULLET_COOLDOWN;
 
-    if (elapsed > cooldown)
+    Timer timer = scene.GetTimer(id);
+
+    if (timer.Elapsed(current) > timer.cooldown)
     {
         Vector3 from = scene.GetTransform(id).position;
         Vector3 to = scene.GetMousePosition();
@@ -146,13 +146,12 @@ void Systems::ShootAtMouse(Scene &scene, int id)
 void Systems::ShootAtShip(Scene &scene, int id)
 {
     float current = scene.GetTime();
-    float elapsed = scene.GetTimer(id).Elapsed(current);
-    float cooldown = scene.GetAliens().BULLET_COOLDOWN;
 
     AI ai = scene.GetAI(id);
+    Timer timer = scene.GetTimer(id);
     Transform transform = scene.GetTransform(id);
 
-    if (elapsed < cooldown)
+    if (timer.Elapsed(current) < timer.cooldown)
     {
         return;
     }

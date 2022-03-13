@@ -91,15 +91,25 @@ void Planets::Update(Scene &scene)
     int id = GetBegin();
     while (id < GetSize())
     {
-        if (scene.GetAI(id).enemyCount <= 0)
+        bool hasEnemies = false;
+
+        for (auto &alien : scene.GetAliens().GetIds())
+        {
+            Vector3 alienPosition = scene.GetTransform(alien).position;
+            Vector3 planetPosition = scene.GetTransform(id).position;
+
+            if (Utils::Distance(alienPosition, planetPosition) <= scene.GetCollider(id).radius * 3.0f)
+            {
+                hasEnemies = true;
+                id++;
+                break;
+            }
+        }
+
+        if (!hasEnemies)
         {
             scene.GetParticles().Explosion(scene, id);
-
             Deactivate(id);
-        }
-        else
-        {
-            id++;
         }
     }
 
@@ -113,7 +123,7 @@ int Planets::CreatePlanet(Scene &scene, Vector3 &position)
     float scale = Utils::RandomFloat(5.0f, 10.0f);
 
     AI ai;
-    ai.attackRange = scale * 2.0f;        // For gravity
+    ai.attackRange = scale * 2.0f;           // For gravity
     ai.enemyCount = (int)ceil(scale * 2.0f); // Bigger planets have more enemies
     scene.SetAI(id, ai);
 

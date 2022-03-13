@@ -28,7 +28,9 @@ void Particles::Update(Scene &scene)
     int id = GetBegin();
     while (id < GetSize())
     {
-        if (scene.GetTimer(id).Elapsed(current) >= DURATION)
+        Timer timer = scene.GetTimer(id);
+
+        if (timer.Elapsed(current) >= timer.stayAlive)
         {
             Deactivate(id);
         }
@@ -48,6 +50,7 @@ void Particles::Ricochet(Scene &scene, int id)
     Physics physics = scene.GetPhysics(id);
     Timer timer = scene.GetTimer(id);
     timer.start = scene.GetTime();
+    timer.stayAlive = 0.2f;
 
     for (int i = 0; i < 5; i++)
     {
@@ -83,6 +86,7 @@ void Particles::Explosion(Scene &scene, int id)
     Physics physics = scene.GetPhysics(id);
     Timer timer = scene.GetTimer(id);
     timer.start = scene.GetTime();
+    timer.stayAlive = 5.0f;
 
     for (int i = 0; i < 100; i++)
     {
@@ -92,16 +96,19 @@ void Particles::Explosion(Scene &scene, int id)
         {
             scene.SetModel(particle, model);
 
-            float scale = Utils::RandomFloat(0.0f, 0.1f);
-            transform.scaling = Vector3(scale, scale, scale);
+            // float scale = Utils::RandomFloat(0.0f, 0.1f);
+            //  transform.scaling = Vector3(scale, scale, scale);
+            transform.scaling.x = Utils::RandomFloat(0.1f, 0.5f);
+            transform.scaling.y = Utils::RandomFloat(0.1f, 0.5f);
+            transform.scaling.z = 0.0f;
             transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
             transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
             transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
             scene.SetTransform(particle, transform);
 
-            physics.velocity.x = Utils::RandomFloat(-10.0f, 10.0f);
-            physics.velocity.y = Utils::RandomFloat(-10.0f, 10.0f);
-            physics.velocity.z = Utils::RandomFloat(-10.0f, 10.0f);
+            physics.velocity.x = Utils::RandomFloat(-20.0f, 20.0f);
+            physics.velocity.y = Utils::RandomFloat(-20.0f, 20.0f);
+            physics.velocity.z = Utils::RandomFloat(-20.0f, 20.0f);
             scene.SetPhysics(particle, physics);
 
             scene.SetTimer(particle, timer);

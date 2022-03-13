@@ -8,7 +8,6 @@ class Particles : public Pool
 {
   public:
     const int TOTAL = 1000;
-    const float DURATION = 0.3f;
 
     virtual void Init(Scene &scene) override;
 
@@ -17,4 +16,6 @@ class Particles : public Pool
     void Ricochet(Scene &scene, int id);
 
     void Explosion(Scene &scene, int id);
+
+    void Supernova(Scene &scene, int id);
 };

@@ -27,6 +27,7 @@ void Ships::Init(Scene &scene)
 
         Timer timer;
         timer.start = scene.GetTime();
+        timer.cooldown = 0.05f;
         scene.SetTimer(id, timer);
 
         index = id;

@@ -19,7 +19,7 @@ void Aliens::Init(Scene &scene)
             Vector3 planetPosition = scene.GetTransform(planet).position;
 
             Vector3 direction = Utils::RandomUnitCircleVector();
-            float distance = scene.GetCollider(planet).radius * Utils::RandomFloat(1.5f, 3.0f);
+            float distance = scene.GetCollider(planet).radius * Utils::RandomFloat(1.2f, 3.0f);
 
             Vector3 alienPosition;
             alienPosition = planetPosition + direction * distance;
@@ -48,11 +48,6 @@ void Aliens::Update(Scene &scene)
         {
             scene.GetParticles().Explosion(scene, id);
 
-            int planet = scene.GetAI(id).homePlanet;
-            AI ai = scene.GetAI(planet);
-            ai.enemyCount--;
-            scene.SetAI(planet, ai);
-
             Deactivate(id);
         }
         else
@@ -69,8 +64,7 @@ int Aliens::CreateAlien(Scene &scene, Vector3 &position, int &planet)
     int id = scene.CreateId();
 
     AI ai;
-    ai.attackRange = 10.0f;
-    ai.homePlanet = planet;
+    ai.attackRange = 12.0f;
     scene.SetAI(id, ai);
 
     Collider collider;
@@ -86,6 +80,10 @@ int Aliens::CreateAlien(Scene &scene, Vector3 &position, int &planet)
     model.color.SetColor(Colors::RED);
     model.lighting = Lighting::OUTLINE;
     scene.SetModel(id, model);
+
+    Timer timer;
+    timer.cooldown = 0.2f;
+    scene.SetTimer(id, timer);
 
     Transform transform;
     transform.position = position;

@@ -2,6 +2,6 @@
 
 #include "AI.h"
 
-AI::AI() : attackRange(0.0f), enemyCount(0), homePlanet(0)
+AI::AI() : attackRange(0.0f), enemyCount(0)
 {
 }
