@@ -103,6 +103,12 @@ void Systems::AccelerateShip(Scene &scene, int id)
         direction.y = -deltaAcceleration;
     }
 
+    if (direction == Vector3())
+    {
+        return;
+    }
+
+    Timer timer = scene.GetTimer(id);
     Physics physics = scene.GetPhysics(id);
     Transform transform = scene.GetTransform(id);
 
@@ -111,16 +117,19 @@ void Systems::AccelerateShip(Scene &scene, int id)
 
     if (from.Dot(to) > 0.8f)
     {
+        timer.stayAlive -= scene.GetDeltaTime() / 500.0f;
         physics.acceleration = direction * 2.0f;
         scene.GetShips().SetMaxVelocity(10.0f);
         scene.GetParticles().Boost(scene, id, to);
     }
     else
     {
+        timer.stayAlive -= scene.GetDeltaTime() / 1000.0f;
         physics.acceleration = direction;
         scene.GetShips().SetMaxVelocity(5.0f);
     }
 
+    scene.SetTimer(id, timer);
     scene.SetPhysics(id, physics);
 }
 
@@ -302,11 +311,11 @@ void Systems::CheckBulletHit(Scene &scene, int id)
             Health health;
 
             health = scene.GetHealth(id);
-            health.points--;
+            health.points--; // Bullets have 1 health
             scene.SetHealth(id, health);
 
             health = scene.GetHealth(target);
-            health.points--;
+            health.points -= 5;
             scene.SetHealth(target, health);
 
             scene.GetParticles().Ricochet(scene, id);
@@ -333,7 +342,7 @@ void Systems::ApplyGravity(Scene &scene, int id)
             Vector3 direction = (to - from).Normalize();
 
             // Bigger planets have more gravity :)
-            float scale = scene.GetCollider(planet).radius;
+            float scale = scene.GetCollider(planet).radius * 0.5f;
             physics.acceleration += direction * scale;
 
             scene.SetPhysics(id, physics);
@@ -493,9 +502,14 @@ void Systems::PickUpFuel(Scene &scene, int id)
             health.points = 100; // Reset health
             scene.SetHealth(id, health);
 
+            // Destroy fuel block
             health = scene.GetHealth(fuel);
             health.points = 0;
             scene.SetHealth(fuel, health);
+
+            Timer timer = scene.GetTimer(id);
+            timer.stayAlive = 100.0f;
+            scene.SetTimer(id, timer);
         }
     }
 }

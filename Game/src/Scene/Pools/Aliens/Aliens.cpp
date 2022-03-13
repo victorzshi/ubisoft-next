@@ -88,7 +88,7 @@ int Aliens::CreateTurret(Scene &scene, Vector3 &position)
     scene.SetCollider(id, collider);
 
     Health health;
-    health.points = 10;
+    health.points = 50;
     scene.SetHealth(id, health);
 
     Model model;
