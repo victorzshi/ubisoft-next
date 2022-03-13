@@ -11,18 +11,15 @@ void Aliens::Init(Scene &scene)
     int total = 0;
     for (auto &planet : scene.GetPlanets().GetIds())
     {
-        float radius = scene.GetCollider(planet).radius;
-
-        // Bigger planets have more enemies
         int count = 0;
-        int enemies = (int)floor(radius * 2.0f);
+        int enemies = scene.GetAI(planet).enemyCount;
         total += enemies;
         while (count < enemies)
         {
             Vector3 planetPosition = scene.GetTransform(planet).position;
 
             Vector3 direction = Utils::RandomUnitCircleVector();
-            float distance = radius * Utils::RandomFloat(1.0f, 2.0f);
+            float distance = scene.GetCollider(planet).radius * Utils::RandomFloat(1.5f, 3.0f);
 
             Vector3 alienPosition;
             alienPosition = planetPosition + direction * distance;
@@ -31,7 +28,7 @@ void Aliens::Init(Scene &scene)
 
             // TODO: Turret OR flying enemy type.
 
-            id = CreateAlien(scene, alienPosition);
+            id = CreateAlien(scene, alienPosition, planet);
             count++;
         }
     }
@@ -51,6 +48,11 @@ void Aliens::Update(Scene &scene)
         {
             scene.GetParticles().Explosion(scene, id);
 
+            int planet = scene.GetAI(id).homePlanet;
+            AI ai = scene.GetAI(planet);
+            ai.enemyCount--;
+            scene.SetAI(planet, ai);
+
             Deactivate(id);
         }
         else
@@ -62,12 +64,13 @@ void Aliens::Update(Scene &scene)
     UpdateIds();
 }
 
-int Aliens::CreateAlien(Scene &scene, Vector3 &position)
+int Aliens::CreateAlien(Scene &scene, Vector3 &position, int &planet)
 {
     int id = scene.CreateId();
 
     AI ai;
     ai.attackRange = 10.0f;
+    ai.homePlanet = planet;
     scene.SetAI(id, ai);
 
     Collider collider;

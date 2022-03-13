@@ -23,7 +23,7 @@ void Systems::MoveCamera(Scene &scene, int id)
 
     // Switch between zoomed in and zoomed out views
     Vector3 position = scene.GetScenePosition();
-    if (closest < 15.0f)
+    if (closest < 20.0f)
     {
         position.z = Utils::Lerp(position.z, 10.0f, 0.05f);
     }
