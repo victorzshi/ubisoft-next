@@ -147,7 +147,7 @@ void Systems::ShootAtMouse(Scene &scene, int id)
         Vector3 from = scene.GetTransform(id).position;
         Vector3 to = scene.GetMousePosition();
 
-        scene.GetBullets().ShootAt(scene, from, to, Colors::WHITE);
+        scene.GetBullets().ShipShootAt(scene, from, to);
 
         Timer timer = scene.GetTimer(id);
         timer.start = scene.GetTime();
@@ -177,7 +177,7 @@ void Systems::ShootAtShip(Scene &scene, int id)
             Vector3 from = transform.position;
             Vector3 to = shipPosition;
 
-            scene.GetBullets().ShootAt(scene, from, to, Colors::RED);
+            scene.GetBullets().AlienShootAt(scene, from, to);
 
             Timer timer = scene.GetTimer(id);
             timer.start = scene.GetTime();
@@ -238,18 +238,29 @@ void Systems::AddRotationFromConstant(Scene &scene, int id)
 void Systems::CheckBulletHit(Scene &scene, int id)
 {
     std::vector<int> targets;
-    for (auto &ship : scene.GetShips().GetIds())
+
+    // XXX: No friendly fire :)
+    Model model = scene.GetModel(id);
+    int r = model.color.r;
+    int g = model.color.g;
+    int b = model.color.b;
+    bool isShip = r == 255 && g == 255 && b == 255 ? true : false;
+    if (isShip)
     {
-        targets.push_back(ship);
+        for (auto &alien : scene.GetAliens().GetIds())
+        {
+            targets.push_back(alien);
+        }
     }
-    for (auto &asteroid : scene.GetAsteroids().GetIds())
+    else
     {
-        targets.push_back(asteroid);
+        for (auto &ship : scene.GetShips().GetIds())
+        {
+            targets.push_back(ship);
+        }
     }
-    for (auto &alien : scene.GetAliens().GetIds())
-    {
-        targets.push_back(alien);
-    }
+
+    // All bullets collide with planets
     for (auto &planet : scene.GetPlanets().GetIds())
     {
         targets.push_back(planet);
@@ -374,7 +385,7 @@ void Systems::CheckShipCollision(Scene &scene, int id)
             Vector3 from = scene.GetTransform(target).position;
             Vector3 to = transform.position;
             Vector3 direction = (to - from).Normalize();
-            physics.velocity = direction * scene.GetShips().GetMaxVelocity();
+            physics.velocity = direction * 5.0f;
             physics.acceleration = Vector3();
 
             scene.SetPhysics(id, physics);
@@ -383,11 +394,11 @@ void Systems::CheckShipCollision(Scene &scene, int id)
             Health health;
 
             health = scene.GetHealth(id);
-            health.points -= (int)scene.GetShips().GetMaxVelocity();
+            health.points -= 10;
             scene.SetHealth(id, health);
 
             health = scene.GetHealth(target);
-            health.points -= (int)scene.GetShips().GetMaxVelocity();
+            health.points -= 10;
             scene.SetHealth(target, health);
 
             scene.GetParticles().Ricochet(scene, id);

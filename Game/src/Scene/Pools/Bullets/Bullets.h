@@ -9,12 +9,12 @@ class Bullets : public Pool
 {
   public:
     const int TOTAL = 100;
-    const float WIDTH = 0.1f;
-    const float DELTA_VELOCITY = 15.0f;
 
     virtual void Init(Scene &scene) override;
 
     virtual void Update(Scene &scene) override;
 
-    void ShootAt(Scene &scene, Vector3 &from, Vector3 &to, Colors color);
+    void ShipShootAt(Scene &scene, Vector3 &from, Vector3 &to);
+
+    void AlienShootAt(Scene &scene, Vector3 &from, Vector3 &to);
 };
