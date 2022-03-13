@@ -10,7 +10,7 @@ class Systems
     void RotateTowardsShip(Scene &scene, int id);
     void AccelerateShip(Scene &scene, int id);
     void ShootAtMouse(Scene &scene, int id);
-    void ShootAtShip(Scene &scene, int id);
+    void AttackShip(Scene &scene, int id);
     void UpdatePosition(Scene &scene, int id);
     void AddRotationFromVelocity(Scene &scene, int id);
     void AddRotationFromConstant(Scene &scene, int id);

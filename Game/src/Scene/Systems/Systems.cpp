@@ -113,7 +113,7 @@ void Systems::AccelerateShip(Scene &scene, int id)
     {
         physics.acceleration = direction * 2.0f;
         scene.GetShips().SetMaxVelocity(10.0f);
-        scene.GetParticles().Boost(scene, id);
+        scene.GetParticles().Boost(scene, id, to);
     }
     else
     {
@@ -148,7 +148,7 @@ void Systems::ShootAtMouse(Scene &scene, int id)
     }
 }
 
-void Systems::ShootAtShip(Scene &scene, int id)
+void Systems::AttackShip(Scene &scene, int id)
 {
     float current = scene.GetTime();
 
@@ -156,27 +156,53 @@ void Systems::ShootAtShip(Scene &scene, int id)
     Timer timer = scene.GetTimer(id);
     Transform transform = scene.GetTransform(id);
 
-    if (timer.Elapsed(current) < timer.cooldown)
+    if (ai.isBomber)
     {
-        return;
-    }
+        Physics physics = scene.GetPhysics(id);
 
-    for (auto &ship : scene.GetShips().GetIds())
-    {
-        Vector3 shipPosition = scene.GetTransform(ship).position;
-
-        if (Utils::Distance(transform.position, shipPosition) < ai.attackRange)
+        for (auto &ship : scene.GetShips().GetIds())
         {
-            Vector3 from = transform.position;
-            Vector3 to = shipPosition;
+            Vector3 shipPosition = scene.GetTransform(ship).position;
 
-            scene.GetBullets().AlienShootAt(scene, from, to);
+            if (Utils::Distance(transform.position, shipPosition) < ai.attackRange)
+            {
+                Vector3 from = transform.position;
+                Vector3 to = shipPosition;
+                Vector3 direction = (to - from).Normalize();
 
-            Timer timer = scene.GetTimer(id);
-            timer.start = scene.GetTime();
-            scene.SetTimer(id, timer);
+                physics.acceleration = direction * 5.0f;
 
-            break;
+                scene.SetPhysics(id, physics);
+                scene.GetParticles().Boost(scene, id, direction);
+
+                break;
+            }
+        }
+    }
+    else
+    {
+        if (timer.Elapsed(current) < timer.cooldown)
+        {
+            return;
+        }
+
+        for (auto &ship : scene.GetShips().GetIds())
+        {
+            Vector3 shipPosition = scene.GetTransform(ship).position;
+
+            if (Utils::Distance(transform.position, shipPosition) < ai.attackRange)
+            {
+                Vector3 from = transform.position;
+                Vector3 to = shipPosition;
+
+                scene.GetBullets().AlienShootAt(scene, from, to);
+
+                Timer timer = scene.GetTimer(id);
+                timer.start = scene.GetTime();
+                scene.SetTimer(id, timer);
+
+                break;
+            }
         }
     }
 }

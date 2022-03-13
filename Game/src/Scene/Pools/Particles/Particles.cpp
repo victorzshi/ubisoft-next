@@ -114,13 +114,10 @@ void Particles::Explosion(Scene &scene, int id)
     }
 }
 
-void Particles::Boost(Scene &scene, int id)
+void Particles::Boost(Scene &scene, int id, Vector3 &direction)
 {
     Transform transform = scene.GetTransform(id);
-    Vector3 from = transform.position;
-    Vector3 to = scene.GetMousePosition();
-    Vector3 direction = (from - to).Normalize();
-    transform.position += direction * 0.5f;
+    transform.position += direction * -transform.scaling.x * 0.5f;
     transform.scaling = Vector3(0.1f, 0.1f, 0.1f);
 
     Model model = scene.GetModel(id);

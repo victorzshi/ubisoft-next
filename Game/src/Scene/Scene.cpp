@@ -246,7 +246,8 @@ void Scene::Update(float deltaTime)
     {
         m_systems.AddRotationFromConstant(*this, id);
         m_systems.RotateTowardsShip(*this, id);
-        m_systems.ShootAtShip(*this, id);
+        m_systems.AttackShip(*this, id);
+        m_systems.UpdatePosition(*this, id);
     }
 
     for (auto &id : m_bullets.GetIds())

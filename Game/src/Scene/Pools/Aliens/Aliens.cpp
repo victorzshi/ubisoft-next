@@ -112,6 +112,7 @@ int Aliens::CreateBomber(Scene &scene, Vector3 &position)
 
     AI ai;
     ai.attackRange = 6.0f;
+    ai.isBomber = true;
     scene.SetAI(id, ai);
 
     Collider collider;
