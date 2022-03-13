@@ -383,11 +383,11 @@ void Systems::CheckShipCollision(Scene &scene, int id)
             Health health;
 
             health = scene.GetHealth(id);
-            health.points -= scene.GetShips().GetMaxVelocity();
+            health.points -= (int)scene.GetShips().GetMaxVelocity();
             scene.SetHealth(id, health);
 
             health = scene.GetHealth(target);
-            health.points -= scene.GetShips().GetMaxVelocity();
+            health.points -= (int)scene.GetShips().GetMaxVelocity();
             scene.SetHealth(target, health);
 
             scene.GetParticles().Ricochet(scene, id);
