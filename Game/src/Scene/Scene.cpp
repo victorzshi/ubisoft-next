@@ -261,6 +261,7 @@ void Scene::Update(float deltaTime)
     {
         m_systems.UpdatePosition(*this, id);
         m_systems.AddRotationFromVelocity(*this, id);
+        m_systems.ScaleSmaller(*this, id);
     }
 
     for (auto &id : m_planets.GetIds())

@@ -26,7 +26,7 @@ void Aliens::Init(Scene &scene)
 
             // TODO: Check that the alien position isn't inside any other planet
 
-            if (Utils::RandomInt(0, 1) == 1)
+            if (Utils::RandomFloat(0.0f, 1.0f) > 0.3f)
             {
                 id = CreateTurret(scene, alienPosition);
             }
@@ -54,13 +54,13 @@ void Aliens::Update(Scene &scene)
 
         if (scene.GetHealth(id).points <= 0)
         {
-            scene.GetParticles().Explosion(scene, id);
+            scene.GetParticles().Explode(scene, id);
 
             Deactivate(id);
         }
         else if (timer.stayAlive != 0.0f && timer.Elapsed(scene.GetTime()) > timer.stayAlive)
         {
-            scene.GetParticles().Explosion(scene, id);
+            scene.GetParticles().Explode(scene, id);
 
             Deactivate(id);
         }

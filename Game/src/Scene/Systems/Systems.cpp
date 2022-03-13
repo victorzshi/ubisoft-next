@@ -182,7 +182,7 @@ void Systems::AttackShip(Scene &scene, int id)
                     timer.stayAlive = 3.0f;
                     scene.SetTimer(id, timer);
                 }
-   
+
                 scene.GetParticles().Boost(scene, id, direction);
 
                 break;
@@ -452,4 +452,15 @@ void Systems::PickUpFuel(Scene &scene, int id)
             scene.SetHealth(fuel, health);
         }
     }
+}
+
+void Systems::ScaleSmaller(Scene &scene, int id)
+{
+    Transform transform = scene.GetTransform(id);
+
+    transform.scaling.x = Utils::Lerp(transform.scaling.x, 0.1f, 0.01f);
+    transform.scaling.y = Utils::Lerp(transform.scaling.y, 0.1f, 0.01f);
+    transform.scaling.z = Utils::Lerp(transform.scaling.z, 0.0f, 0.01f);
+
+    scene.SetTransform(id, transform);
 }

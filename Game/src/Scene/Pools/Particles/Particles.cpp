@@ -77,12 +77,12 @@ void Particles::Ricochet(Scene &scene, int id)
     }
 }
 
-void Particles::Explosion(Scene &scene, int id)
+void Particles::Explode(Scene &scene, int id)
 {
     Transform transform = scene.GetTransform(id);
     Model model = scene.GetModel(id);
     model.mesh.SetMesh(Meshes::CUBE);
-    model.lighting = Lighting::SHADOW;
+    model.lighting = Lighting::BRIGHT;
     Physics physics = scene.GetPhysics(id);
     Timer timer = scene.GetTimer(id);
     timer.start = scene.GetTime();

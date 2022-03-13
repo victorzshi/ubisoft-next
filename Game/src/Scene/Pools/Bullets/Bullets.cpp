@@ -54,7 +54,7 @@ void Bullets::ShipShootAt(Scene &scene, Vector3 &from, Vector3 &to)
         float width = 0.1f;
 
         Vector3 direction = (to - from).Normalize();
-        Vector3 position = from + direction; // Spawn the bullet a little in front of the model
+        Vector3 position = from + direction * 0.6f; // Spawn the bullet a little in front of the model
 
         Collider collider;
         collider.radius = width * 0.5f;

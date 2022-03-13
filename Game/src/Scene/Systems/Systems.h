@@ -21,4 +21,5 @@ class Systems
     void SpinPlanet(Scene &scene, int id);
     void CheckShipCollision(Scene &scene, int id);
     void PickUpFuel(Scene &scene, int id);
+    void ScaleSmaller(Scene &scene, int id);
 };
