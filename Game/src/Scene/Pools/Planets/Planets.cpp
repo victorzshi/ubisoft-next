@@ -123,8 +123,8 @@ int Planets::CreatePlanet(Scene &scene, Vector3 &position)
     float scale = Utils::RandomFloat(5.0f, 10.0f);
 
     AI ai;
-    ai.attackRange = scale * 2.0f;           // For gravity
-    ai.enemyCount = (int)ceil(scale * 2.0f); // Bigger planets have more enemies
+    ai.attackRange = scale * 2.0f;    // For gravity
+    ai.enemyCount = (int)ceil(scale); // Bigger planets have more enemies
     scene.SetAI(id, ai);
 
     Collider collider;

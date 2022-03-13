@@ -96,19 +96,17 @@ void Particles::Explosion(Scene &scene, int id)
         {
             scene.SetModel(particle, model);
 
-            // float scale = Utils::RandomFloat(0.0f, 0.1f);
-            //  transform.scaling = Vector3(scale, scale, scale);
-            transform.scaling.x = Utils::RandomFloat(0.1f, 0.5f);
-            transform.scaling.y = Utils::RandomFloat(0.1f, 0.5f);
+            transform.scaling.x = Utils::RandomFloat(transform.scaling.x * 0.5f, transform.scaling.x);
+            transform.scaling.y = Utils::RandomFloat(transform.scaling.y * 0.5f, transform.scaling.y);
             transform.scaling.z = 0.0f;
             transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
             transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
             transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);
             scene.SetTransform(particle, transform);
 
-            physics.velocity.x = Utils::RandomFloat(-20.0f, 20.0f);
-            physics.velocity.y = Utils::RandomFloat(-20.0f, 20.0f);
-            physics.velocity.z = Utils::RandomFloat(-20.0f, 20.0f);
+            physics.velocity.x = Utils::RandomFloat(-10.0f, 10.0f);
+            physics.velocity.y = Utils::RandomFloat(-10.0f, 10.0f);
+            physics.velocity.z = Utils::RandomFloat(-10.0f, 10.0f);
             scene.SetPhysics(particle, physics);
 
             scene.SetTimer(particle, timer);

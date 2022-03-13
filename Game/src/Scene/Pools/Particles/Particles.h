@@ -16,6 +16,4 @@ class Particles : public Pool
     void Ricochet(Scene &scene, int id);
 
     void Explosion(Scene &scene, int id);
-
-    void Supernova(Scene &scene, int id);
 };
