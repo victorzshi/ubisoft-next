@@ -103,6 +103,12 @@ void Systems::AccelerateShip(Scene &scene, int id)
         direction.y = -deltaAcceleration;
     }
 
+    if (direction == Vector3())
+    {
+        return;
+    }
+
+    Timer timer = scene.GetTimer(id);
     Physics physics = scene.GetPhysics(id);
     Transform transform = scene.GetTransform(id);
 
@@ -111,16 +117,19 @@ void Systems::AccelerateShip(Scene &scene, int id)
 
     if (from.Dot(to) > 0.8f)
     {
+        timer.stayAlive -= scene.GetDeltaTime() / 500.0f;
         physics.acceleration = direction * 2.0f;
         scene.GetShips().SetMaxVelocity(10.0f);
         scene.GetParticles().Boost(scene, id, to);
     }
     else
     {
+        timer.stayAlive -= scene.GetDeltaTime() / 1000.0f;
         physics.acceleration = direction;
         scene.GetShips().SetMaxVelocity(5.0f);
     }
 
+    scene.SetTimer(id, timer);
     scene.SetPhysics(id, physics);
 }
 
@@ -179,7 +188,7 @@ void Systems::AttackShip(Scene &scene, int id)
                 if (timer.stayAlive == 0.0f)
                 {
                     timer.start = scene.GetTime();
-                    timer.stayAlive = 3.0f;
+                    timer.stayAlive = 10.0f;
                     scene.SetTimer(id, timer);
                 }
 
@@ -302,11 +311,11 @@ void Systems::CheckBulletHit(Scene &scene, int id)
             Health health;
 
             health = scene.GetHealth(id);
-            health.points--;
+            health.points--; // Bullets have 1 health
             scene.SetHealth(id, health);
 
             health = scene.GetHealth(target);
-            health.points--;
+            health.points -= 5;
             scene.SetHealth(target, health);
 
             scene.GetParticles().Ricochet(scene, id);
@@ -333,7 +342,7 @@ void Systems::ApplyGravity(Scene &scene, int id)
             Vector3 direction = (to - from).Normalize();
 
             // Bigger planets have more gravity :)
-            float scale = scene.GetCollider(planet).radius;
+            float scale = scene.GetCollider(planet).radius * 0.5f;
             physics.acceleration += direction * scale;
 
             scene.SetPhysics(id, physics);
@@ -388,21 +397,18 @@ void Systems::SpinPlanet(Scene &scene, int id)
     scene.SetTransform(id, transform);
 }
 
-void Systems::CheckShipCollision(Scene &scene, int id)
+void Systems::CheckPlanetCollision(Scene &scene, int id)
 {
-    std::vector<int> targets;
-    for (auto &alien : scene.GetAliens().GetIds())
-    {
-        targets.push_back(alien);
-    }
     for (auto &planet : scene.GetPlanets().GetIds())
     {
-        targets.push_back(planet);
-    }
+        AI ai = scene.GetAI(id);
 
-    for (auto &target : targets)
-    {
-        if (Collider::IsHit(scene, id, target))
+        if (ai.attackRange > 0.0f && !ai.isBomber) // Is a stationary turret.
+        {
+            return;
+        }
+
+        if (Collider::IsHit(scene, id, planet))
         {
             Physics physics = scene.GetPhysics(id);
             Transform transform = scene.GetTransform(id);
@@ -411,7 +417,7 @@ void Systems::CheckShipCollision(Scene &scene, int id)
 
             transform.position -= physics.velocity * elapsed;
 
-            Vector3 from = scene.GetTransform(target).position;
+            Vector3 from = scene.GetTransform(planet).position;
             Vector3 to = transform.position;
             Vector3 direction = (to - from).Normalize();
             physics.velocity = direction * 5.0f;
@@ -423,12 +429,61 @@ void Systems::CheckShipCollision(Scene &scene, int id)
             Health health;
 
             health = scene.GetHealth(id);
-            health.points -= 10;
+            health.points -= 5;
             scene.SetHealth(id, health);
 
-            health = scene.GetHealth(target);
+            scene.GetParticles().Ricochet(scene, id);
+        }
+    }
+}
+
+void Systems::CheckAlienCollision(Scene &scene, int id)
+{
+    for (auto &alien : scene.GetAliens().GetIds())
+    {
+        if (Collider::IsHit(scene, id, alien))
+        {
+            bool isBomber = scene.GetAI(alien).isBomber;
+
+            Physics physics = scene.GetPhysics(id);
+            Transform transform = scene.GetTransform(id);
+
+            float elapsed = scene.GetDeltaTime() / 1000.0f;
+
+            transform.position -= physics.velocity * elapsed;
+
+            Vector3 from = scene.GetTransform(alien).position;
+            Vector3 to = transform.position;
+            Vector3 direction = (to - from).Normalize();
+            if (isBomber)
+            {
+                physics.velocity = direction * 20.0f;
+            }
+            else
+            {
+                physics.velocity = direction * 10.0f;
+            }
+            physics.acceleration = Vector3();
+
+            scene.SetPhysics(id, physics);
+            scene.SetTransform(id, transform);
+
+            Health health;
+
+            health = scene.GetHealth(id);
+            if (isBomber)
+            {
+                health.points -= 20;
+            }
+            else
+            {
+                health.points -= 10;
+            }
+            scene.SetHealth(id, health);
+
+            health = scene.GetHealth(alien);
             health.points -= 10;
-            scene.SetHealth(target, health);
+            scene.SetHealth(alien, health);
 
             scene.GetParticles().Ricochet(scene, id);
         }
@@ -447,9 +502,14 @@ void Systems::PickUpFuel(Scene &scene, int id)
             health.points = 100; // Reset health
             scene.SetHealth(id, health);
 
+            // Destroy fuel block
             health = scene.GetHealth(fuel);
             health.points = 0;
             scene.SetHealth(fuel, health);
+
+            Timer timer = scene.GetTimer(id);
+            timer.stayAlive = 100.0f;
+            scene.SetTimer(id, timer);
         }
     }
 }
@@ -458,9 +518,9 @@ void Systems::ScaleSmaller(Scene &scene, int id)
 {
     Transform transform = scene.GetTransform(id);
 
-    transform.scaling.x = Utils::Lerp(transform.scaling.x, 0.1f, 0.01f);
-    transform.scaling.y = Utils::Lerp(transform.scaling.y, 0.1f, 0.01f);
-    transform.scaling.z = Utils::Lerp(transform.scaling.z, 0.0f, 0.01f);
+    transform.scaling.x = Utils::Lerp(transform.scaling.x, 0.0f, 0.02f);
+    transform.scaling.y = Utils::Lerp(transform.scaling.y, 0.0f, 0.02f);
+    transform.scaling.z = Utils::Lerp(transform.scaling.z, 0.0f, 0.02f);
 
     scene.SetTransform(id, transform);
 }

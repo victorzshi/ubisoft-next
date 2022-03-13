@@ -19,7 +19,7 @@ void Aliens::Init(Scene &scene)
             Vector3 planetPosition = scene.GetTransform(planet).position;
 
             Vector3 direction = Utils::RandomUnitCircleVector();
-            float distance = scene.GetCollider(planet).radius * Utils::RandomFloat(1.2f, 3.0f);
+            float distance = scene.GetCollider(planet).radius * Utils::RandomFloat(1.5f, 3.0f);
 
             Vector3 alienPosition;
             alienPosition = planetPosition + direction * distance;
@@ -88,7 +88,7 @@ int Aliens::CreateTurret(Scene &scene, Vector3 &position)
     scene.SetCollider(id, collider);
 
     Health health;
-    health.points = 10;
+    health.points = 50;
     scene.SetHealth(id, health);
 
     Model model;
@@ -119,7 +119,7 @@ int Aliens::CreateBomber(Scene &scene, Vector3 &position)
     float width = 0.5f;
 
     AI ai;
-    ai.attackRange = 6.0f;
+    ai.attackRange = 8.0f;
     ai.isBomber = true;
     scene.SetAI(id, ai);
 

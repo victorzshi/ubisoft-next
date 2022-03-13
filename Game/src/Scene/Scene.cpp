@@ -238,7 +238,8 @@ void Scene::Update(float deltaTime)
         m_systems.LimitShipVelocity(*this, id);
         m_systems.ShootAtMouse(*this, id);
         m_systems.UpdatePosition(*this, id);
-        m_systems.CheckShipCollision(*this, id);
+        m_systems.CheckPlanetCollision(*this, id);
+        m_systems.CheckAlienCollision(*this, id);
         m_systems.PickUpFuel(*this, id);
     }
 
@@ -248,20 +249,21 @@ void Scene::Update(float deltaTime)
         m_systems.RotateTowardsShip(*this, id);
         m_systems.AttackShip(*this, id);
         m_systems.UpdatePosition(*this, id);
+        m_systems.CheckPlanetCollision(*this, id);
     }
 
     for (auto &id : m_bullets.GetIds())
     {
-        m_systems.UpdatePosition(*this, id);
         m_systems.AddRotationFromVelocity(*this, id);
+        m_systems.UpdatePosition(*this, id);
         m_systems.CheckBulletHit(*this, id);
     }
 
     for (auto &id : m_particles.GetIds())
     {
-        m_systems.UpdatePosition(*this, id);
-        m_systems.AddRotationFromVelocity(*this, id);
         m_systems.ScaleSmaller(*this, id);
+        m_systems.AddRotationFromVelocity(*this, id);
+        m_systems.UpdatePosition(*this, id);
     }
 
     for (auto &id : m_planets.GetIds())
@@ -289,6 +291,19 @@ void Scene::Update(float deltaTime)
 void Scene::Render()
 {
     m_renderer.Render();
+
+    for (auto &id : GetShips().GetIds())
+    {
+        Health health = GetHealth(id);
+        Timer timer = GetTimer(id);
+
+        int fuel = (int)roundf(timer.stayAlive);
+
+        std::string healthText = "Health: " + std::to_string(health.points);
+        std::string fuelText = "Fuel: " + std::to_string(fuel);
+        App::Print(10.0f, 30.0f, healthText.c_str(), 0.0f, 0.0f, 1.0f);
+        App::Print(10.0f, 10.0f, fuelText.c_str(), 0.0f, 0.0f, 1.0f);
+    }
 }
 
 void Scene::SetTime(float deltaTime)
