@@ -5,6 +5,7 @@
 enum class Meshes
 {
     PLANE,
+    TWOPLANE,
     CUBE,
     SPHERE,
     ICOSPHERE,
@@ -26,6 +27,7 @@ struct Mesh
     Meshes m_mesh;
 
     static std::vector<Face> m_plane;
+    static std::vector<Face> m_twoplane;
     static std::vector<Face> m_cube;
     static std::vector<Face> m_sphere;
     static std::vector<Face> m_icosphere;

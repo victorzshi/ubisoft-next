@@ -79,14 +79,21 @@ void Particles::Ricochet(Scene &scene, int id)
 
 void Particles::Explode(Scene &scene, int id)
 {
+    // Explosion of lines
     Transform transform = scene.GetTransform(id);
+    transform.scaling.x = transform.scaling.x * 0.01f;
+    transform.scaling.y = transform.scaling.y * 0.01f;
+    transform.scaling.z = transform.scaling.z * 1.0f;
+
     Model model = scene.GetModel(id);
-    model.mesh.SetMesh(Meshes::CUBE);
-    model.lighting = Lighting::BRIGHT;
+    model.mesh.SetMesh(Meshes::TWOPLANE);
+    model.lighting = Lighting::SHADOW;
+
     Physics physics = scene.GetPhysics(id);
+
     Timer timer = scene.GetTimer(id);
     timer.start = scene.GetTime();
-    timer.stayAlive = 5.0f;
+    timer.stayAlive = 3.0f;
 
     for (int i = 0; i < 100; i++)
     {
@@ -96,9 +103,6 @@ void Particles::Explode(Scene &scene, int id)
         {
             scene.SetModel(particle, model);
 
-            transform.scaling.x = Utils::RandomFloat(transform.scaling.x * 0.5f, transform.scaling.x);
-            transform.scaling.y = Utils::RandomFloat(transform.scaling.y * 0.5f, transform.scaling.y);
-            transform.scaling.z = 0.0f;
             transform.rotation.x = Utils::RandomFloat(0.0f, 360.0f);
             transform.rotation.y = Utils::RandomFloat(0.0f, 360.0f);
             transform.rotation.z = Utils::RandomFloat(0.0f, 360.0f);

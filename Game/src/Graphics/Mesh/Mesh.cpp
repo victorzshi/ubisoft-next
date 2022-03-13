@@ -6,6 +6,7 @@
 #include <strstream>
 
 std::vector<Face> Mesh::m_plane;
+std::vector<Face> Mesh::m_twoplane;
 std::vector<Face> Mesh::m_cube;
 std::vector<Face> Mesh::m_sphere;
 std::vector<Face> Mesh::m_icosphere;
@@ -18,6 +19,10 @@ Mesh::Mesh() : m_mesh(Meshes::CUBE)
     if (m_plane.empty())
     {
         m_plane = LoadFromObjectFile("plane.obj");
+    }
+    if (m_twoplane.empty())
+    {
+        m_twoplane = LoadFromObjectFile("twoplane.obj");
     }
     if (m_cube.empty())
     {
@@ -53,6 +58,10 @@ std::vector<Face> Mesh::GetFaces()
     {
     case Meshes::PLANE:
         faces = m_plane;
+        break;
+
+    case Meshes::TWOPLANE:
+        faces = m_twoplane;
         break;
 
     case Meshes::CUBE:

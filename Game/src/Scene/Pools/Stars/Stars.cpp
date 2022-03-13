@@ -20,7 +20,7 @@ void Stars::Init(Scene &scene)
 
         float x = Utils::RandomFloat(-300.0f, 300.0f);
         float y = Utils::RandomFloat(-300.0f, 300.0f);
-        float z = -200.0f;
+        float z = Utils::RandomFloat(-200.0f, -100.0f);
 
         Transform transform;
         transform.position = Vector3(x, y, z);

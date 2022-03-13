@@ -458,9 +458,9 @@ void Systems::ScaleSmaller(Scene &scene, int id)
 {
     Transform transform = scene.GetTransform(id);
 
-    transform.scaling.x = Utils::Lerp(transform.scaling.x, 0.1f, 0.01f);
-    transform.scaling.y = Utils::Lerp(transform.scaling.y, 0.1f, 0.01f);
-    transform.scaling.z = Utils::Lerp(transform.scaling.z, 0.0f, 0.01f);
+    transform.scaling.x = Utils::Lerp(transform.scaling.x, 0.0f, 0.02f);
+    transform.scaling.y = Utils::Lerp(transform.scaling.y, 0.0f, 0.02f);
+    transform.scaling.z = Utils::Lerp(transform.scaling.z, 0.0f, 0.02f);
 
     scene.SetTransform(id, transform);
 }
