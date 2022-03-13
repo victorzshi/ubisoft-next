@@ -113,3 +113,43 @@ void Particles::Explosion(Scene &scene, int id)
         }
     }
 }
+
+void Particles::Boost(Scene &scene, int id)
+{
+    Transform transform = scene.GetTransform(id);
+    Vector3 from = transform.position;
+    Vector3 to = scene.GetMousePosition();
+    Vector3 direction = (from - to).Normalize();
+    transform.position += direction * 0.5f;
+    transform.scaling = Vector3(0.1f, 0.1f, 0.1f);
+
+    Model model = scene.GetModel(id);
+    model.mesh.SetMesh(Meshes::CONE);
+    model.color.SetColor(Colors::ORANGE);
+    model.lighting = Lighting::BRIGHT;
+
+    Physics physics = scene.GetPhysics(id);
+
+    Timer timer = scene.GetTimer(id);
+    timer.start = scene.GetTime();
+    timer.stayAlive = 0.3f;
+
+    for (int i = 0; i < 5; i++)
+    {
+        int particle = GetSize();
+
+        if (Activate(particle))
+        {
+            scene.SetTransform(particle, transform);
+
+            scene.SetModel(particle, model);
+
+            physics.velocity.x = Utils::RandomFloat(-1.0f, 1.0f);
+            physics.velocity.y = Utils::RandomFloat(-1.0f, 1.0f);
+            physics.velocity.z = Utils::RandomFloat(-1.0f, 1.0f);
+            scene.SetPhysics(particle, physics);
+
+            scene.SetTimer(particle, timer);
+        }
+    }
+}
