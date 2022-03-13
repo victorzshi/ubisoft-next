@@ -238,18 +238,29 @@ void Systems::AddRotationFromConstant(Scene &scene, int id)
 void Systems::CheckBulletHit(Scene &scene, int id)
 {
     std::vector<int> targets;
-    for (auto &ship : scene.GetShips().GetIds())
+
+    // XXX: No friendly fire :)
+    Model model = scene.GetModel(id);
+    int r = model.color.r;
+    int g = model.color.g;
+    int b = model.color.b;
+    bool isShip = r == 255 && g == 255 && b == 255 ? true : false;
+    if (isShip)
     {
-        targets.push_back(ship);
+        for (auto &alien : scene.GetAliens().GetIds())
+        {
+            targets.push_back(alien);
+        }
     }
-    for (auto &asteroid : scene.GetAsteroids().GetIds())
+    else
     {
-        targets.push_back(asteroid);
+        for (auto &ship : scene.GetShips().GetIds())
+        {
+            targets.push_back(ship);
+        }
     }
-    for (auto &alien : scene.GetAliens().GetIds())
-    {
-        targets.push_back(alien);
-    }
+
+    // All bullets collide with planets
     for (auto &planet : scene.GetPlanets().GetIds())
     {
         targets.push_back(planet);
