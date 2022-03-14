@@ -57,12 +57,16 @@ void Aliens::Update(Scene &scene)
             scene.GetParticles().Explode(scene, id);
 
             Deactivate(id);
+
+            scene.GetUI()->scoring.enemiesDestroyed++;
         }
         else if (timer.stayAlive != 0.0f && timer.Elapsed(scene.GetTime()) > timer.stayAlive)
         {
             scene.GetParticles().Explode(scene, id);
 
             Deactivate(id);
+
+            scene.GetUI()->scoring.enemiesDestroyed++;
         }
         else
         {

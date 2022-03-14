@@ -42,10 +42,15 @@ void Ships::Init(Scene &scene)
 
 void Ships::Update(Scene &scene)
 {
+    if (scene.GetUI()->GetScreen() == Screen::GAME_OVER)
+    {
+        return;
+    }
+
     int id = GetBegin();
     while (id < GetSize())
     {
-        if (scene.GetHealth(id).points <= 0)
+        if (scene.GetHealth(id).points <= 0 || scene.GetTimer(id).stayAlive <= 0)
         {
             scene.GetParticles().Explode(scene, id);
 

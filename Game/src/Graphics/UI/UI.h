@@ -4,19 +4,38 @@
 
 #include <chrono>
 
+class Scene;
+class Renderer;
+
 enum class Screen
 {
     START,
     NONE,
     PAUSED,
+    GAME_OVER,
 };
 
-class Scene;
-class Renderer;
+struct Scoring
+{
+    bool isWin = false;
+    int damageTaken = 0;
+    int enemiesDestroyed = 0;
+    std::chrono::duration<float> totalTime;
+
+    void Reset()
+    {
+        isWin = false;
+        damageTaken = 0;
+        enemiesDestroyed = 0;
+        totalTime = totalTime.zero();
+    }
+};
 
 class UI
 {
   public:
+    Scoring scoring;
+
     UI();
 
     void Init(Scene &scene, Renderer &renderer);

@@ -13,7 +13,7 @@ void Init()
 {
     Vector3Test::RunTests();
     MatrixTest::RunTests();
-    scene.Init(renderer);
+    scene.Init(renderer, ui);
     renderer.Init(scene);
     ui.Init(scene, renderer);
 }
@@ -22,25 +22,22 @@ void Update(float deltaTime)
 {
     ui.HandleInput();
 
-    if (ui.GetScreen() == Screen::NONE)
+    if (ui.GetScreen() == Screen::PAUSED || ui.GetScreen() == Screen::GAME_OVER)
+    {
+        renderer.MoveCamera(deltaTime);
+    }
+
+    if (ui.GetScreen() != Screen::PAUSED)
     {
         ui.Update();
         scene.Update(deltaTime);
         renderer.Update(deltaTime);
     }
-    if (ui.GetScreen() == Screen::PAUSED)
-    {
-        renderer.MoveCamera(deltaTime);
-    }
 }
 
 void Render()
 {
-    if (ui.GetScreen() == Screen::NONE || ui.GetScreen() == Screen::PAUSED)
-    {
-        renderer.Render();
-    }
-
+    renderer.Render();
     ui.Render();
 }
 

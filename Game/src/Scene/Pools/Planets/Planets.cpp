@@ -2,21 +2,26 @@
 
 #include "Planets.h"
 
+#include <set>
+
 #include "Math/Utils/Utils.h"
 #include "Scene/Scene.h"
 
 void Planets::Init(Scene &scene)
 {
+    std::set<int> set;
+
     int id = 0;
     int count = 0;
-    while (count < TOTAL)
+    int total = Utils::RandomInt(4, 8);
+    while (count < total)
     {
         // Select a different direction for each planet going clockwise
         // Max 8 directions
         int random = Utils::RandomInt(0, 7);
-        if (m_random.count(random) == 0)
+        if (set.count(random) == 0)
         {
-            m_random.insert(random);
+            set.insert(random);
 
             float x = Utils::RandomFloat(20.0f, 40.0f);
             float y = Utils::RandomFloat(20.0f, 40.0f);
@@ -78,15 +83,12 @@ void Planets::Init(Scene &scene)
     }
 
     SetScene(&scene);
-    SetBegin(id - (TOTAL - 1));
+    SetBegin(id - (total - 1));
     SetSize(id + 1);
     SetEnd(id);
 
     // Aliens require planet data
     UpdateIds();
-
-    // For restarting the game later properly...
-    m_random.clear();
 }
 
 void Planets::Update(Scene &scene)

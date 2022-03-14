@@ -10,6 +10,7 @@
 #include "Components/Timer/Timer.h"
 #include "Components/Transform/Transform.h"
 #include "Graphics/Renderer/Renderer.h"
+#include "Graphics/UI/UI.h"
 #include "Pools/Aliens/Aliens.h"
 #include "Pools/Bullets/Bullets.h"
 #include "Pools/Fuel/Fuel.h"
@@ -24,9 +25,10 @@ class Scene
   public:
     Scene();
 
-    void Init(Renderer &renderer);
+    void Init(Renderer &renderer, UI &ui);
 
     // Utilities
+    UI *GetUI();
     Vector3 GetScenePosition() const;
     Vector3 GetMousePosition() const;
     float GetDeltaTime() const;
@@ -80,6 +82,10 @@ class Scene
     Renderer *m_renderer;
     Vector3 m_position;
 
+    // Need access to scoring
+    UI *m_ui;
+    bool m_isGameOver;
+
     // Unique ID
     int m_id;
 
@@ -114,4 +120,5 @@ class Scene
     void SetTime(float deltaTime);
     void InitPools();
     void UpdatePools();
+    void CheckGameOver();
 };
