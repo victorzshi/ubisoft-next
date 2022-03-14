@@ -12,13 +12,14 @@ enum class Screen
 };
 
 class Scene;
+class Renderer;
 
 class UI
 {
   public:
     UI();
 
-    void Init(Scene *scene, float SCREEN_WIDTH, float SCREEN_HEIGHT);
+    void Init(Scene &scene, Renderer &renderer);
 
     Screen GetScreen() const;
 
@@ -32,10 +33,10 @@ class UI
 
   private:
     void *m_FONT = GLUT_BITMAP_9_BY_15;
-    float m_SCREEN_WIDTH;
-    float m_SCREEN_HEIGHT;
 
     Scene *m_scene;
+    Renderer *m_renderer;
+
     Screen m_screen;
     Color m_colorLife;
     Color m_colorFuel;

@@ -5,19 +5,17 @@
 #include "Math/Vector3/Vector3Test.cpp"
 #include "Scene/Scene.h"
 
-// If you change these, also update AppSettings.h
-const float SCREEN_WIDTH = 960.0f;
-const float SCREEN_HEIGHT = 540.0f;
-
 Scene scene;
+Renderer renderer;
 UI ui;
 
 void Init()
 {
     Vector3Test::RunTests();
     MatrixTest::RunTests();
-    scene.Init();
-    ui.Init(&scene, SCREEN_WIDTH, SCREEN_HEIGHT);
+    scene.Init(renderer);
+    renderer.Init(scene);
+    ui.Init(scene, renderer);
 }
 
 void Update(float deltaTime)
@@ -28,10 +26,11 @@ void Update(float deltaTime)
     {
         ui.Update();
         scene.Update(deltaTime);
+        renderer.Update(deltaTime);
     }
     if (ui.GetScreen() == Screen::PAUSED)
     {
-        scene.GetRenderer().MoveCamera(deltaTime);
+        renderer.MoveCamera(deltaTime);
     }
 }
 
@@ -39,7 +38,7 @@ void Render()
 {
     if (ui.GetScreen() == Screen::NONE || ui.GetScreen() == Screen::PAUSED)
     {
-        scene.Render();
+        renderer.Render();
     }
 
     ui.Render();
@@ -47,5 +46,4 @@ void Render()
 
 void Shutdown()
 {
-    scene.Shutdown();
 }

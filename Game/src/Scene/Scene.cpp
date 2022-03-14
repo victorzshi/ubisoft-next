@@ -4,7 +4,7 @@
 
 #include "Systems/Systems.h"
 
-Scene::Scene() : m_id(0), m_deltaTime(0.0f)
+Scene::Scene() : m_renderer(nullptr), m_id(0), m_deltaTime(0.0f)
 {
     // Initialize time variables
     m_start = std::chrono::steady_clock::now();
@@ -15,9 +15,9 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     m_position = Vector3(0.0f, 0.0f, 300.0f);
 }
 
-void Scene::Init()
+void Scene::Init(Renderer &renderer)
 {
-    m_renderer.Init(*this);
+    m_renderer = &renderer;
 
     // Planets go first
     m_planets.Init(*this);
@@ -33,18 +33,9 @@ void Scene::Init()
     // TODO: Initialize space but leave all objects inactive. Use level data to generate objects.
 }
 
-void Scene::Shutdown()
-{
-}
-
 void Scene::SetPause(std::chrono::time_point<std::chrono::steady_clock> pause)
 {
     m_start += std::chrono::steady_clock::now() - pause;
-}
-
-Renderer &Scene::GetRenderer()
-{
-    return m_renderer;
 }
 
 Vector3 Scene::GetScenePosition() const
@@ -54,7 +45,7 @@ Vector3 Scene::GetScenePosition() const
 
 Vector3 Scene::GetMousePosition() const
 {
-    return m_renderer.GetMousePosition();
+    return m_renderer->GetMousePosition();
 }
 
 float Scene::GetDeltaTime() const
@@ -178,12 +169,12 @@ void Scene::SetScenePosition(Vector3 position)
 
 void Scene::SetCameraPosition(Vector3 position)
 {
-    m_renderer.SetCameraPosition(position);
+    m_renderer->SetCameraPosition(position);
 }
 
 void Scene::SetCameraTarget(Vector3 target)
 {
-    m_renderer.SetCameraTarget(target);
+    m_renderer->SetCameraTarget(target);
 }
 
 void Scene::SetAI(int id, AI ai)
@@ -294,13 +285,6 @@ void Scene::Update(float deltaTime)
     }
 
     UpdatePools();
-
-    m_renderer.Update(deltaTime);
-}
-
-void Scene::Render()
-{
-    m_renderer.Render();
 }
 
 void Scene::SetTime(float deltaTime)

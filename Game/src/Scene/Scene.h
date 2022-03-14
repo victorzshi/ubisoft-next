@@ -24,11 +24,9 @@ class Scene
   public:
     Scene();
 
-    void Init();
-    void Shutdown();
+    void Init(Renderer &renderer);
 
     // Utilities
-    Renderer &GetRenderer();
     Vector3 GetScenePosition() const;
     Vector3 GetMousePosition() const;
     float GetDeltaTime() const;
@@ -74,9 +72,12 @@ class Scene
     int CreateId();
 
     void Update(float deltaTime);
-    void Render();
 
   private:
+    // Handle camera
+    Renderer *m_renderer;
+    Vector3 m_position;
+
     // Unique ID
     int m_id;
 
@@ -103,10 +104,6 @@ class Scene
     Planets m_planets;
     Ships m_ships;
     Stars m_stars;
-
-    // Handle camera
-    Vector3 m_position;
-    Renderer m_renderer;
 
     // Gameplay logic
     Systems m_systems;

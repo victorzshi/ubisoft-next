@@ -2,20 +2,20 @@
 
 #include "UI.h"
 
+#include "Graphics/Renderer/Renderer.h"
 #include "Scene/Scene.h"
 
-UI::UI() : m_scene(nullptr), m_SCREEN_WIDTH(0.0f), m_SCREEN_HEIGHT(0.0f), m_screen(Screen::START), m_isHidden(false)
+UI::UI() : m_scene(nullptr), m_screen(Screen::START), m_isHidden(false)
 {
     m_pressed = std::chrono::steady_clock::now();
     m_current = m_pressed;
     m_time = m_current - m_pressed;
 }
 
-void UI::Init(Scene *scene, float SCREEN_WIDTH, float SCREEN_HEIGHT)
+void UI::Init(Scene &scene, Renderer &renderer)
 {
-    m_scene = scene;
-    m_SCREEN_WIDTH = SCREEN_WIDTH;
-    m_SCREEN_HEIGHT = SCREEN_HEIGHT;
+    m_scene = &scene;
+    m_renderer = &renderer;
 }
 
 Screen UI::GetScreen() const
@@ -107,6 +107,7 @@ void UI::Render()
     }
 
     float margin = 100.0f;
+    float screenHeight = m_renderer->SCREEN_HEIGHT;
     float r = 1.0f;
     float g = 1.0f;
     float b = 1.0f;
@@ -114,10 +115,10 @@ void UI::Render()
     switch (m_screen)
     {
     case Screen::START:
-        App::Print(margin, m_SCREEN_HEIGHT * 0.80f, "Vanguard Mission Zero: Genesis Odyssey", r, g, b, m_FONT);
-        App::Print(margin, m_SCREEN_HEIGHT * 0.60f, "Controls: WASD to move, LEFT CLICK to fire", r, g, b, m_FONT);
-        App::Print(margin, m_SCREEN_HEIGHT * 0.40f, "Objective: Eliminate all hostiles", r, g, b, m_FONT);
-        App::Print(margin, m_SCREEN_HEIGHT * 0.20f, "Press SPACE to start", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.80f, "Vanguard Mission Zero: Genesis Odyssey", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.60f, "Controls: WASD to move, LEFT CLICK to fire", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.40f, "Objective: Eliminate all hostiles", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.20f, "Press SPACE to start", r, g, b, m_FONT);
         break;
 
     case Screen::NONE:
@@ -125,10 +126,10 @@ void UI::Render()
         break;
 
     case Screen::PAUSED:
-        App::Print(margin, m_SCREEN_HEIGHT * 0.80f, "PAUSED - WASD/SPACE/CTRL to move camera", r, g, b, m_FONT);
-        App::Print(margin, m_SCREEN_HEIGHT * 0.60f, "Press H to hide text", r, g, b, m_FONT);
-        // App::Print(margin, m_SCREEN_HEIGHT * 0.40f, "Press R to restart", r, g, b, m_FONT);
-        App::Print(margin, m_SCREEN_HEIGHT * 0.20f, "Press ESC to continue", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.80f, "PAUSED - WASD/SPACE/CTRL to move camera", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.60f, "Press H to hide text", r, g, b, m_FONT);
+        // App::Print(margin, screenHeight * 0.40f, "Press R to restart", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.20f, "Press ESC to continue", r, g, b, m_FONT);
         PrintShipStats();
         break;
     }

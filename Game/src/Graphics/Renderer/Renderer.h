@@ -9,6 +9,10 @@ class Scene;
 class Renderer
 {
   public:
+    // If you change these, also update AppSettings.h
+    const float SCREEN_WIDTH = 960.0f;
+    const float SCREEN_HEIGHT = 540.0f;
+
     Renderer();
 
     void Init(Scene &scene);
@@ -27,12 +31,10 @@ class Renderer
     Scene *m_scene;
 
     // Constants for viewing frustum
-    const float m_SCREEN_WIDTH = 960.0f;
-    const float m_SCREEN_HEIGHT = 540.0f;
     const float m_FOV = 120.0f;
     const float m_THETA = m_FOV * (PI / 180.0f);
     const float m_DISTANCE = 1.0f / tanf(m_THETA * 0.5f);
-    const float m_ASPECT_RATIO = m_SCREEN_WIDTH / m_SCREEN_HEIGHT;
+    const float m_ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
     const float m_Z_NEAR = 0.1f;
     const float m_Z_FAR = 100.0f;
 
