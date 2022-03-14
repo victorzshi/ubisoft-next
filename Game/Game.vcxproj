@@ -198,6 +198,7 @@
     <ClInclude Include="src\Graphics\Face\Face.h" />
     <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\Renderer\Renderer.h" />
+    <ClInclude Include="src\Graphics\UI\UI.h" />
     <ClInclude Include="src\Math\Utils\Utils.h" />
     <ClInclude Include="src\Math\Matrix\Matrix.h" />
     <ClInclude Include="src\Math\Vector3\Vector3.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="src\Graphics\Face\Face.cpp" />
     <ClCompile Include="src\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Graphics\UI\UI.cpp" />
     <ClCompile Include="src\Math\Utils\Utils.cpp" />
     <ClCompile Include="src\Math\Matrix\Matrix.cpp" />
     <ClCompile Include="src\Math\Matrix\MatrixTest.cpp" />

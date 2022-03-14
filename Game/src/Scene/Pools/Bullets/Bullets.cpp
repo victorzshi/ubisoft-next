@@ -120,7 +120,7 @@ void Bullets::AlienShootAt(Scene &scene, Vector3 &from, Vector3 &to)
 
         Timer timer;
         timer.start = scene.GetTime();
-        timer.stayAlive = 3.0f;
+        timer.stayAlive = 2.0f;
         scene.SetTimer(bullet, timer);
     }
 }

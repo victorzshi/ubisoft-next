@@ -299,10 +299,11 @@ void Scene::Render()
 
         int fuel = (int)roundf(timer.stayAlive);
 
-        std::string healthText = "Health: " + std::to_string(health.points);
-        std::string fuelText = "Fuel: " + std::to_string(fuel);
-        App::Print(10.0f, 30.0f, healthText.c_str(), 0.0f, 0.0f, 1.0f);
-        App::Print(10.0f, 10.0f, fuelText.c_str(), 0.0f, 0.0f, 1.0f);
+        std::string healthText = "LIFE " + std::string(health.points, '|');
+        std::string fuelText = "FUEL " + std::string(fuel, '|');
+
+        App::Print(10.0f, 30.0f, healthText.c_str(), 1.0f, 1.0f, 1.0f, GLUT_BITMAP_9_BY_15);
+        App::Print(10.0f, 10.0f, fuelText.c_str(), 1.0f, 1.0f, 1.0f, GLUT_BITMAP_9_BY_15);
     }
 }
 
