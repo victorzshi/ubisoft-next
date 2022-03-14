@@ -225,6 +225,10 @@ int Scene::CreateId()
 
 void Scene::Restart()
 {
+    m_isGameOver = false;
+
+    m_position = Vector3(0.0f, 0.0f, 300.0f);
+
     m_id = 0;
 
     m_ai.clear();
