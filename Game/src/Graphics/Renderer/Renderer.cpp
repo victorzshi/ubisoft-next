@@ -33,6 +33,41 @@ void Renderer::SetCameraTarget(Vector3 target)
     m_camera.to = target;
 }
 
+void Renderer::MoveCamera(float deltaTime)
+{
+    Vector3 position = m_camera.from;
+
+    float deltaVelocity = deltaTime / 100.0f;
+
+    if (App::IsKeyPressed('W'))
+    {
+        position.z -= deltaVelocity;
+    }
+    if (App::IsKeyPressed('S'))
+    {
+        position.z += deltaVelocity;
+    }
+    if (App::IsKeyPressed('A'))
+    {
+        position.x -= deltaVelocity;
+    }
+    if (App::IsKeyPressed('D'))
+    {
+        position.x += deltaVelocity;
+    }
+    if (App::IsKeyPressed(VK_SPACE))
+    {
+        position.y -= deltaVelocity;
+    }
+    if (App::IsKeyPressed(VK_CONTROL))
+    {
+        position.y += deltaVelocity;
+    }
+
+    SetCameraPosition(position);
+    Update(deltaTime);
+}
+
 void Renderer::Update(float deltaTime)
 {
     SetViewMatrix();
@@ -122,8 +157,8 @@ void Renderer::SetMousePosition()
     App::GetMousePos(mouseX, mouseY);
 
     Vector3 viewPoint;
-    viewPoint.x = 2.0f * m_ASPECT_RATIO * mouseX / m_SCREEN_WIDTH - m_ASPECT_RATIO;
-    viewPoint.y = -2.0f * mouseY / m_SCREEN_HEIGHT + 1.0f;
+    viewPoint.x = 2.0f * m_ASPECT_RATIO * mouseX / SCREEN_WIDTH - m_ASPECT_RATIO;
+    viewPoint.y = -2.0f * mouseY / SCREEN_HEIGHT + 1.0f;
     viewPoint.z = -m_DISTANCE;
 
     Vector3 worldPoint = m_viewInverse * viewPoint;
@@ -212,8 +247,8 @@ void Renderer::UpdateVisible()
                     }
 
                     // Offset into normalized space
-                    float offsetWidth = m_SCREEN_WIDTH * 0.5f;
-                    float offsetHeight = m_SCREEN_HEIGHT * 0.5f;
+                    float offsetWidth = SCREEN_WIDTH * 0.5f;
+                    float offsetHeight = SCREEN_HEIGHT * 0.5f;
                     for (int i = 0; i < clipped.vertices; i++)
                     {
                         clipped.vertex[i].x = offsetWidth * clipped.vertex[i].x + offsetWidth;
@@ -277,8 +312,8 @@ void Renderer::RenderBorder()
     float b = 0.0f;
     float x = 1.0f; // Offset into visible area
     float y = 0.0f;
-    float w = m_SCREEN_WIDTH;
-    float h = m_SCREEN_HEIGHT - 1.0f; // Offset into visible area
+    float w = SCREEN_WIDTH;
+    float h = SCREEN_HEIGHT - 1.0f; // Offset into visible area
     App::DrawLine(x, y, x, h, r, g, b);
     App::DrawLine(x, h, w, h, r, g, b);
     App::DrawLine(w, h, w, y, r, g, b);

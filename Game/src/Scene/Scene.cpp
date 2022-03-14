@@ -4,7 +4,7 @@
 
 #include "Systems/Systems.h"
 
-Scene::Scene() : m_id(0), m_deltaTime(0.0f)
+Scene::Scene() : m_renderer(nullptr), m_id(0), m_deltaTime(0.0f)
 {
     // Initialize time variables
     m_start = std::chrono::steady_clock::now();
@@ -15,26 +15,18 @@ Scene::Scene() : m_id(0), m_deltaTime(0.0f)
     m_position = Vector3(0.0f, 0.0f, 300.0f);
 }
 
-void Scene::Init()
+void Scene::Init(Renderer &renderer)
 {
-    m_renderer.Init(*this);
+    m_renderer = &renderer;
 
-    // Planets go first
-    m_planets.Init(*this);
-    // Because aliens and fuel depend on planet position
-    m_aliens.Init(*this);
-    m_fuel.Init(*this);
-
-    m_bullets.Init(*this);
-    m_particles.Init(*this);
-    m_ships.Init(*this);
-    m_stars.Init(*this);
+    InitPools();
 
     // TODO: Initialize space but leave all objects inactive. Use level data to generate objects.
 }
 
-void Scene::Shutdown()
+void Scene::SetPause(std::chrono::time_point<std::chrono::steady_clock> pause)
 {
+    m_start += std::chrono::steady_clock::now() - pause;
 }
 
 Vector3 Scene::GetScenePosition() const
@@ -44,7 +36,7 @@ Vector3 Scene::GetScenePosition() const
 
 Vector3 Scene::GetMousePosition() const
 {
-    return m_renderer.GetMousePosition();
+    return m_renderer->GetMousePosition();
 }
 
 float Scene::GetDeltaTime() const
@@ -168,12 +160,12 @@ void Scene::SetScenePosition(Vector3 position)
 
 void Scene::SetCameraPosition(Vector3 position)
 {
-    m_renderer.SetCameraPosition(position);
+    m_renderer->SetCameraPosition(position);
 }
 
 void Scene::SetCameraTarget(Vector3 target)
 {
-    m_renderer.SetCameraTarget(target);
+    m_renderer->SetCameraTarget(target);
 }
 
 void Scene::SetAI(int id, AI ai)
@@ -223,6 +215,21 @@ int Scene::CreateId()
 
     m_id++;
     return m_id - 1; // Array index starts at 0
+}
+
+void Scene::Restart()
+{
+    m_id = 0;
+
+    m_ai.clear();
+    m_collider.clear();
+    m_health.clear();
+    m_model.clear();
+    m_physics.clear();
+    m_timer.clear();
+    m_transform.clear();
+
+    InitPools();
 }
 
 void Scene::Update(float deltaTime)
@@ -284,26 +291,6 @@ void Scene::Update(float deltaTime)
     }
 
     UpdatePools();
-
-    m_renderer.Update(deltaTime);
-}
-
-void Scene::Render()
-{
-    m_renderer.Render();
-
-    for (auto &id : GetShips().GetIds())
-    {
-        Health health = GetHealth(id);
-        Timer timer = GetTimer(id);
-
-        int fuel = (int)roundf(timer.stayAlive);
-
-        std::string healthText = "Health: " + std::to_string(health.points);
-        std::string fuelText = "Fuel: " + std::to_string(fuel);
-        App::Print(10.0f, 30.0f, healthText.c_str(), 0.0f, 0.0f, 1.0f);
-        App::Print(10.0f, 10.0f, fuelText.c_str(), 0.0f, 0.0f, 1.0f);
-    }
 }
 
 void Scene::SetTime(float deltaTime)
@@ -311,6 +298,24 @@ void Scene::SetTime(float deltaTime)
     m_deltaTime = deltaTime;
     m_current = std::chrono::steady_clock::now();
     m_time = m_current - m_start;
+}
+
+void Scene::InitPools()
+{
+    // Planets go first
+    m_planets.Init(*this);
+
+    // Because aliens and fuel depend on planet position
+    m_aliens.Init(*this);
+
+    // The order of the pools below don't matter
+    m_bullets.Init(*this);
+    m_particles.Init(*this);
+    m_ships.Init(*this);
+    m_stars.Init(*this);
+
+    // And fuel sometimes gets destroyed on restart but not when it's last :)
+    m_fuel.Init(*this);
 }
 
 void Scene::UpdatePools()

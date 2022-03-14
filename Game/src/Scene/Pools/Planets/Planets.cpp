@@ -84,6 +84,9 @@ void Planets::Init(Scene &scene)
 
     // Aliens require planet data
     UpdateIds();
+
+    // For restarting the game later properly...
+    m_random.clear();
 }
 
 void Planets::Update(Scene &scene)
@@ -109,7 +112,7 @@ void Planets::Update(Scene &scene)
         if (!hasEnemies)
         {
             scene.GetParticles().Explode(scene, id);
-            
+
             Deactivate(id);
         }
     }

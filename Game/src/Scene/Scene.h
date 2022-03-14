@@ -24,14 +24,14 @@ class Scene
   public:
     Scene();
 
-    void Init();
-    void Shutdown();
+    void Init(Renderer &renderer);
 
     // Utilities
     Vector3 GetScenePosition() const;
     Vector3 GetMousePosition() const;
     float GetDeltaTime() const;
     float GetTime() const;
+    void SetPause(std::chrono::time_point<std::chrono::steady_clock> pause);
 
     // Get component arrays
     AI GetAI(int id) const;
@@ -71,10 +71,15 @@ class Scene
     // Create new object with unique ID
     int CreateId();
 
+    void Restart();
+
     void Update(float deltaTime);
-    void Render();
 
   private:
+    // Handle camera
+    Renderer *m_renderer;
+    Vector3 m_position;
+
     // Unique ID
     int m_id;
 
@@ -102,14 +107,11 @@ class Scene
     Ships m_ships;
     Stars m_stars;
 
-    // Handle camera
-    Vector3 m_position;
-    Renderer m_renderer;
-
     // Gameplay logic
     Systems m_systems;
 
     // Helper functions
     void SetTime(float deltaTime);
+    void InitPools();
     void UpdatePools();
 };
