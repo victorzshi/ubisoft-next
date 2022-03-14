@@ -79,15 +79,37 @@ void Particles::Ricochet(Scene &scene, int id)
 
 void Particles::Explode(Scene &scene, int id)
 {
+    Meshes mesh = scene.GetModel(id).mesh.GetMesh();
+    if (mesh == Meshes::CONE)
+    {
+        App::PlaySound("data/sounds/Explosion3__003.wav");
+    }
+    else if (mesh == Meshes::MONKEY)
+    {
+        App::PlaySound("data/sounds/Explosion1__002.wav");
+    }
+    else if (mesh == Meshes::ICOSPHERE) 
+    {
+        App::PlaySound("data/sounds/Explosion2__004.wav");
+    }
+    else if (mesh == Meshes::TORUS)
+    {
+        App::PlaySound("data/sounds/Explosion2__006.wav");
+    }
+    else if (mesh == Meshes::CUBE)
+    {
+        App::PlaySound("data/sounds/Pickup__008.wav");
+    }
+
     // Explosion of lines
+    Model model = scene.GetModel(id);
+    model.mesh.SetMesh(Meshes::TWOPLANE);
+    model.lighting = Lighting::SHADOW;
+
     Transform transform = scene.GetTransform(id);
     transform.scaling.x = transform.scaling.x * 0.01f;
     transform.scaling.y = transform.scaling.y * 0.01f;
     transform.scaling.z = transform.scaling.z * 1.0f;
-
-    Model model = scene.GetModel(id);
-    model.mesh.SetMesh(Meshes::TWOPLANE);
-    model.lighting = Lighting::SHADOW;
 
     Physics physics = scene.GetPhysics(id);
 
@@ -120,6 +142,12 @@ void Particles::Explode(Scene &scene, int id)
 
 void Particles::Boost(Scene &scene, int id, Vector3 &direction)
 {
+    Meshes mesh = scene.GetModel(id).mesh.GetMesh();
+    if (mesh == Meshes::CONE && !App::IsSoundPlaying("data/sounds/Bass Drum__004.wav"))
+    {
+        App::PlaySound("data/sounds/Bass Drum__004.wav");
+    }
+
     Transform transform = scene.GetTransform(id);
     transform.position += direction * -transform.scaling.x * 0.5f;
     transform.scaling = Vector3(0.1f, 0.1f, 0.1f);

@@ -21,6 +21,8 @@ struct Mesh
 
     std::vector<Face> GetFaces();
 
+    Meshes GetMesh() const;
+
     void SetMesh(Meshes mesh);
 
   private:
