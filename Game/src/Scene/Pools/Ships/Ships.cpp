@@ -29,6 +29,7 @@ void Ships::Init(Scene &scene)
         timer.start = scene.GetTime();
         timer.cooldown = 0.05f;
         timer.stayAlive = 100.0f; // 100 seconds of fuel
+        timer.ammo = 100.0f;      // 100 seconds of ammo
         scene.SetTimer(id, timer);
 
         index = id;

@@ -98,12 +98,15 @@ void UI::Update()
         Timer timer = m_scene->GetTimer(id);
 
         int life = max(health.points, 0);
+        int ammo = max((int)roundf(timer.ammo), 0);
         int fuel = max((int)roundf(timer.stayAlive), 0);
 
         m_colorLife = GetTextColor(life);
+        m_colorAmmo = GetTextColor(ammo);
         m_colorFuel = GetTextColor(fuel);
 
-        m_life = "LIFE " + std::string(health.points, '|');
+        m_life = "LIFE " + std::string(life, '|');
+        m_ammo = "AMMO " + std::string(ammo, '|');
         m_fuel = "FUEL " + std::string(fuel, '|');
     }
     else
@@ -194,7 +197,12 @@ void UI::PrintShipStats()
     float r = m_colorLife.r / 255.0f;
     float g = m_colorLife.g / 255.0f;
     float b = m_colorLife.b / 255.0f;
-    App::Print(10.0f, 30.0f, m_life.c_str(), r, g, b, m_FONT);
+    App::Print(10.0f, 50.0f, m_life.c_str(), r, g, b, m_FONT);
+
+    r = m_colorAmmo.r / 255.0f;
+    g = m_colorAmmo.g / 255.0f;
+    b = m_colorAmmo.b / 255.0f;
+    App::Print(10.0f, 30.0f, m_ammo.c_str(), r, g, b, m_FONT);
 
     r = m_colorFuel.r / 255.0f;
     g = m_colorFuel.g / 255.0f;
