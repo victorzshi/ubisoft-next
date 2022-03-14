@@ -116,9 +116,10 @@ void UI::Render()
     {
     case Screen::START:
         App::Print(margin, screenHeight * 0.80f, "Vanguard Mission Zero: Genesis Odyssey", r, g, b, m_FONT);
-        App::Print(margin, screenHeight * 0.60f, "Controls: WASD to move, LEFT CLICK to fire", r, g, b, m_FONT);
-        App::Print(margin, screenHeight * 0.40f, "Objective: Eliminate all hostiles", r, g, b, m_FONT);
-        App::Print(margin, screenHeight * 0.20f, "Press SPACE to start", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.60f, "WASD to move and LEFT CLICK to fire", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.50f, "ESC to pause", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.40f, "Eliminate all enemies", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.20f, "SPACE to start", r, g, b, m_FONT);
         break;
 
     case Screen::NONE:
@@ -126,10 +127,11 @@ void UI::Render()
         break;
 
     case Screen::PAUSED:
-        App::Print(margin, screenHeight * 0.80f, "PAUSED - WASD/SPACE/CTRL to move camera", r, g, b, m_FONT);
-        App::Print(margin, screenHeight * 0.60f, "Press H to hide text", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.80f, "PAUSED", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.60f, "WASD/SPACE/CTRL to move camera", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.50f, "H to hide text", r, g, b, m_FONT);
         // App::Print(margin, screenHeight * 0.40f, "Press R to restart", r, g, b, m_FONT);
-        App::Print(margin, screenHeight * 0.20f, "Press ESC to continue", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.20f, "ESC to continue", r, g, b, m_FONT);
         PrintShipStats();
         break;
     }
