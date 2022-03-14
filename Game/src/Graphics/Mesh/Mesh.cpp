@@ -94,6 +94,11 @@ std::vector<Face> Mesh::GetFaces()
     return faces;
 }
 
+Meshes Mesh::GetMesh() const
+{
+    return m_mesh;
+}
+
 void Mesh::SetMesh(Meshes mesh)
 {
     m_mesh = mesh;

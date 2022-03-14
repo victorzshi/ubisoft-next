@@ -51,6 +51,8 @@ void Bullets::ShipShootAt(Scene &scene, Vector3 &from, Vector3 &to)
 
     if (Activate(bullet))
     {
+        App::PlaySound("data/sounds/Bass Drum__008.wav");
+
         float width = 0.1f;
 
         Vector3 direction = (to - from).Normalize();
@@ -91,6 +93,8 @@ void Bullets::AlienShootAt(Scene &scene, Vector3 &from, Vector3 &to)
 
     if (Activate(bullet))
     {
+        App::PlaySound("data/sounds/Bass Drum__003.wav");
+
         float width = 0.5f;
 
         Vector3 direction = (to - from).Normalize();
