@@ -291,20 +291,6 @@ void Scene::Update(float deltaTime)
 void Scene::Render()
 {
     m_renderer.Render();
-
-    for (auto &id : GetShips().GetIds())
-    {
-        Health health = GetHealth(id);
-        Timer timer = GetTimer(id);
-
-        int fuel = (int)roundf(timer.stayAlive);
-
-        std::string healthText = "LIFE " + std::string(health.points, '|');
-        std::string fuelText = "FUEL " + std::string(fuel, '|');
-
-        App::Print(10.0f, 30.0f, healthText.c_str(), 1.0f, 1.0f, 1.0f, GLUT_BITMAP_9_BY_15);
-        App::Print(10.0f, 10.0f, fuelText.c_str(), 1.0f, 1.0f, 1.0f, GLUT_BITMAP_9_BY_15);
-    }
 }
 
 void Scene::SetTime(float deltaTime)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Graphics/Color/Color.h"
+
 enum class Screen
 {
     START,
@@ -22,6 +24,8 @@ class UI
 
     void HandleInput();
 
+    void Update();
+
     void Render();
 
   private:
@@ -32,4 +36,12 @@ class UI
     Scene *m_scene;
 
     Screen m_screen;
+
+    Color m_colorLife;
+    Color m_colorFuel;
+    std::string m_life;
+    std::string m_fuel;
+
+    Color GetTextColor(int level);
+    void PrintShipStats();
 };

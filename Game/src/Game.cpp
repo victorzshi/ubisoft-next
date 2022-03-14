@@ -26,6 +26,7 @@ void Update(float deltaTime)
 
     if (ui.GetScreen() == Screen::NONE)
     {
+        ui.Update();
         scene.Update(deltaTime);
     }
 }
