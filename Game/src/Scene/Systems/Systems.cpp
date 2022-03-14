@@ -318,6 +318,11 @@ void Systems::CheckBulletHit(Scene &scene, int id)
             health.points -= 5;
             scene.SetHealth(target, health);
 
+            if (scene.GetAI(target).attackRange == 0.0f)
+            {
+                scene.GetUI()->scoring.damageTaken += 5;
+            }
+
             scene.GetParticles().Ricochet(scene, id);
         }
     }
@@ -432,6 +437,12 @@ void Systems::CheckPlanetCollision(Scene &scene, int id)
             health.points -= 5;
             scene.SetHealth(id, health);
 
+            // XXX: Update ship score.
+            if (ai.attackRange == 0.0f)
+            {
+                scene.GetUI()->scoring.damageTaken += 5;
+            }
+
             scene.GetParticles().Ricochet(scene, id);
         }
     }
@@ -474,10 +485,12 @@ void Systems::CheckAlienCollision(Scene &scene, int id)
             if (isBomber)
             {
                 health.points -= 20;
+                scene.GetUI()->scoring.damageTaken += 20;
             }
             else
             {
                 health.points -= 10;
+                scene.GetUI()->scoring.damageTaken += 10;
             }
             scene.SetHealth(id, health);
 

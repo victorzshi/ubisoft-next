@@ -5,7 +5,7 @@
 #include "Graphics/Renderer/Renderer.h"
 #include "Scene/Scene.h"
 
-UI::UI() : m_scene(nullptr), m_screen(Screen::START), m_isHidden(false)
+UI::UI() : m_scene(nullptr), m_renderer(nullptr), m_screen(Screen::START), m_isHidden(false)
 {
     m_pressed = std::chrono::steady_clock::now();
     m_current = m_pressed;
@@ -36,7 +36,8 @@ void UI::HandleInput()
     switch (m_screen)
     {
     case Screen::START:
-        if (App::IsKeyPressed(VK_SPACE))
+        if (App::IsKeyPressed('W') || App::IsKeyPressed('A') || App::IsKeyPressed('S') || App::IsKeyPressed('D') ||
+            App::IsKeyPressed(VK_LBUTTON))
         {
             m_screen = Screen::NONE;
         }
@@ -72,22 +73,32 @@ void UI::HandleInput()
             m_pressed = std::chrono::steady_clock::now();
         }
         break;
+
+    case Screen::GAME_OVER:
+        if (App::IsKeyPressed('R') && m_time.count() > 0.3f)
+        {
+            m_scene->Restart();
+
+            m_screen = Screen::NONE;
+            m_pressed = std::chrono::steady_clock::now();
+        }
+        break;
     }
 }
 
 void UI::Update()
 {
-    std::vector<int> ids = m_scene->GetShips().GetIds();
+    std::vector<int> ships = m_scene->GetShips().GetIds();
 
-    if (!ids.empty())
+    if (!ships.empty())
     {
-        int ship = ids.front();
+        int id = ships.front();
 
-        Health health = m_scene->GetHealth(ship);
-        Timer timer = m_scene->GetTimer(ship);
+        Health health = m_scene->GetHealth(id);
+        Timer timer = m_scene->GetTimer(id);
 
-        int life = health.points;
-        int fuel = (int)roundf(timer.stayAlive);
+        int life = max(health.points, 0);
+        int fuel = max((int)roundf(timer.stayAlive), 0);
 
         m_colorLife = GetTextColor(life);
         m_colorFuel = GetTextColor(fuel);
@@ -101,7 +112,7 @@ void UI::Update()
 
         m_colorLife = GetTextColor(life);
 
-        m_life = "LIFE " + std::string(life, '|');
+        m_life = "LIFE :(";
     }
 }
 
@@ -124,8 +135,8 @@ void UI::Render()
         App::Print(margin, screenHeight * 0.80f, "Vanguard Mission Zero: Genesis Odyssey", r, g, b, m_FONT);
         App::Print(margin, screenHeight * 0.60f, "WASD to move and LEFT CLICK to fire", r, g, b, m_FONT);
         App::Print(margin, screenHeight * 0.50f, "ESC to pause", r, g, b, m_FONT);
-        App::Print(margin, screenHeight * 0.40f, "Eliminate all enemies", r, g, b, m_FONT);
-        App::Print(margin, screenHeight * 0.20f, "SPACE to start", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.40f, "Destroy all enemies", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.20f, "Good luck...", r, g, b, m_FONT);
         break;
 
     case Screen::NONE:
@@ -139,6 +150,19 @@ void UI::Render()
         App::Print(margin, screenHeight * 0.40f, "R to restart", r, g, b, m_FONT);
         App::Print(margin, screenHeight * 0.20f, "ESC to continue", r, g, b, m_FONT);
         PrintShipStats();
+        break;
+
+    case Screen::GAME_OVER:
+        std::string title = scoring.isWin ? "YOU WIN!!!" : "YOU LOSE...";
+        std::string damage = "Damage Taken: " + std::to_string(scoring.damageTaken);
+        std::string enemies = "Enemies Destroyed: " + std::to_string(scoring.enemiesDestroyed);
+        std::string time = "Total Time (seconds): " + std::to_string((int)roundf(scoring.totalTime.count()));
+
+        App::Print(margin, screenHeight * 0.80f, title.c_str(), r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.60f, damage.c_str(), r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.50f, enemies.c_str(), r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.40f, time.c_str(), r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.20f, "R to restart", r, g, b, m_FONT);
         break;
     }
 }
@@ -176,4 +200,14 @@ void UI::PrintShipStats()
     g = m_colorFuel.g / 255.0f;
     b = m_colorFuel.b / 255.0f;
     App::Print(10.0f, 10.0f, m_fuel.c_str(), r, g, b, m_FONT);
+
+#ifdef _DEBUG
+    std::string damage = "Damage Taken: " + std::to_string(scoring.damageTaken);
+    std::string enemies = "Enemies Destroyed: " + std::to_string(scoring.enemiesDestroyed);
+    std::string time = "Total Time (seconds): " + std::to_string((int)roundf(scoring.totalTime.count()));
+
+    App::Print(10.0f, 100.0f, damage.c_str(), r, g, b, m_FONT);
+    App::Print(10.0f, 80.0f, enemies.c_str(), r, g, b, m_FONT);
+    App::Print(10.0f, 60.0f, time.c_str(), r, g, b, m_FONT);
+#endif
 }

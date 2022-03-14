@@ -4,7 +4,7 @@
 
 #include "Systems/Systems.h"
 
-Scene::Scene() : m_renderer(nullptr), m_id(0), m_deltaTime(0.0f)
+Scene::Scene() : m_renderer(nullptr), m_ui(nullptr), m_isGameOver(false), m_id(0), m_deltaTime(0.0f)
 {
     // Initialize time variables
     m_start = std::chrono::steady_clock::now();
@@ -15,18 +15,19 @@ Scene::Scene() : m_renderer(nullptr), m_id(0), m_deltaTime(0.0f)
     m_position = Vector3(0.0f, 0.0f, 300.0f);
 }
 
-void Scene::Init(Renderer &renderer)
+void Scene::Init(Renderer &renderer, UI &ui)
 {
     m_renderer = &renderer;
+    m_ui = &ui;
 
     InitPools();
 
     // TODO: Initialize space but leave all objects inactive. Use level data to generate objects.
 }
 
-void Scene::SetPause(std::chrono::time_point<std::chrono::steady_clock> pause)
+UI *Scene::GetUI()
 {
-    m_start += std::chrono::steady_clock::now() - pause;
+    return m_ui;
 }
 
 Vector3 Scene::GetScenePosition() const
@@ -47,6 +48,11 @@ float Scene::GetDeltaTime() const
 float Scene::GetTime() const
 {
     return m_time.count();
+}
+
+void Scene::SetPause(std::chrono::time_point<std::chrono::steady_clock> pause)
+{
+    m_start += std::chrono::steady_clock::now() - pause;
 }
 
 AI Scene::GetAI(int id) const
@@ -230,6 +236,8 @@ void Scene::Restart()
     m_transform.clear();
 
     InitPools();
+
+    m_ui->scoring.Reset();
 }
 
 void Scene::Update(float deltaTime)
@@ -278,12 +286,12 @@ void Scene::Update(float deltaTime)
         m_systems.SpinPlanet(*this, id);
     }
 
+#ifdef _DEBUG
     for (auto &id : m_stars.GetIds())
     {
-#ifdef _DEBUG
         m_systems.ChangeColor(*this, id);
-#endif
     }
+#endif
 
     for (auto &id : m_fuel.GetIds())
     {
@@ -291,6 +299,8 @@ void Scene::Update(float deltaTime)
     }
 
     UpdatePools();
+
+    CheckGameOver();
 }
 
 void Scene::SetTime(float deltaTime)
@@ -327,4 +337,25 @@ void Scene::UpdatePools()
     m_planets.Update(*this);
     m_ships.Update(*this);
     m_stars.Update(*this);
+}
+
+void Scene::CheckGameOver()
+{
+    if (!m_isGameOver)
+    {
+        if (m_ships.GetIds().size() == 0)
+        {
+            m_ui->scoring.totalTime = std::chrono::steady_clock::now() - m_start;
+            m_ui->SetScreen(Screen::GAME_OVER);
+            m_isGameOver = true;
+        }
+
+        if (m_aliens.GetIds().size() == 0)
+        {
+            m_ui->scoring.isWin = true;
+            m_ui->scoring.totalTime = std::chrono::steady_clock::now() - m_start;
+            m_ui->SetScreen(Screen::GAME_OVER);
+            m_isGameOver = true;
+        }
+    }
 }
