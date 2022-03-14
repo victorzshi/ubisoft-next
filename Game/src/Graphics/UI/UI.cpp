@@ -6,6 +6,9 @@
 
 UI::UI() : m_scene(nullptr), m_SCREEN_WIDTH(0.0f), m_SCREEN_HEIGHT(0.0f), m_screen(Screen::START), m_isHidden(false)
 {
+    m_pressed = std::chrono::steady_clock::now();
+    m_current = m_pressed;
+    m_time = m_current - m_pressed;
 }
 
 void UI::Init(Scene *scene, float SCREEN_WIDTH, float SCREEN_HEIGHT)
@@ -27,6 +30,9 @@ void UI::SetScreen(Screen screen)
 
 void UI::HandleInput()
 {
+    m_current = std::chrono::steady_clock::now();
+    m_time = m_current - m_pressed;
+
     switch (m_screen)
     {
     case Screen::START:
@@ -37,20 +43,23 @@ void UI::HandleInput()
         break;
 
     case Screen::NONE:
-        if (App::IsKeyPressed(VK_ESCAPE))
+        if (App::IsKeyPressed(VK_ESCAPE) && m_time.count() > 0.3f)
         {
             m_screen = Screen::PAUSED;
+            m_pressed = std::chrono::steady_clock::now();
         }
         break;
 
     case Screen::PAUSED:
-        if (App::IsKeyPressed(VK_SPACE))
+        if (App::IsKeyPressed(VK_ESCAPE) && m_time.count() > 0.3f)
         {
             m_screen = Screen::NONE;
+            m_pressed = std::chrono::steady_clock::now();
         }
-        if (App::IsKeyPressed('H'))
+        if (App::IsKeyPressed('H') && m_time.count() > 0.3f)
         {
             m_isHidden = !m_isHidden;
+            m_pressed = std::chrono::steady_clock::now();
         }
         break;
     }
@@ -115,7 +124,7 @@ void UI::Render()
         App::Print(margin, m_SCREEN_HEIGHT * 0.80f, "PAUSED", r, g, b, m_FONT);
         App::Print(margin, m_SCREEN_HEIGHT * 0.60f, "Press H to hide text", r, g, b, m_FONT);
         // App::Print(margin, m_SCREEN_HEIGHT * 0.40f, "Press R to restart", r, g, b, m_FONT);
-        App::Print(margin, m_SCREEN_HEIGHT * 0.20f, "Press SPACE to continue", r, g, b, m_FONT);
+        App::Print(margin, m_SCREEN_HEIGHT * 0.20f, "Press ESC to continue", r, g, b, m_FONT);
         PrintShipStats();
         break;
     }

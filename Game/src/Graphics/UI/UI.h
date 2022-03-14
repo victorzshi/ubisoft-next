@@ -2,6 +2,8 @@
 
 #include "Graphics/Color/Color.h"
 
+#include <chrono>
+
 enum class Screen
 {
     START,
@@ -39,6 +41,9 @@ class UI
     Color m_colorFuel;
     std::string m_life;
     std::string m_fuel;
+    std::chrono::time_point<std::chrono::steady_clock> m_pressed;
+    std::chrono::time_point<std::chrono::steady_clock> m_current;
+    std::chrono::duration<float> m_time;
     bool m_isHidden;
 
     Color GetTextColor(int level);
