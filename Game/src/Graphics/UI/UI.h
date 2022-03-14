@@ -34,13 +34,12 @@ class UI
     float m_SCREEN_HEIGHT;
 
     Scene *m_scene;
-
     Screen m_screen;
-
     Color m_colorLife;
     Color m_colorFuel;
     std::string m_life;
     std::string m_fuel;
+    bool m_isHidden;
 
     Color GetTextColor(int level);
     void PrintShipStats();

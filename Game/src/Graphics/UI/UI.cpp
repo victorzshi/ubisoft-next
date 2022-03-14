@@ -4,7 +4,7 @@
 
 #include "Scene/Scene.h"
 
-UI::UI() : m_scene(nullptr), m_SCREEN_WIDTH(0.0f), m_SCREEN_HEIGHT(0.0f), m_screen(Screen::START)
+UI::UI() : m_scene(nullptr), m_SCREEN_WIDTH(0.0f), m_SCREEN_HEIGHT(0.0f), m_screen(Screen::START), m_isHidden(false)
 {
 }
 
@@ -48,6 +48,10 @@ void UI::HandleInput()
         {
             m_screen = Screen::NONE;
         }
+        if (App::IsKeyPressed('H'))
+        {
+            m_isHidden = !m_isHidden;
+        }
         break;
     }
 }
@@ -84,6 +88,11 @@ void UI::Update()
 
 void UI::Render()
 {
+    if (m_isHidden)
+    {
+        return;
+    }
+
     float margin = 100.0f;
     float r = 1.0f;
     float g = 1.0f;
@@ -104,8 +113,8 @@ void UI::Render()
 
     case Screen::PAUSED:
         App::Print(margin, m_SCREEN_HEIGHT * 0.80f, "PAUSED", r, g, b, m_FONT);
-        // App::Print(100.0f, m_SCREEN_HEIGHT * 0.60f, "Press H to hide text", r, g, b, m_FONT);
-        // App::Print(100.0f, m_SCREEN_HEIGHT * 0.40f, "Press R to restart", r, g, b, m_FONT);
+        App::Print(margin, m_SCREEN_HEIGHT * 0.60f, "Press H to hide text", r, g, b, m_FONT);
+        // App::Print(margin, m_SCREEN_HEIGHT * 0.40f, "Press R to restart", r, g, b, m_FONT);
         App::Print(margin, m_SCREEN_HEIGHT * 0.20f, "Press SPACE to continue", r, g, b, m_FONT);
         PrintShipStats();
         break;
