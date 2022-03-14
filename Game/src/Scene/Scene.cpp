@@ -19,16 +19,7 @@ void Scene::Init(Renderer &renderer)
 {
     m_renderer = &renderer;
 
-    // Planets go first
-    m_planets.Init(*this);
-    // Because aliens and fuel depend on planet position
-    m_aliens.Init(*this);
-    m_fuel.Init(*this);
-
-    m_bullets.Init(*this);
-    m_particles.Init(*this);
-    m_ships.Init(*this);
-    m_stars.Init(*this);
+    InitPools();
 
     // TODO: Initialize space but leave all objects inactive. Use level data to generate objects.
 }
@@ -226,6 +217,21 @@ int Scene::CreateId()
     return m_id - 1; // Array index starts at 0
 }
 
+void Scene::Restart()
+{
+    m_id = 0;
+
+    m_ai.clear();
+    m_collider.clear();
+    m_health.clear();
+    m_model.clear();
+    m_physics.clear();
+    m_timer.clear();
+    m_transform.clear();
+
+    InitPools();
+}
+
 void Scene::Update(float deltaTime)
 {
     SetTime(deltaTime);
@@ -292,6 +298,24 @@ void Scene::SetTime(float deltaTime)
     m_deltaTime = deltaTime;
     m_current = std::chrono::steady_clock::now();
     m_time = m_current - m_start;
+}
+
+void Scene::InitPools()
+{
+    // Planets go first
+    m_planets.Init(*this);
+
+    // Because aliens and fuel depend on planet position
+    m_aliens.Init(*this);
+
+    // The order of the pools below don't matter
+    m_bullets.Init(*this);
+    m_particles.Init(*this);
+    m_ships.Init(*this);
+    m_stars.Init(*this);
+
+    // And fuel sometimes gets destroyed on restart but not when it's last :)
+    m_fuel.Init(*this);
 }
 
 void Scene::UpdatePools()

@@ -57,12 +57,18 @@ void UI::HandleInput()
             m_screen = Screen::NONE;
             m_pressed = std::chrono::steady_clock::now();
 
-            // Add paused time to game start
-            m_scene->SetPause(m_paused);
+            m_scene->SetPause(m_paused); // Make sure game clock won't skip into future
         }
         if (App::IsKeyPressed('H') && m_time.count() > 0.3f)
         {
             m_isHidden = !m_isHidden;
+            m_pressed = std::chrono::steady_clock::now();
+        }
+        if (App::IsKeyPressed('R') && m_time.count() > 0.3f)
+        {
+            m_scene->Restart();
+
+            m_screen = Screen::NONE;
             m_pressed = std::chrono::steady_clock::now();
         }
         break;
@@ -130,7 +136,7 @@ void UI::Render()
         App::Print(margin, screenHeight * 0.80f, "PAUSED", r, g, b, m_FONT);
         App::Print(margin, screenHeight * 0.60f, "WASD/SPACE/CTRL to move camera", r, g, b, m_FONT);
         App::Print(margin, screenHeight * 0.50f, "H to hide text", r, g, b, m_FONT);
-        // App::Print(margin, screenHeight * 0.40f, "Press R to restart", r, g, b, m_FONT);
+        App::Print(margin, screenHeight * 0.40f, "R to restart", r, g, b, m_FONT);
         App::Print(margin, screenHeight * 0.20f, "ESC to continue", r, g, b, m_FONT);
         PrintShipStats();
         break;

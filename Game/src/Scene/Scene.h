@@ -71,6 +71,8 @@ class Scene
     // Create new object with unique ID
     int CreateId();
 
+    void Restart();
+
     void Update(float deltaTime);
 
   private:
@@ -110,5 +112,6 @@ class Scene
 
     // Helper functions
     void SetTime(float deltaTime);
+    void InitPools();
     void UpdatePools();
 };
