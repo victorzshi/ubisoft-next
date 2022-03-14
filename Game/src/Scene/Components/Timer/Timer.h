@@ -5,6 +5,7 @@ struct Timer
     float start;
     float cooldown;
     float stayAlive;
+    float ammo;
 
     Timer();
 

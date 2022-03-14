@@ -58,8 +58,10 @@ class UI
 
     Screen m_screen;
     Color m_colorLife;
+    Color m_colorAmmo;
     Color m_colorFuel;
     std::string m_life;
+    std::string m_ammo;
     std::string m_fuel;
     std::chrono::time_point<std::chrono::steady_clock> m_paused;
     std::chrono::time_point<std::chrono::steady_clock> m_pressed;

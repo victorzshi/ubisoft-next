@@ -144,7 +144,7 @@ void Systems::ShootAtMouse(Scene &scene, int id)
 
     Timer timer = scene.GetTimer(id);
 
-    if (timer.Elapsed(current) > timer.cooldown)
+    if (timer.Elapsed(current) > timer.cooldown && timer.ammo > 0)
     {
         Vector3 from = scene.GetTransform(id).position;
         Vector3 to = scene.GetMousePosition();
@@ -153,6 +153,7 @@ void Systems::ShootAtMouse(Scene &scene, int id)
 
         Timer timer = scene.GetTimer(id);
         timer.start = scene.GetTime();
+        timer.ammo -= scene.GetDeltaTime() / 50.0f;
         scene.SetTimer(id, timer);
     }
 }
@@ -522,6 +523,7 @@ void Systems::PickUpFuel(Scene &scene, int id)
 
             Timer timer = scene.GetTimer(id);
             timer.stayAlive = 100.0f;
+            timer.ammo = 100.0f;
             scene.SetTimer(id, timer);
         }
     }
