@@ -28,10 +28,12 @@ class Scene
     void Shutdown();
 
     // Utilities
+    Renderer &GetRenderer();
     Vector3 GetScenePosition() const;
     Vector3 GetMousePosition() const;
     float GetDeltaTime() const;
     float GetTime() const;
+    void SetPause(std::chrono::time_point<std::chrono::steady_clock> pause);
 
     // Get component arrays
     AI GetAI(int id) const;

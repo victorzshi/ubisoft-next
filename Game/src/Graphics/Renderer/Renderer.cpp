@@ -33,6 +33,41 @@ void Renderer::SetCameraTarget(Vector3 target)
     m_camera.to = target;
 }
 
+void Renderer::MoveCamera(float deltaTime)
+{
+    Vector3 position = m_camera.from;
+
+    float deltaVelocity = deltaTime / 100.0f;
+
+    if (App::IsKeyPressed('W'))
+    {
+        position.z -= deltaVelocity;
+    }
+    if (App::IsKeyPressed('S'))
+    {
+        position.z += deltaVelocity;
+    }
+    if (App::IsKeyPressed('A'))
+    {
+        position.x -= deltaVelocity;
+    }
+    if (App::IsKeyPressed('D'))
+    {
+        position.x += deltaVelocity;
+    }
+    if (App::IsKeyPressed(VK_SPACE))
+    {
+        position.y -= deltaVelocity;
+    }
+    if (App::IsKeyPressed(VK_CONTROL))
+    {
+        position.y += deltaVelocity;
+    }
+
+    SetCameraPosition(position);
+    Update(deltaTime);
+}
+
 void Renderer::Update(float deltaTime)
 {
     SetViewMatrix();

@@ -18,6 +18,8 @@ class Renderer
     void SetCameraPosition(Vector3 position);
     void SetCameraTarget(Vector3 target);
 
+    void MoveCamera(float deltaTime);
+
     void Update(float deltaTime);
     void Render();
 

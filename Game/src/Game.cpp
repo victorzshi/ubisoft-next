@@ -29,6 +29,10 @@ void Update(float deltaTime)
         ui.Update();
         scene.Update(deltaTime);
     }
+    if (ui.GetScreen() == Screen::PAUSED)
+    {
+        scene.GetRenderer().MoveCamera(deltaTime);
+    }
 }
 
 void Render()

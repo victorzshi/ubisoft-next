@@ -37,6 +37,16 @@ void Scene::Shutdown()
 {
 }
 
+void Scene::SetPause(std::chrono::time_point<std::chrono::steady_clock> pause)
+{
+    m_start += std::chrono::steady_clock::now() - pause;
+}
+
+Renderer &Scene::GetRenderer()
+{
+    return m_renderer;
+}
+
 Vector3 Scene::GetScenePosition() const
 {
     return m_position;

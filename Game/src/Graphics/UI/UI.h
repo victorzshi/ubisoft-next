@@ -41,6 +41,7 @@ class UI
     Color m_colorFuel;
     std::string m_life;
     std::string m_fuel;
+    std::chrono::time_point<std::chrono::steady_clock> m_paused;
     std::chrono::time_point<std::chrono::steady_clock> m_pressed;
     std::chrono::time_point<std::chrono::steady_clock> m_current;
     std::chrono::duration<float> m_time;
