@@ -8,7 +8,9 @@
 
 This year's challenge was to make a game inspired by [Gravitar](https://en.wikipedia.org/wiki/Gravitar) in C++ using the provided API.
 
-_Vanguard Mission Zero: Genesis Odyssey_ is my programming submission that won first place. Check out the [gameplay video](https://youtu.be/N88Oq19CvQY)!
+_Vanguard Mission Zero: Genesis Odyssey_ is my programming submission that won [first place](https://toronto.ubisoft.com/ubisoft-toronto-next-2022-winners/).
+
+For all the gameplay features, check out the [YouTube video](https://youtu.be/N88Oq19CvQY) description!
 
 ![2022-03-14 07-20-13_Trim](https://user-images.githubusercontent.com/19493797/173255649-7b8f09fc-f140-4f83-b023-dce2e015d2ad.gif)
 
@@ -17,14 +19,16 @@ _Vanguard Mission Zero: Genesis Odyssey_ is my programming submission that won f
 ## Engine features
 
 - 3D graphics featuring particles, lighting, and backface culling ✨
-- CPU-friendly component design using data locality and object pooling 🧱
-- Automated unit tests and code formatting 🤖
+- CPU cache-friendly component design using data locality and object pooling 🧱
+- Automated unit testing and code formatting 🤖
 
 ## Running the game
 
 Open **Game.sln** in Visual Studio 2022 and hit **F5**.
 
 That's it!
+
+Or, if you're on Windows, download [vanguard-mission-zero-0.1.0-win64.zip](https://github.com/victorzshi/ubisoft-next/releases/download/v0.1.0/vanguard-mission-zero-0.1.0-win64.zip). Select _Extract All..._ and run **Game.exe**.
 
 ---
 
@@ -34,7 +38,7 @@ Here's what I personally used in order to make this submission.
 
 ### [(Free) Learn C++ by Codecademy](https://www.codecademy.com/learn/learn-c-plus-plus)
 
-The very basics of C++. Definitely do all of this.
+The very basics of C++. Definitely learn all of this.
 
 ### [(Free) Beginning Game Programming v2.0 by Lazy Foo'](https://lazyfoo.net/tutorials/SDL/)
 
