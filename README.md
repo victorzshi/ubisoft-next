@@ -4,6 +4,8 @@
 
 "Ubisoft Toronto NEXT is an annual competition designed to showcase the talent of video game development students in Ontario and to help kickstart their careers in the industry." — [Official Website](https://toronto.ubisoft.com/next/)
 
+---
+
 This year's challenge was to make a game inspired by [Gravitar](https://en.wikipedia.org/wiki/Gravitar) in C++ using the provided API.
 
 _Vanguard Mission Zero: Genesis Odyssey_ is my programming submission that won first place.
@@ -42,7 +44,7 @@ Make your first game using C++. I did lessons 1 to 29 inclusive which is everyth
 
 ### [(Free/Paid) Game Programming Patterns by Robert Nystrom](https://gameprogrammingpatterns.com/)
 
-**Very important** for taking your code to the next level. The web version is free but I did buy a physical copy and it's one of my most useful reference books. I've read it front to back a few times now.
+Take your code to the next level. The web version is free but I did buy a physical copy and it's one of my most useful reference books. I've read it front to back a few times now.
 
 ### [(Free) Code-It-Yourself! 3D Graphics Engine by Javidx9](https://youtu.be/ih20l3pJoeU)
 
@@ -50,9 +52,7 @@ Make your first game using C++. I did lessons 1 to 29 inclusive which is everyth
 
 ### [(Paid) Essential Mathematics for Games and Interactive Applications by James M. Van Verth and Lars M. Bishop](https://www.essentialmath.com/book.htm)
 
-Inevitably, you will need to debug your graphics code. This textbook is definitely the toughest resource in this list, but it goes into _essential_ details and provides relevant examples with code snippets, as well as demo code online. Could save your life, as it did mine (pay to win?).
-
-I studied up to and including chapter 7. Using the textbook as a starting point, I built my own vector and matrix maths libraries--make sure you set aside enough time for this! I also referenced chapter 7 extensively while debugging my camera system.
+Inevitably, you will need to debug your graphics code. This textbook is definitely the toughest resource in this list, but it goes into _essential_ details and provides relevant examples with code snippets, as well as demo code online. Could save your life, as it did mine (pay to win?). I studied up to and including chapter 7. Using the textbook as a starting point, I built my own vector and matrix maths libraries—make sure you set aside enough time for this! I also referenced chapter 7 extensively while debugging my camera system.
 
 > Long story short, I started studying C++ seriously starting from December 2019 until the end of February 2020.
 > My schedule was based on roughly three months of ~8 hour days where I studied and made simple games in C++.
