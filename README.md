@@ -1,6 +1,6 @@
 # Ubisoft Toronto NEXT 2022 Programming Submission
 
-![Mina from Watch Dogs: Legion](https://static-wordpress.akamaized.net/toronto.ubisoft.com/wp-content/uploads/2021/12/13152016/char_Mina-350x350.png)
+![Mina from Watch Dogs: Legion](https://user-images.githubusercontent.com/19493797/173255638-29248c96-c3b9-41a3-a14a-a3553be84425.png)
 
 "Ubisoft Toronto NEXT is an annual competition designed to showcase the talent of video game development students in Ontario and to help kickstart their careers in the industry." — [Official Website](https://toronto.ubisoft.com/next/)
 
@@ -8,11 +8,9 @@
 
 This year's challenge was to make a game inspired by [Gravitar](https://en.wikipedia.org/wiki/Gravitar) in C++ using the provided API.
 
-_Vanguard Mission Zero: Genesis Odyssey_ is my programming submission that won first place.
+_Vanguard Mission Zero: Genesis Odyssey_ is my programming submission that won first place. Check out the [gameplay video](https://youtu.be/N88Oq19CvQY)!
 
-TODO: Add gameplay gif.
-
-And check out the [gameplay video](https://youtu.be/N88Oq19CvQY)!
+![2022-03-14 07-20-13_Trim](https://user-images.githubusercontent.com/19493797/173255649-7b8f09fc-f140-4f83-b023-dce2e015d2ad.gif)
 
 > Fun fact, my game was lovingly named by Stephen Vijayakumar and Abhinav Dhindsa.
 
