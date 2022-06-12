@@ -28,7 +28,9 @@ Open **Game.sln** in Visual Studio 2022 and hit **F5**.
 
 That's it!
 
-Or, if you're on Windows, download [vanguard-mission-zero-0.1.0-win64.zip](https://github.com/victorzshi/ubisoft-next/releases/download/v0.1.0/vanguard-mission-zero-0.1.0-win64.zip). Select _Extract All..._ and run **Game.exe**.
+Or, if you're on Windows, download [vanguard-mission-zero-0.1.0-win64.zip](https://github.com/victorzshi/ubisoft-next/releases/download/v0.1.0/vanguard-mission-zero-0.1.0-win64.zip). 
+
+Select _Extract All..._ and run **Game.exe**.
 
 ---
 
@@ -56,7 +58,7 @@ Take your code to the next level. The web version is free but I did buy a physic
 
 Inevitably, you will need to debug your graphics code. This textbook is definitely the toughest resource in this list, but it goes into _essential_ details and provides relevant examples with code snippets, as well as demo code online. Could save your life, as it did mine (pay to win?). I studied up to and including chapter 7. Using the textbook as a starting point, I built my own vector and matrix maths libraries—make sure you set aside enough time for this! I also referenced chapter 7 extensively while debugging my camera system.
 
-> Long story short, I started studying C++ seriously starting from December 2019 until the end of February 2020.
+> Long story short, I started studying C++ seriously starting from December 2021 until the end of February 2022.
 > My schedule was based on roughly three months of 4-8 hour days where I studied and made simple games in C++.
 > However, I still had to prioritise and move on when I felt like I had learned what I needed to know from each resource.
 > Even then, I only made 3 out of the 6 games I had originally planned to which were Pong, Breakout, and Space Invaders.
