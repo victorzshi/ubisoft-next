@@ -1,6 +1,8 @@
 # Ubisoft Toronto NEXT 2022 Programming Submission
 
-![Mina from Watch Dogs: Legion](https://user-images.githubusercontent.com/19493797/173255638-29248c96-c3b9-41a3-a14a-a3553be84425.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/19493797/173955881-c0b7ae55-5f08-4f2c-b799-cc67da0ccd7a.png">
+</p>
 
 "Ubisoft Toronto NEXT is an annual competition designed to showcase the talent of video game development students in Ontario and to help kickstart their careers in the industry." — [Official Website](https://toronto.ubisoft.com/next/)
 
@@ -26,11 +28,9 @@ For all the gameplay features, check out the [YouTube video](https://youtu.be/N8
 
 Open **Game.sln** in Visual Studio 2022 and hit **F5**.
 
+Or, if you're on Windows, download and extract [vanguard-mission-zero-0.1.0-win64.zip](https://github.com/victorzshi/ubisoft-next/releases/download/v0.1.0/vanguard-mission-zero-0.1.0-win64.zip). Run **Game.exe**.
+
 That's it!
-
-Or, if you're on Windows, download [vanguard-mission-zero-0.1.0-win64.zip](https://github.com/victorzshi/ubisoft-next/releases/download/v0.1.0/vanguard-mission-zero-0.1.0-win64.zip). 
-
-Select _Extract All..._ and run **Game.exe**.
 
 ---
 
